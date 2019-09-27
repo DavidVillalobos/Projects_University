@@ -1,0 +1,4 @@
+﻿  main.cpp
+c:\users\home\desktop\ii examen i parte programacion i\ii examen i parte programacion i\main.cpp(53): warning C4326: el tipo de valor devuelto de 'main' debe ser 'int' en lugar de 'void'
+c:\users\home\desktop\ii examen i parte programacion i\ii examen i parte programacion i\main.cpp(54): warning C4101: 'opcion': variable local sin referencia
+  II Examen I Parte Programacion I.vcxproj -> C:\Users\Home\Desktop\II Examen I Parte Programacion I\Debug\II Examen I Parte Programacion I.exe

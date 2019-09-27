@@ -1,0 +1,7 @@
+﻿  In_Out.cpp
+c:\users\home\desktop\proyecto 1\proyecto1.1\proyecto1.1\in_out.cpp(161): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+c:\users\home\desktop\proyecto 1\proyecto1.1\proyecto1.1\in_out.cpp(164): warning C4267: '=': conversión de 'size_t' a 'int'; posible pérdida de datos
+c:\users\home\desktop\proyecto 1\proyecto1.1\proyecto1.1\in_out.cpp(215): warning C4267: '+=': conversión de 'size_t' a 'int'; posible pérdida de datos
+c:\users\home\desktop\proyecto 1\proyecto1.1\proyecto1.1\in_out.cpp(242): warning C4267: '+=': conversión de 'size_t' a 'int'; posible pérdida de datos
+c:\users\home\desktop\proyecto 1\proyecto1.1\proyecto1.1\in_out.cpp(261): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+  Proyecto1.1.vcxproj -> C:\Users\Home\Desktop\Proyecto 1\Proyecto1.1\x64\Debug\Proyecto1.1.exe

@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Contrato" Collapsed="true">
+    <Position X="5.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AOEADABAAAAQQIGAAAgAAIEAAAIQAAABAAIAIAAAABA=</HashCode>
+      <FileName>Contrato.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Empleado" Collapsed="true">
+    <Position X="8" Y="5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EwAAEQhgAAQAIACAARCBQAAJAAIAAIAAAAAEABAEAgA=</HashCode>
+      <FileName>Empleado.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Empresa" Collapsed="true">
+    <Position X="6.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAgACAIIACAAACCgAACAAIAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Empresa.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Error" Collapsed="true">
+    <Position X="6.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEQAAAAAAAAAAQAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Error.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Planilla" Collapsed="true">
+    <Position X="6.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQgAAAAAAAAAAAAAAAAAAAgAAAAAAAAACABA=</HashCode>
+      <FileName>Planilla.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlanillaCorta" Collapsed="true">
+    <Position X="6" Y="7.25" Width="1.5" />
+    <InheritanceLine Type="Planilla" FixedToPoint="true">
+      <Path>
+        <Point X="7.5" Y="6.691" />
+        <Point X="7.5" Y="6.95" />
+        <Point X="6.75" Y="6.95" />
+        <Point X="6.75" Y="7.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAABAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PlanillaCorta.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlanillaIdefinida" Collapsed="true">
+    <Position X="8" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>PlanillaIdefinida.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Profesional" Collapsed="true">
+    <Position X="4.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Profesional.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Puesto" Collapsed="true">
+    <Position X="10.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAACAAAABAAAAQAEBAAAAAAAAAIAAEAAAAAAAAAA=</HashCode>
+      <FileName>Puesto.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

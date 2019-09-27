@@ -1,0 +1,7 @@
+Administracion
+Cajas
+Gerencia
+Mantenimiento
+Mantenimiento (turno diurno)
+Mantenimiento (turno nocturno)
+RRHH
