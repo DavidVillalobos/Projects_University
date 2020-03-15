@@ -1,6 +1,6 @@
 # SistemasOperativos
  
-##Proyecto 1 de Sistemas Operativos - Puente
+## Proyecto 1 de Sistemas Operativos - Puente
 
 >Integrantes
 
