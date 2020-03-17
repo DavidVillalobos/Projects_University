@@ -4,19 +4,36 @@
 #include <unistd.h>// for sleep
 #include <stdlib.h> // for srand and malloc
 
-#define lenght 10 //Largo del puente
-#define media 1 //Media de la formula de al distribucion exponencial
+#define LENGHT 4 //Largo del puente
+#define MEDIA 4 //Media de la formula de al distribucion exponencial
 // del tiempo de llegada de los vehiculos
-#define modality 1
+#define MODALITY 2
 // Minimo y maximo de velocidad de los carros
-#define MIN_VELOCITY 5
-#define MAX_VELOCITY 6
+#define MIN_VELOCITY 1
+#define MAX_VELOCITY 2
+
+#define EAST_TRAFFIC_LIGHT_TIME 10
+#define WEST_TRAFFIC_LIGHT_TIME 5
+/*
+[bridge] 
+length=6 
+
+[sector-west] 
+speed-cars = \51 
+arrive-exp-time-cars = \34h #Este Numero es en Hexadecimal
+traffic-light-time-green = \35
+
+[sector-east] 
+speed-cars = \49
+arrive-exp-time-cars = \50 #Media en la distribucion exponencial
+traffic-light-time-green = \51
+*/
 
 //Variables compartidas
 //vectores de campos del puente
-int vecCampos[lenght];
+int vecCampos[LENGHT];
 //Seguros para evitar que varios carros utilicen el mismo campo del puente
-pthread_mutex_t locks[lenght];
+pthread_mutex_t locks[LENGHT];
 
 //Direccion de al via
 int direction = 0;
@@ -25,6 +42,8 @@ int flag = 1;
 //Numero de autos (Placas)
 int NUMAUTO = 1;
 
+int eastTrafficLight = 0;
+int westTrafficLight = 0;
 //           ENTIDADES DE LA SIMULACION
 
 //Carros, {Velocidad, Direccion, Placa, Prioridad}
@@ -91,11 +110,21 @@ void insertFirst(struct cola* cola, struct car* car){
 
 //Imprimir el puente
 void printBridge(){
-    for (int i = 0; i < lenght; i++){
-        if(vecCampos[i] != -1){
-            printf("\t|%d|\n",vecCampos[i]);
-        }else{
-            printf("\t| |\n");
+    if(direction){
+        for (int i = 0; i < LENGHT; i++){
+            if(vecCampos[i] != -1){
+                printf("\t|%d|\n",vecCampos[i]);
+            }else{
+                printf("\t| |\n");
+            }
+        }
+    }else{
+        for (int i = LENGHT-1; 0 <= i; i--){
+            if(vecCampos[i] != -1){
+                printf("\t|%d|\n",vecCampos[i]);
+            }else{
+                printf("\t| |\n");
+            }
         }
     }
 }
@@ -109,12 +138,12 @@ struct cola* finish;
 //Imprime la cola
 void printCola(struct cola* cola){
     struct nodo* aux = cola->first;
-    printf("[");
+    printf("[ ");
     while(aux){
-        printf("{%d}", aux->car->num);
+        printf("%d, ", aux->car->num);
         aux = aux->next;
     }
-    printf("]");
+    printf(" ]");
     printf("\n");
 }
 
@@ -124,12 +153,14 @@ void printSimulacion(){
     (direction)?printf("-->"):printf("<--");
     printf(" Oeste");
     printf("\n");
+    if(MODALITY ==2){ printf("Semaforo Este "); (eastTrafficLight)?printf("Verde\n"):printf("Rojo\n"); }
     printf("Este -> ");
     printCola(east);
     printBridge();
-    printf("Oeste -> ");
+    printf("Oeste ->");
     printCola(west);
-    printf("Cruzaron al otro lado: ");
+     if(MODALITY ==2){ printf("Semaforo Oeste "); (westTrafficLight)?printf("Verde\n"):printf("Rojo\n"); }
+    printf("\nCruzaron al otro lado: ");
     printCola(finish);
 }
 
@@ -137,11 +168,10 @@ void printSimulacion(){
 void* cross_bridge(void* arg){
     struct car *car = (struct car*) arg;
     pthread_mutex_lock(&locks[0]);
-    for (int i = 0; i < lenght; i++){
+    for (int i = 0; i < LENGHT; i++){
         vecCampos[i] = car->num;
-        printSimulacion();
         sleep(car->speed);
-        if(i+1<lenght){
+        if(i+1<LENGHT){
             pthread_mutex_lock(&locks[i+1]);
         }
         vecCampos[i] = -1;
@@ -156,7 +186,7 @@ void* cross_bridge(void* arg){
 void* createCar(){
     while(flag){
         //Esperar segun distribucion exponencial
-        double  a = - media * log((double) (rand()%1000)/1000);
+        double  a = - MEDIA * log( 1 - (double) (rand()%1000)/1000);
         //printf("\n Sleep %f", a);
         sleep(a);
         //Crear carro y definimos los atributos
@@ -185,7 +215,7 @@ void* createCar(){
 }
 
 int emptyBridge(){
-    for (int i = 0; i < lenght; i++){
+    for (int i = 0; i < LENGHT; i++){
         if(vecCampos[i] != -1){
             return 0;
         }
@@ -196,44 +226,86 @@ int emptyBridge(){
 //Elige un carro de las colas
 struct car* chooseCar(){
     struct car* aux = NULL;
-    struct cola* ceder = NULL;
-    struct cola* pasar = NULL;
-    switch(modality){
-        case 1: {
-            if(direction){ pasar = east; ceder = west;}
-            else{ pasar = west; ceder = east;}
-            if(pasar->first){
-                if(vecCampos[0] == -1){
+    if(vecCampos[0] == -1){
+        struct cola* ceder = NULL;
+        struct cola* pasar = NULL;
+        switch(MODALITY){
+            case 1: {
+                if(direction){ pasar = east; ceder = west;}
+                else{ pasar = west; ceder = east;}
+                if(pasar->first){
                     aux = dequeue(pasar);
+                }else if(ceder->first && emptyBridge()){
+                    //Como el puente va a cambiar de direccion solo 
+                    //puede hacerlo SI Y SOLO SI el puente esta vacio
+                    direction = !direction;
+                    aux = dequeue(ceder);    
                 }
-            }else if(ceder->first && emptyBridge()){
-                //Como el puente va a cambiar de direccion solo 
-                //puede hacerlo SI Y SOLO SI el puente esta vacio
-                direction = !direction;
-                aux = dequeue(ceder);    
+                break;
             }
-            break;
+            case 2:{
+                int currentTrafficLight, otherTrafficLight;
+                if(direction){ 
+                    pasar = east; ceder = west; 
+                    currentTrafficLight = eastTrafficLight;
+                    otherTrafficLight = westTrafficLight;
+                }else{ 
+                    pasar = west; ceder = east;
+                    currentTrafficLight = westTrafficLight;
+                    otherTrafficLight = eastTrafficLight;
+                }
+                if(pasar->first && currentTrafficLight){ aux = dequeue(pasar); }
+                else if(ceder->first && otherTrafficLight && emptyBridge()){
+                    //Como el puente va a cambiar de direccion solo 
+                    //puede hacerlo SI Y SOLO SI el puente esta vacio
+                    direction = !direction;
+                    aux = dequeue(ceder);    
+                }
+                break;
+            }
+            default: break;
         }
-        default: break;
     }
     return aux;
+}
+
+void* coordinateTrafficLights(){
+    while(flag){
+        eastTrafficLight = 1;
+        westTrafficLight = 0;
+        sleep(EAST_TRAFFIC_LIGHT_TIME);
+        eastTrafficLight = 0;
+        westTrafficLight = 1;
+        sleep(WEST_TRAFFIC_LIGHT_TIME);
+    }
+    pthread_exit(0);
 }
 
 //Se encarga de escuchar las peticiones del usuario
 void* listenerUser(){
     while(flag){
-        char input;
-        scanf(" %c ",&input);
-        if(input == '*'){//Por el momento solo de salida
+        char c;
+        scanf(" %c ",&c);
+        if(c == '*'){
             flag = 0;
         }
-        //if(finish->first){
-        //    struct car* car = dequeue(finish);
-        //    pthread_join(car->tid, NULL);
-        //    free(car);
-        //}
     }
     pthread_exit(0);
+} 
+
+//        INICIANDO SIMULACION
+//         [/////////     ]
+void startSimulation(){
+    while(flag){
+        //Se elige un automovil
+        struct car* car = chooseCar();
+        if(car){//LLego algun automovil
+            pthread_create(&(car->tid), &(car->attr), cross_bridge, car);
+            //pthread_join(car->tid, NULL);
+        }
+        sleep(0.001);
+        printSimulacion();
+    }
 }
 
 int main(){
@@ -245,7 +317,7 @@ int main(){
     finish = malloc(sizeof(struct cola));
     west->last = west->first = east->last = east->first = finish->last = finish->first = NULL;
     //Inicializamos los bloqueos del puente
-    for(int i = 0; i < lenght; i++){
+    for(int i = 0; i < LENGHT; i++){
         pthread_mutex_init(&locks[i], NULL);
         vecCampos[i] = -1;
     }
@@ -255,25 +327,17 @@ int main(){
     pthread_attr_init(&attr2);
     pthread_create(&tid2, &attr2, createCar, NULL);
     //Creamos un hilo para que responda al usuario
-    //pthread_t tid3;
-    //pthread_attr_t attr3;
-    //pthread_attr_init(&attr3);
-    //pthread_create(&tid3, &attr3, listenerUser, NULL);
+    pthread_t tid3;
+    pthread_attr_t attr3;
+    pthread_attr_init(&attr3);
+    pthread_create(&tid3, &attr3, coordinateTrafficLights, NULL);
     
-    //        INICIANDO SIMULACION
-    //         [/////////     ]
-    
-    while(flag){
-        //Se elige un automovil
-        struct car* car = chooseCar();
-        if(car){//LLego algun automovil
-            pthread_create(&(car->tid), &(car->attr), cross_bridge, car);
-            //pthread_join(car->tid, NULL);
-        }
-        //sleep(2);
-    }
+
+    startSimulation();
+
+
     //Finalizamos los hilos
-    for(int i = 0; i < lenght; i++){
+    for(int i = 0; i < LENGHT; i++){
         pthread_mutex_destroy(&locks[i]);
     }
     pthread_join(tid2, NULL);
@@ -281,13 +345,16 @@ int main(){
     while(east->first){
         struct car* car = dequeue(east);
         pthread_join(car->tid, NULL);
+        free(car);
     }
     while(west->first){
         struct car* car = dequeue(west);
         pthread_join(car->tid, NULL);
+        free(car);
     }
     while(finish->first){
         struct car* car = dequeue(finish);
         pthread_join(car->tid, NULL);
+        free(car);
     }
 }
