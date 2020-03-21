@@ -1,3 +1,5 @@
+# SistemasOperativos
+
 # Proyecto Puente
 ### Primer Proyecto Sistemas Operativos
 _El proyecto consiste en administrar un puente que solo tiene el ancho de un autotomovil, lo cual hace que en un momento dado solo pueda haber
@@ -14,7 +16,6 @@ Descomprima la carpeta . . .
 _Que cosas necesitas para instalar el software y como instalarlas_
 * Sistema Operativo Linux para correr hilos desde C
 
-
 ### Ejecutando las pruebas ⚙️
 
 _Modifica el archivo config.ini asignando los valores que desees a las entidades de la simulación_
@@ -29,6 +30,5 @@ _Menciona las herramientas que utilizaste para crear tu proyecto_
 
 ### Autores ✒️
 
-
-* **Luis David Villalobos González** https://github.com/DavidVillalobos
+* **Luis David Villalobos González**
 * **Giancarlo Alvarado**
