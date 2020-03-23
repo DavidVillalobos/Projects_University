@@ -1,0 +1,24 @@
+.menu {
+    background-color: #052D40;
+    font-family: fantasy;
+    font: 25px bold;
+    height: 55px;
+    margin-top: -15px;
+}
+
+.menu li {
+    display: inline-block;
+    padding-right: 13px;
+    padding-top: 15px;
+}
+
+.menu li :hover{
+    border-radius: 7px;
+    background-color: #295265;
+}
+
+.menu li a:link, .menu li a:visited{
+    text-decoration: none;
+    color:white;
+    padding: 10px;
+}

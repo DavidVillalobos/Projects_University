@@ -1,0 +1,184 @@
+body {
+    background-image: url("../images/background.jpg");
+}
+
+header{
+    font-size: 75px;
+    color: #052D40;
+    text-shadow: 2px 2px 2px black;
+    font-family: fantasy;
+}
+
+body header img{
+    width: 100px;
+    vertical-align: middle;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.content{
+    border: 2px black outset;
+    background-image: url("../images/backgroundcards.jpg");
+    height: 460px;
+}
+
+.content img{
+    width: 65px;
+    vertical-align: middle;
+    padding: 10px; 
+}
+
+footer{
+    border: 1px black outset;
+    background-color: #052D40;
+    font: 22px bold;
+    color: white;	
+    text-align: center;
+    padding: 10px;
+}
+
+.login{
+    margin-left: 37%;
+    margin-right: 37%;
+    margin-top: 3%;
+    border: black 2px outset;
+    background-color: #E1E7F3;
+}
+
+.login header{
+    text-align: center;
+    border-bottom: black 2px outset;
+    background-color: #052D40;   
+    font-size: 36px;
+    color: white;
+}
+
+#search{
+    margin-left: 5%;
+    margin-right: 61%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    border: black 2px outset;
+    background-color: #E1E7F3;
+    text-align: center;
+    font: oblique bold 20px sans-serif;
+}
+
+#searchHeader{
+    text-align: center;
+    border-bottom: black 2px outset;
+    background-color: #052D40;   
+    font-size: 26px;
+    padding-right: 38px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    color: white;
+}
+
+#accounts{
+    width: 57%;
+    margin-left: 42%;
+    margin-right: 3%;
+    margin-top: -15%;
+    margin-bottom: 3%;
+    border: black 2px outset;
+    background-color: #E1E7F3;
+    text-align: center;
+    font: oblique bold 20px sans-serif;
+}
+
+.buttom{
+    width: 110px;
+    height: 30px;
+    margin: 2px;
+    font: oblique bold 20px sans-serif;
+}
+
+input[type="text"].invalid, input[type="password"].invalid{
+    border: 3px solid #FC6544;
+}
+
+.form{
+    width: 80%;
+    margin-top: 60px;
+    margin-left: 10%;
+    font-size: 20px;  
+    border: 3px solid black;
+    text-align: center;
+    background-color: white;
+}
+.form header{
+    border-bottom: black 2px outset;
+    background-color: #052D40;   
+    font-size: 36px;
+    color: white;
+}
+
+.formData{
+    margin-top: 6%;
+    margin-left: 35%;
+    margin-right: 35%;
+    font-size: 20px; 
+    border: 3px solid black;
+    text-align: center;
+    background-color: white;
+}
+
+.formData header{
+    border-bottom: black 2px outset;
+    background-color: #052D40;   
+    font-size: 36px;
+    color: white;
+}
+
+.cabecera{
+    border-bottom: black 2px outset;
+    font-size: 24px;
+    color: white;
+    background-color: #052D40;
+}
+
+.link-button { 
+    background: none;
+    border: none;
+    color: #0066ff;
+    text-decoration: underline;
+    cursor: pointer; 
+}
+
+.table_cuenta{
+    width: 20%;
+    text-align: center;
+    margin-top: 8%;
+    margin-left: 5%;
+    background-color: #052D40;
+    color: white;
+    border: black 2px solid;
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    font-size: 22px;
+    display: inline-table;
+}
+
+.table_movimientos{
+    width: 65%;
+    margin-top: 2%;
+    margin-right: 5%;
+    float:right;
+    padding: 10px;
+    border: 3px solid black;
+    text-align: center;
+    background-color: white;
+}
+
+.table_movimientos th{
+    font-size: 20px;
+}
+
+.table_movimientos header{
+    border-bottom: black 2px outset;
+    background-color: #052D40;   
+    font-size: 30px;
+    color: white;
+}
+
