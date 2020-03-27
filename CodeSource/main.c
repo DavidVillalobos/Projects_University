@@ -5,88 +5,85 @@
 #include <stdlib.h> // for srand and malloc
 #include<string.h> // for strlen
 
-//  Variables de Configuracion
-int LENGHT = 5; //Largo del puente
-int MODALITY = 0; //Modalidad
-//Media de la formula de al distribucion exponencial
-// del tiempo de llegada de los vehiculos en cada sentido
-int ARRIVAL_AVERAGE_OF_EAST_CARS = 0;
-int ARRIVAL_AVERAGE_OF_WEST_CARS = 0;
-// Minimo y maximo de velocidad de los carros en cada sentido
-int MIN_VELOCITY_EAST_CARS = 0;
-int MAX_VELOCITY_EAST_CARS = 0;
-int MIN_VELOCITY_WEST_CARS = 0;
-int MAX_VELOCITY_WEST_CARS = 0;
-//Tiempo de la luz verde en cada sentido
-int EAST_TRAFFIC_LIGHT_TIME = 0;
-int WEST_TRAFFIC_LIGHT_TIME = 0;
-//Numero K de carros que pasan en cada sentido
-int NUMBER_CARS_PASS_WEST = 0;
-int NUMBER_CARS_PASS_EAST = 0;
-//Probabilidad de ambulancia en cada sentido
-int AMBULANCE_PROBABILITY_WEST = 0;
-int AMBULANCE_PROBABILITY_EAST = 0;
+//  Variables de Configuracion/compartidas
 
-//Variables compartidas
 //vectores de campos del puente
 int *bridge;
 //Seguros para evitar que varios carros 
 //utilicen el mismo espacio del puente
 pthread_mutex_t *semaphores;
+//Seguro para evitar que los semaforos o oficiales
+//utilicen la misma via
+pthread_mutex_t way_bridge;
+int way = 1;//Direccion de la via
+int simulation = 1; //simulacion encendida o apagada
+int num_cars = 1;//Numero de autos ('Placas')
+int lenght = 5; //Largo del puente
+int modality = 0; //Modalidad
 
-//Direccion de al via
-int direction = 0;
-//Bandera para que el usuario apague la simulacion cuando quiera
-int flag = 1;
-//Numero de autos ('Placas')
-int NUMAUTO = 1;
-//Semaforo en cada sentido  1 verde, 0 rojo
-int eastTrafficLight = 0;
-int westTrafficLight = 0;
-//Oficial en cada sentido  permisos 1 pase , 0 espere
-int eastTransitOfficer = 0;
-int westTransitOfficer = 0;
-int carsToPass = 0;
 //           ENTIDADES DE LA SIMULACION
-//Carros, {Velocidad, Direccion, Placa, Prioridad}
-struct car{
-    int speed, direction, num, priority;
-    pthread_t tid;
-    pthread_attr_t attr;
+
+//Sector, cada lado de la simulacion
+struct sector_t{
+    //Lado del sector 0 oeste, 1 este, . . .
+    int side;//id
+    //Media de la formula de distribucion exponencial
+    // del tiempo de llegada de los vehiculos en cada sentido
+    int average_cars;
+    // Minimo y maximo de velocidad de los carros en cada sentido
+    int min_velocity_cars;
+    int max_velocity_cars;
+    //Probabilidad de ambulancia en cada sentido
+    int ambulance_probability;
+    //Oficial de transito
+    struct officer_t* transit_officer;
+    //Cola en espera por cruzar el puente
+    struct queue_t* ready;
+    //Cola despues de cruzar
+    struct queue_t* finish;//(aqui llegan los que venian del otro sector)
+    //Semaforo del sector
+    struct semaphore_t* semaphore;
 };
 
-//Nodo de Cola, {Carro, Siguiente}
-struct nodo{
-    struct car* car;
-    struct nodo* next;
+struct sector_t* east;
+struct sector_t* west;
+
+//Carros, {Velocidad, Direccion, Placa, Prioridad}
+struct car_t{
+    int speed, direction, num, priority;
+    pthread_t tid;
+};
+
+//Semaforo, {Color de luz, tiempo}
+struct semaphore_t{
+    int light, time_in_green, time;
+    pthread_t tid;
+};
+
+//Oficial de Transito, {k, ki}
+struct officer_t{
+    //Numero K de carros que pasan en cada sentido
+    int number_cars_pass, number;
+    pthread_t tid;
 };
 
 //Cola, {Primero, Ultimo}
-struct cola{
-    struct nodo* first;
-    struct nodo* last;
+struct queue_t{
+    struct node_t* first;
+    struct node_t* last;
 };
 
-//Cola en ambos sentidos
-struct cola* west;
-struct cola* east;
-//Cola de Carros que fueron procesados
-struct cola* finishWest;
-struct cola* finishEast;
+//Nodo de Cola, {Carro, Siguiente}
+struct node_t{
+    struct car_t* car;
+    struct node_t* next;
+};
 
 //Encolar o Poner en cola
-void enqueue(struct cola* cola, struct car* car) {
-    struct nodo* newnodo = malloc(sizeof(struct nodo));
+void enqueue(struct queue_t* cola, struct car_t* car) {
+    struct node_t* newnodo = malloc(sizeof(struct node_t));
     newnodo->car = car;
     newnodo->next = NULL;
-    //if(car->priority){
-    //    if(cola->first){
-    //        newnodo->next = cola->first;
-    //        cola->first = newnodo; 
-    //    }else{
-    //        cola->first = newnodo;
-    //    }
-    //}else{
     if(cola->first){
         if(cola->first->next){
             cola->last->next = newnodo;
@@ -97,30 +94,34 @@ void enqueue(struct cola* cola, struct car* car) {
     }else{
         cola->first = newnodo;
     }
-    //}
 }
 
-//Desencolar o quitar de la cola
-struct car* dequeue(struct cola* cola){
+//Encolar con prioridad, (de primero)
+void enqueue_priority(struct  queue_t* cola, struct car_t* car){
+    struct node_t* newnodo = malloc(sizeof(struct node_t));
+    newnodo->car = car;
+    newnodo->next = NULL;
     if(cola->first){
-        struct nodo* nodo = cola->first;
+        newnodo->next = cola->first;
+    }
+    cola->first = newnodo;
+};
+
+
+//Desencolar o quitar de la cola
+struct car_t* dequeue(struct queue_t* cola){
+    if(cola->first){
+        struct node_t* nodo = cola->first;
         cola->first = cola->first->next;
         return nodo->car;
     }
     return NULL;
 }
 
-void insertFirst(struct cola* cola, struct car* car){
-    struct nodo* newnodo = malloc(sizeof(struct car));
-    newnodo->car = car;
-    newnodo->next = cola->first;
-    cola->first = newnodo;
-}
-
 //Imprimir el puente
 void printBridge(){
-    if(direction){
-        for (int i = 0; i < LENGHT; i++){
+    if(way){
+        for (int i = 0; i < lenght; i++){
             if(bridge[i] != -1){
                 printf("\t|%d|\n",bridge[i]);
             }else{
@@ -128,7 +129,7 @@ void printBridge(){
             }
         }
     }else{
-        for (int i = LENGHT-1; 0 <= i; i--){
+        for (int i = lenght-1; 0 <= i; i--){
             if(bridge[i] != -1){
                 printf("\t|%d|\n",bridge[i]);
             }else{
@@ -139,11 +140,11 @@ void printBridge(){
 }
 
 //Imprime la cola
-void printCola(struct cola* cola){
-    struct nodo* aux = cola->first;
+void printCola(struct queue_t* cola){
+    struct node_t* aux = cola->first;
     printf("[ ");
     while(aux){
-        printf("%d", aux->car->num);
+        printf("%d(%c)", aux->car->num, (aux->car->priority)?'+':'-');
         aux = aux->next;
         if(aux){
             printf(", ");
@@ -155,210 +156,238 @@ void printCola(struct cola* cola){
 
 void printSimulacion(){
     system("clear");
-    printf("Cruzaron al Este: ");
-    printCola(finishEast);
     printf("\nVia: Este ");
-    (direction)?printf("-->"):printf("<--");
-    printf(" Oeste");
-    printf("\n");
-    if(MODALITY == 2){ printf("Semaforo Este "); (eastTrafficLight)?printf("Verde\n"):printf("Rojo\n"); }
-    printf("Este -> ");
-    printCola(east);
+    (way)?printf("-->"):printf("<--");
+    printf(" Oeste\n");
+    printf("\nCruzaron al Este: ");
+    printCola(east->finish);
+    if(modality == 2){ 
+        printf("\nSemaforo Este "); 
+        if(east->semaphore->light == -1)
+            printf("Amarillo");
+        else if(east->semaphore->light)
+            printf("Verde (%d)",east->semaphore->time);
+        else
+            printf("Rojo"); 
+    }
+    if(modality == 3){
+        printf("\nOficial Este k(%d)",east->transit_officer->number); 
+    }
+    printf("\nEste -> ");
+    printCola(east->ready);
     printBridge();
     printf("Oeste ->");
-    printCola(west);
-    if(MODALITY == 2){ printf("Semaforo Oeste "); (westTrafficLight)?printf("Verde\n"):printf("Rojo\n"); }
+    printCola(west->ready);
+    if(modality == 2){ 
+        printf("\nSemaforo Oeste "); 
+        if(west->semaphore->light == -1)
+            printf("Amarillo");
+        else if(west->semaphore->light)
+            printf("Verde (%d)",west->semaphore->time);
+        else
+            printf("Rojo"); 
+    }
+    if(modality == 3){
+        printf("\nOficial Oeste k(%d)",west->transit_officer->number); 
+    }
     printf("\nCruzaron al Oeste: ");
-    printCola(finishWest);
+    printCola(west->finish);
 }
 
 //Cruzar el puente
 void* cross_bridge(void* arg){
-    struct car *car = (struct car*) arg;
-    pthread_mutex_lock(&semaphores[0]); //P(Puente[0]) pido el primero
-    for (int i = 0; i < LENGHT; i++){
-        bridge[i] = car->num;
+    struct car_t *car = (struct car_t*) arg;
+    bridge[0] = car->num;
+    for (int i = 0; i < lenght; i++){
         sleep(car->speed);//Utilizando el puente
-        if(i+1<LENGHT){//Si me falta camino, pido el de adelante
+        if(i+1<lenght){//Si me falta camino, pido el de adelante
             pthread_mutex_lock(&semaphores[i+1]);//P(Puente[i + 1])
+            bridge[i+1] = car->num;
         }
         bridge[i] = -1;
         pthread_mutex_unlock(&semaphores[i]);//V(Puente[i]) libero el que estoy
     }
     //Agregamos el carro a la lista de procesos terminados segun el lado
-    if(car->direction){
-        enqueue(finishWest, car);
-    }else{
-        enqueue(finishEast, car);
-    }
+    enqueue((car->direction)?west->finish:east->finish, car);
     pthread_exit(0);
 }
 
-float exponentialValue(int media){
-    return - media * log( 1 - (double) (rand()%1000)/1000);
+
+void* activatecarMaker(void* arg){
+    struct sector_t* sector = (struct sector_t*) arg;
+    while(simulation){// - media * log(e)[1 - (0 < rand() < 1)]
+        float  a = -sector->average_cars * log( 1 - (double) (rand()%1000)/1000);
+        sleep(a);//Esperar
+        //Crear carro y definimos los atributos
+        struct car_t* car = malloc(sizeof(struct car_t));
+        car->direction = sector->side;
+        car->num = num_cars++;
+        car->speed = sector->min_velocity_cars + rand() % (sector->max_velocity_cars + 1 - sector->min_velocity_cars);
+        car->priority = (10 - sector->ambulance_probability <= rand() % 11)? 1: 0;
+        (car->priority)? enqueue_priority(sector->ready, car) : enqueue(sector->ready, car);        
+    }
+    pthread_exit(0);
 }
 
 //Creador de Vehiculos  in the exponential distribution
-void* createCar(){
-    while(flag){
-        //Esperar
-        float  a = exponentialValue(ARRIVAL_AVERAGE_OF_EAST_CARS);
-        //printf("\n Sleep %f", a);
-        sleep(a);
-        //Crear carro y definimos los atributos
-        struct car* car = malloc(sizeof(struct car));
-        pthread_attr_init(&car->attr);
-        car->speed = MIN_VELOCITY_EAST_CARS + rand() % (MAX_VELOCITY_EAST_CARS + 1 - MIN_VELOCITY_EAST_CARS);
-        car->num = NUMAUTO; 
-        NUMAUTO++;
-        //Asignamos una proporcion de 4/10 para las ambulancias(Prioridad)
-        if(1 - AMBULANCE_PROBABILITY_WEST <= rand() % 11){ car->priority = 1;}
-        else{ car->priority = 0;}
-        //Asignamos una direccion con proporcion 1/2
-        car->direction = rand() & 1;
-        //Encolamos el vehiculo (Simula que llega de algun sector) 
-        if(car->direction){
-            enqueue(east, car);
-        }else{
-            enqueue(west, car);
-        }
-        //Mensaje para el Usuario
-       /*  printf("LLego un automovil proveniente del sector");
-        if(car->direction){ printf(" este");}else{printf(" oeste");}
-        printf(" con matricula: %d\n", car->num);
-        printf("\nEste --> ");
-        printCola(east);
-        printf("\nOeste --> ");
-        printCola(west);
-        printf("\n"); */
-    }
-    pthread_exit(0);
-}
 
 int emptyBridge(){
-    for (int i = 0; i < LENGHT; i++){
-        if(bridge[i] != -1){
-            return 0;
+    for (int j = 0; j < 50; j++){
+        for (int i = 0; i < lenght; i++){
+            if(bridge[i] != -1){
+                return 0;
+            }
         }
     }
     return 1;
 }
 
-//Elige un carro de las colas
-struct car* chooseCar(){
-    struct car* aux = NULL;
-    if(bridge[0] == -1){
-        struct cola* ceder;
-        struct cola* pasar;
-        switch(MODALITY){
-            case 1: { //FIFO
-                if(direction){ pasar = east; ceder = west;}
-                else{ pasar = west; ceder = east;}
-                if(pasar->first){
-                    aux = dequeue(pasar);
-                }else if(ceder->first && emptyBridge()){
-                    //Como el puente va a cambiar de direccion solo 
-                    //puede hacerlo SI Y SOLO SI el puente esta vacio
-                    direction = !direction;
-                    aux = dequeue(ceder);
-                }
-                break;
-            }
-            case 2:{ //Semaforo
-                int currentTrafficLight, otherTrafficLight;
-                if(direction){ 
-                    pasar = east; ceder = west; 
-                    currentTrafficLight = eastTrafficLight;
-                    otherTrafficLight = westTrafficLight;
-                }else{ 
-                    pasar = west; ceder = east;
-                    currentTrafficLight = westTrafficLight;
-                    otherTrafficLight = eastTrafficLight;
-                }
-                if(pasar->first && currentTrafficLight){ aux = dequeue(pasar); }
-                else if(ceder->first && otherTrafficLight && emptyBridge()){
-                    //Como el puente va a cambiar de direccion solo 
-                    //puede hacerlo SI Y SOLO SI el puente esta vacio
-                    direction = !direction;
-                    aux = dequeue(ceder);    
-                }
-                break;
-            }
-            case 3:{ //Transito 
-                int currentTransitOfficer, otherTransitOfficer;
-                if(direction){ 
-                    pasar = east; ceder = west;
-                    currentTransitOfficer = eastTransitOfficer;
-                    otherTransitOfficer = westTransitOfficer;
-                }else{ 
-                    pasar = west; ceder = east;
-                    currentTransitOfficer = westTransitOfficer;
-                    otherTransitOfficer = eastTransitOfficer;
-                }
-                if(pasar->first && currentTransitOfficer){ aux = dequeue(pasar); }
-                else if(ceder->first && otherTransitOfficer && emptyBridge()){
-                    //Como el puente va a cambiar de direccion solo 
-                    //puede hacerlo SI Y SOLO SI el puente esta vacio
-                    direction = !direction;
-                    aux = dequeue(ceder);    
-                }
-                break;
-            }
-            default: break;
+void* fifo(void* arg){
+    struct sector_t* ceder; // cede paso al otro lado
+    struct sector_t* pasar; // tiene la via
+    struct car_t* car = NULL;
+    while (simulation){
+        if(way){ pasar = east; ceder = west;}
+        else{ pasar = west; ceder = east;}
+        if(pasar->ready->first){
+            //P(Puente[0]) pido el primer espacio
+            pthread_mutex_lock(&semaphores[0]);
+            car = dequeue(pasar->ready);
+            pthread_create(&(car->tid), NULL, cross_bridge, car);
+            car = NULL;
+        }else if(ceder->ready->first && emptyBridge()){
+            //Como el puente va a cambiar de direccion solo 
+            //puede hacerlo SI Y SOLO SI el puente esta vacio
+            //P(Puente[0]) pido el primer espacio
+            pthread_mutex_lock(&semaphores[0]);
+            car = dequeue(ceder->ready);
+            way = ceder->side;
+            pthread_create(&(car->tid), NULL, cross_bridge, car);
+            car = NULL;
         }
-    }
-    return aux;
-}
-
-void* coordinateTrafficLights(){
-    while(flag){
-        eastTrafficLight = 1;
-        westTrafficLight = 0;
-        sleep(EAST_TRAFFIC_LIGHT_TIME);
-        eastTrafficLight = 0;
-        westTrafficLight = 1;
-        sleep(WEST_TRAFFIC_LIGHT_TIME);
     }
     pthread_exit(0);
 }
 
-void* coordinateTrafficOfficers(){
-    while(flag){
-        carsToPass = NUMBER_CARS_PASS_WEST;
-        westTransitOfficer = 1;
-        //while(carsToPass)
-        //NUMBER_CARS_PASS_WEST 
-        eastTransitOfficer = 0;
-        //NUMBER_CARS_PASS_WEST 
+void* timer(void* arg){
+    struct semaphore_t* semaphore  = (struct semaphore_t*) arg;
+    for (int i = semaphore->time_in_green; 0 < i; i--){
+        semaphore->time = i;
+        sleep(1);
     }
+    semaphore->light = 0;
+    pthread_exit(0);
+}
+
+void* activateSemaphore(void* arg){
+    struct sector_t* sector = (struct sector_t*) arg; 
+    pthread_t time;
+    struct car_t* car = NULL;
+    while(simulation){
+        pthread_mutex_lock(&way_bridge); // Bloquea sentido del camino
+        sleep(1);
+        sector->semaphore->light = 1;
+        pthread_create(&time, NULL, timer, sector->semaphore); //Inicia el temporizador del semaforo
+        while(!emptyBridge());
+        way = sector->side;
+        while(sector->semaphore->light){ 
+            if(sector->ready->first &&  pthread_mutex_trylock(&semaphores[0]) == 0){
+                //P(Puente[0]) pido el primer espacio
+                car = dequeue(sector->ready);
+                pthread_create(&(car->tid), NULL, cross_bridge, car);
+            }
+        }
+        pthread_mutex_unlock(&way_bridge); // Desbloquea el sentido del camino
+        sector->semaphore->light = -1;//Luz en amarillo
+        sleep(1);//tiempo de luz amarilla
+        sector->semaphore->light = 0;// Luz roja
+    }
+    pthread_exit(0);
+}
+
+void* semaphore(){
+    pthread_create(&east->semaphore->tid, NULL, activateSemaphore, east);
+    sleep(1);
+    pthread_create(&west->semaphore->tid, NULL, activateSemaphore, west);
+    pthread_join(east->semaphore->tid, NULL);
+    pthread_join(west->semaphore->tid, NULL);
+    pthread_exit(0);
+}
+
+void* establishOfficer(void* arg){
+    struct sector_t* sector = (struct sector_t*) arg; 
+    struct car_t* car = NULL;
+    while(simulation){
+        if(emptyBridge()){
+            pthread_mutex_lock(&way_bridge); // Bloquea sentido del camino
+            way = sector->side;
+            for (int i = 0; i < sector->transit_officer->number_cars_pass && sector->ready->first; i++){
+                pthread_mutex_lock(&semaphores[0]);
+                sector->transit_officer->number = sector->transit_officer->number_cars_pass - i;
+                car = dequeue(sector->ready);
+                pthread_create(&car->tid, NULL, cross_bridge, car);
+            }
+            sector->transit_officer->number = 0;
+            pthread_mutex_unlock(&way_bridge); // Desbloquea el sentido del camino
+            sleep(1);
+        }
+    }
+    pthread_exit(0);
+}
+
+void* officerTransit(){
+    pthread_create(&east->transit_officer->tid, NULL, establishOfficer, east);
+    pthread_create(&west->transit_officer->tid, NULL, establishOfficer, west);
+    pthread_join(east->transit_officer->tid, NULL);
+    pthread_join(west->transit_officer->tid, NULL);
     pthread_exit(0);
 }
 
 //Se encarga de escuchar las peticiones del usuario
 void* userListener(){
-    while(flag){
+    while(simulation){
         char c;
         scanf(" %c ",&c);
         if(c == '*'){
-            flag = 0;
+            simulation = 0;
         }
     }
     pthread_exit(0);
-} 
+}
 
-//        INICIANDO SIMULACION
-//         [/////////     ]
-void startSimulation(){
-    while(flag){
-        //Se elige un automovil
-        struct car* car = chooseCar();
-        if(car){//LLego algun automovil
-            pthread_create(&(car->tid), &(car->attr), cross_bridge, car);
-            //pthread_join(car->tid, NULL);
+void playSimulation(){
+    //Creamos un hilo que escucha peticiones al usuario
+    pthread_t user;
+    pthread_create(&user, NULL, userListener, NULL);
+    //Creamos un hilo que administra la modalidad
+    pthread_t mod;
+    switch (modality){
+        case 1: { 
+            pthread_create(&mod, NULL, fifo, NULL);
+            break; 
         }
-        sleep(0.001); 
-        printSimulacion();
+        case 2: {
+            pthread_create(&mod, NULL, semaphore, NULL);
+            break;
+        }
+        case 3:{
+            pthread_create(&mod, NULL, officerTransit, NULL);
+            break;
+        }
+        default: break;
     }
+    //Creamos los hilos que crean automoviles
+    pthread_t cars_east;
+    pthread_create(&cars_east, NULL, activatecarMaker, east);
+    pthread_t cars_west;
+    pthread_create(&cars_west, NULL, activatecarMaker, west);
+    //Veamos la simulacion
+    while(simulation) printSimulacion();
+    //Esperamos que los hilos terminen
+    pthread_join(user, NULL);
+    pthread_join(mod, NULL);
+    pthread_join(cars_east, NULL);
+    pthread_join(cars_west, NULL);
 }
 
 char* slide(char *str, char begin, char finish){
@@ -396,134 +425,147 @@ int compare(char* string_a, char* string_b){
 }
 
 void saveVariableSetting(char* section, char* name, int num, char* comment){
-    if(section != NULL){
-        //printf("In %s, varible %s, is load with %d, comments: %s\n",section, name, num, comment);
-        if(compare(section, "modality") && compare(name, "id")){
-            MODALITY = num;
-        }else if(compare(section, "bridge")){
-            if(compare(name, "length")){
-                LENGHT = num;
-                bridge = (int*) malloc (LENGHT * sizeof(int));
-                semaphores = (pthread_mutex_t*) malloc (LENGHT * sizeof(pthread_mutex_t));
-            }
-        }else if(compare(section, "sector:east")){
-            if(compare(name, "arrive-exp-time-cars")){
-                ARRIVAL_AVERAGE_OF_EAST_CARS = num;
-            }else if(compare(name, "number-cars-pass")){
-                NUMBER_CARS_PASS_EAST = num;
-            }else if(compare(name, "traffic-light-time")){
-                EAST_TRAFFIC_LIGHT_TIME = num;
-            }else if(compare(name, "speed-cars-upper")){
-                MAX_VELOCITY_EAST_CARS = num;
-            }else if(compare(name, "speed-cars-lower")){
-                MIN_VELOCITY_EAST_CARS = num;
-            }else if(compare(name, "ambulance-probability")){
-                AMBULANCE_PROBABILITY_EAST = num;
-            }
-        }else if(compare(section, "sector:west")){
-            if(compare(name, "arrive-exp-time-cars")){
-                ARRIVAL_AVERAGE_OF_WEST_CARS = num;
-            }else if(compare(name, "number-cars-pass")){
-                NUMBER_CARS_PASS_WEST = num;
-            }else if(compare(name, "traffic-light-time")){
-                WEST_TRAFFIC_LIGHT_TIME = num;
-            }else if(compare(name, "speed-cars-upper")){
-                MAX_VELOCITY_WEST_CARS = num;
-            }else if(compare(name, "speed-cars-lower")){
-                MIN_VELOCITY_WEST_CARS = num;
-            }else if(compare(name, "ambulance-probability")){
-                AMBULANCE_PROBABILITY_WEST = num;
-            }
+    //printf("In %s, varible %s, is load with %d, comments: %s\n",section, name, num, comment);
+    if(compare(section, "modality") && compare(name, "id")){
+        modality = num;
+    }else if(compare(section, "bridge")){
+        if(compare(name, "length")){
+            lenght = num;
+            bridge = (int*) malloc (lenght * sizeof(int));
+            semaphores = (pthread_mutex_t*) malloc (lenght * sizeof(pthread_mutex_t));
+        }
+    }else if(compare(section, "sector:east")){
+        if(compare(name, "arrive-exp-time-cars")){
+            east->average_cars = num;
+        }else if(compare(name, "number-cars-pass")){
+            east->transit_officer->number_cars_pass = num;
+        }else if(compare(name, "traffic-light-time")){
+            east->semaphore->time_in_green = num;
+        }else if(compare(name, "speed-cars-upper")){
+            east->max_velocity_cars = num;
+        }else if(compare(name, "speed-cars-lower")){
+            east->min_velocity_cars = num;
+        }else if(compare(name, "ambulance-probability")){
+            east->ambulance_probability = num;
+        }
+    }else if(compare(section, "sector:west")){
+        if(compare(name, "arrive-exp-time-cars")){
+            west->average_cars = num;
+        }else if(compare(name, "number-cars-pass")){
+            west->transit_officer->number_cars_pass = num;
+        }else if(compare(name, "traffic-light-time")){
+            west->semaphore->time_in_green = num;
+        }else if(compare(name, "speed-cars-upper")){
+            west->max_velocity_cars = num;
+        }else if(compare(name, "speed-cars-lower")){
+            west->min_velocity_cars = num;
+        }else if(compare(name, "ambulance-probability")){
+            west->ambulance_probability = num;
         }
     }
 }
 
-void getConfigurations(char* path) {
-    FILE *fichero_config = fopen (path, "r");
+int initConfigurations(char* path) {
+    FILE *config = fopen (path, "r");
+    if(!config){ return 0;}
     char line[100];
     char* section = NULL;
-    while(fgets(line, 100, fichero_config) != NULL){
-        if(line[0] == 91) 
+    char* name = NULL;
+    char* value = NULL;
+    char* comment = NULL;
+    int num = 0;
+    east = malloc(sizeof(struct sector_t));
+    west = malloc(sizeof(struct sector_t));
+    east->semaphore = malloc(sizeof(struct semaphore_t));
+    east->semaphore->light = 0; //Luz roja
+    east->side = 1; 
+    west->semaphore = malloc(sizeof(struct semaphore_t));
+    west->semaphore->light = 0; //Luz roja
+    west->side = 0; 
+    east->transit_officer = malloc(sizeof(struct officer_t));
+    west->transit_officer = malloc(sizeof(struct officer_t));
+    while(fgets(line, 100, config) != NULL){
+        if(line[0] == 91){
             section = slide(line, 91, 93);
-        else if(line[0] == 13){ section = NULL; }
-        else{
-            char* name = slide(line, 0, 32);
-            char* value = slide(line, 92, 32);
-            int num = atoi(value) - ((value[strlen(value)-1] == 104)? 30 : 48);
-            char* comment = slide(line,35,13);
+            //comment = slide(line,35,13);
+        }
+        else if(line[0] == 13) section = NULL;
+        else if(section != NULL){
+            name = slide(line, 0, 32);
+            value = slide(line, 92, 32);
+            num = atoi(value) - ((value[strlen(value)-1] == 104)? 30 : 48);
+            comment = slide(line,35,13);
             saveVariableSetting(section, name, num, comment);    
         }
     }
-    fclose (fichero_config);//cerrar fichero
+    fclose (config);//cerramos el fichero
     //Creamos las colas de ambos sectores
-    east = malloc(sizeof(struct cola));
-    west = malloc(sizeof(struct cola));
-    //Creamos la cola de finish
-    finishEast = malloc(sizeof(struct cola));
-    finishWest = malloc(sizeof(struct cola));
+    east->ready = malloc(sizeof(struct queue_t));
+    west->ready = malloc(sizeof(struct queue_t));
+    //Creamos la cola de finish de ambos sectores
+    east->finish = malloc(sizeof(struct queue_t));
+    west->finish = malloc(sizeof(struct queue_t));
     //Inicializamos las colas
-    east->last = east->first = west->last = west->first = NULL;
-    finishEast->last = finishEast->first = finishWest->last = finishWest->first = NULL;
+    east->ready->last = east->ready->first = west->ready->last = west->ready->first = NULL;
+    east->finish->last = east->finish->first = west->finish->last = west->finish->first = NULL;
     //Colocamos una semilla aleatoria
     srand(time(NULL));
-}
-
-
-int main(){
-    //Inicializamos las configuraciones
-    getConfigurations("config.ini");
     //Inicializamos los bloqueos y espacios del puente
-    for(int i = 0; i < LENGHT; i++){
+    for(int i = 0; i < lenght; i++){
         pthread_mutex_init(&semaphores[i], NULL);
         bridge[i] = -1;
     } 
-    //Creamos el hilo que crea automoviles
-    pthread_t tid2;
-    pthread_attr_t attr2;
-    pthread_attr_init(&attr2);
-    pthread_create(&tid2, &attr2, createCar, NULL);
-    //Creamos un hilo para que coordina los semaforos
-    pthread_t tid3;
-    pthread_attr_t attr3;
-    pthread_attr_init(&attr3);
-    pthread_create(&tid3, &attr3, coordinateTrafficLights, NULL);
-    //Creamos un hilo que escucha las peticiones del usuario
-    pthread_t tid4;
-    pthread_attr_t attr4;
-    pthread_attr_init(&attr4);
-    pthread_create(&tid4, &attr4, userListener, NULL);
-    startSimulation();
+    pthread_mutex_init(&way_bridge, NULL);
+    return 1;
+}
+
+void stopSimulation(){
     system("clear");
     printf("\n\t\t FINALIZANDO SIMULACION . . .\n");
     //Finalizamos los hilos
-    for(int i = 0; i < LENGHT; i++){
+    for(int i = 0; i < lenght; i++){
         pthread_mutex_destroy(&semaphores[i]);
     }
-    pthread_join(tid2, NULL);
-    pthread_join(tid3, NULL);   
-    pthread_join(tid4, NULL);
-    while(east->first){
-        struct car* car = dequeue(east);
+    pthread_mutex_destroy(&way_bridge);
+    if(modality == 2){
+        free(east->semaphore);
+        free(west->semaphore);
+    }
+    while(east->ready->first){
+        struct car_t* car = dequeue(east->ready);
         pthread_join(car->tid, NULL);
         free(car);
     }
-    free(east);
-    while(west->first){
-        struct car* car = dequeue(west);
+    free(east->ready);
+    while(west->ready->first){
+        struct car_t* car = dequeue(west->ready);
         pthread_join(car->tid, NULL);
         free(car);
     }
-    free(west);
-    while(finishWest->first){
-        struct car* car = dequeue(finishWest);
+    free(west->ready);
+    while(east->finish->first){
+        struct car_t* car = dequeue(east->finish);
         pthread_join(car->tid, NULL);
         free(car);
     }
-    //free(finishWest); one problem in free . . . . 
-    while(finishEast->first){
-        struct car* car = dequeue(finishEast);
+    //free(finishEast); one problem in free . . . . 
+    while(west->finish->first){
+        struct car_t* car = dequeue(west->finish);
         pthread_join(car->tid, NULL);
         free(car);
     }
-    //free(finishEast);
+    //free(finishWest);
+
+}
+
+int main(int argc, char *argv[]){
+    char* path = "config.ini";
+    if(argc == 2) path = argv[1];
+    //Inicializamos las configuraciones
+    if(initConfigurations(path)){
+        playSimulation();//Iniciamos Simulacion
+        stopSimulation();//Detenemos Simulacion
+    }else{
+        printf("Ocurrio algun error al cargar las configuraciones\n");
+    }
 }
