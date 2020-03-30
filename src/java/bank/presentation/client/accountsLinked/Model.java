@@ -11,11 +11,21 @@ import java.util.List;
 public class Model {
     
     private List<Cuenta> accountsLinked;
+    private Cuenta accountToLink;
     
     public Model(){
         this.accountsLinked = new ArrayList<>();
+        accountToLink = null;
     }
-    
+
+    public Cuenta getAccountToLink() {
+        return accountToLink;
+    }
+
+    public void setAccountToLink(Cuenta accountToLink) {
+        this.accountToLink = accountToLink;
+    }
+
     public List<Cuenta> getAccountsLinked() {
         return accountsLinked;
     }

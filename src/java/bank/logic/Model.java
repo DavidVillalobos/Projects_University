@@ -36,18 +36,34 @@ public class Model {
         
     }
 
+    //----------------------Insertar datos-----------------------------//
+    
+    public void agregarVinculo(Cliente client, Cuenta cuenta) throws Exception{
+        Vinculo link = new Vinculo();
+        link.setCliente(client);
+        link.setCuenta(cuenta);
+        vinculos.add(link);
+    }
+    
+    //----------------------Busquedas-----------------------------//
+    
     public Usuario usuarioFind(String cedula) throws Exception{
-        if (usuarios.get(cedula)!=null) return usuarios.get(cedula);
+        Cliente client = clientes.get(cedula);
+        if (client!=null){ return client.getUsuario(); }
         else throw new Exception("Usuario no existe");
     }
 
     public Cliente clienteFind(Usuario usuario) throws Exception{
-        for(Cliente c: clientes.getAll()){
-            if(c.getUsuario().getIdUsuario().equals(usuario.getIdUsuario())){
-                return c;
+        try{
+            for(Cliente c: clientes.getAll()){
+                if(c.getUsuario().getIdUsuario().equals(usuario.getIdUsuario())){
+                    return c;
+                }
             }
+            return null;
+        } catch (Exception ex) {
+            throw new Exception("Ocurrio algun error");
         }
-        return null;
     }
     
     public Cuenta cuentaFind(Integer idCuenta) throws Exception{
@@ -69,18 +85,7 @@ public class Model {
         }
         return result;
     }
-    
-    public Boolean cuentaVerify(Usuario s, Cuenta c) throws Exception{
-        String s1_id, s2_id;
-        s1_id = s.getIdUsuario(); 
-        s2_id = c.getCliente().getUsuario().getIdUsuario();
-        return s1_id.equals(s2_id);
-    }
-    
-    public List<Movimiento> getRecentMovements(Cuenta cuenta) throws Exception{
-        return movimientos.getRecentMovements(cuenta);
-    }
-    
+        
     public List<Cuenta> cuentasVinculadasFind(Cliente cliente) throws Exception{
         List<Cuenta> result = new ArrayList();
         for(Vinculo v: vinculos.getAll()){
@@ -90,10 +95,24 @@ public class Model {
         }
         return result;
     }
-
-    public void clienteUpdate(Cliente client) {
-        throw new UnsupportedOperationException("Not supported yet."); 
-        //To change body of generated methods, choose Tools | Templates.
+    
+    public List<Movimiento> getRecentMovements(Cuenta cuenta) throws Exception{
+        return movimientos.getRecentMovements(cuenta);
     }
     
+    //----------------------Verificaciones-----------------------------//
+    
+    public Boolean cuentaVerify(Usuario s, Cuenta c) throws Exception{
+        String s1_id, s2_id;
+        s1_id = s.getIdUsuario(); 
+        s2_id = c.getCliente().getUsuario().getIdUsuario();
+        return s1_id.equals(s2_id);
+    }
+    
+    //----------------------Actualizaciones-----------------------------//
+    
+    public void clienteUpdate(Cliente client) throws Exception {
+        clientes.update(client);
+    }
+
 }

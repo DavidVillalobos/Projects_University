@@ -60,6 +60,7 @@ public class Cliente implements Serializable {
     private List<Vinculo> vinculoList;
 
     public Cliente() {
+        usuario = new Usuario();
     }
 
     public Cliente(String cedula) {

@@ -1,6 +1,7 @@
 package bank.presentation.login;
 
-import bank.logic.Usuario;
+import bank.logic.Cliente;
+
 
 /**
  *
@@ -8,18 +9,19 @@ import bank.logic.Usuario;
  */
 public class Model {
     
-    private Usuario user;
-    
-    public Model(){
-        this.user = new Usuario();
+    private Cliente client;
+
+    public Model() {
+        this.client = new Cliente();
     }
 
-    public Usuario getUser() {
-        return user;
+    public Cliente getClient() {
+        return client;
     }
 
-    public void setUser(Usuario user) {
-        this.user = user;
+    public void setClient(Cliente client) {
+        this.client = client;
     }
     
+   
 }

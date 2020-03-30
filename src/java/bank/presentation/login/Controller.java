@@ -1,5 +1,6 @@
 package bank.presentation.login;
 
+import bank.logic.Cliente;
 import bank.logic.Usuario;
 import java.io.IOException;
 import java.util.HashMap;
@@ -38,8 +39,8 @@ public class Controller extends HttpServlet {
     
     private String showAction(HttpServletRequest request){
         Model model = (Model) request.getAttribute("model");
-        model.getUser().setIdUsuario("");
-        model.getUser().setPassword("");
+        model.getClient().setCedula("");
+        model.getClient().getUsuario().setPassword("");
         return "/presentation/login/View.jsp";
     }
     
@@ -57,8 +58,8 @@ public class Controller extends HttpServlet {
        
     private Map<String, String> completeData(HttpServletRequest request){
         Map<String, String> errors = new HashMap<>();
-        if(request.getParameter("user-name").isEmpty()){
-            errors.put("user-name", "Usuario Necesario");
+        if(request.getParameter("cedula").isEmpty()){
+            errors.put("cedula", "Cedula Necesaria");
         }
         if(request.getParameter("password").isEmpty()){
             errors.put("password", "Contraseña Necesaria");
@@ -68,36 +69,36 @@ public class Controller extends HttpServlet {
     
     private void updateData(HttpServletRequest request){
         Model model = (Model) request.getAttribute("model");
-        model.getUser().setIdUsuario(request.getParameter("user-name"));
-        model.getUser().setPassword(request.getParameter("password"));
+        model.getClient().setCedula(request.getParameter("cedula"));
+        model.getClient().getUsuario().setPassword(request.getParameter("password"));
     }
     
     private String loginAction(HttpServletRequest request) {
         Model model= (Model) request.getAttribute("model");
         HttpSession session = request.getSession(true);
         try {
-            Usuario db_user = this.validateCredentials(model.getUser());
+            Usuario db_user = this.validateCredentials(model.getClient());
             session.setAttribute("user", db_user);
-            if (db_user.getTipo()) {                
+            if (db_user.getTipo()) {
                 return "/presentation/cashier/accounts/search/show";
             } else {
                 return "/presentation/client/accounts/show";
             }
         } catch (Exception ex) {
             Map<String, String> errors = new HashMap<>();
-            errors.put("user-name", "Usuario o Contraseña Erroneos");
-            errors.put("password", "Usuario o Contraseña Erroneos");
+            errors.put("cedula", "Cedula o Contraseña Erronea");
+            errors.put("password", "Cedula o Contraseña Erronea");
             request.setAttribute("errors", errors);
             return "/presentation/login/View.jsp"; 
         }
     }
     
-    private Usuario validateCredentials(Usuario user) throws Exception{
+    private Usuario validateCredentials(Cliente client) throws Exception{
         Usuario db_user;
         try {
-            String x = user.getIdUsuario();
+            String x = client.getCedula();
             db_user = bank.logic.Model.instance().usuarioFind(x);
-            if(!db_user.getPassword().equals(user.getPassword())){
+            if(!db_user.getPassword().equals(client.getUsuario().getPassword())){
                 throw new Exception();
             }
         }catch (Exception ex) {

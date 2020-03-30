@@ -20,8 +20,8 @@
             <div class="login">
                 <header>Iniciar Sesion</header>
                 <img src="/Banco_PIV/images/icon-account.png" alt="no-image">
-                <input class ="<%=verifyErrors("user-name",errors)%>" type="text" name="user-name" placeholder=" Usuario" 
-                       value="<%=credencials.get("user-name")[0]%>" title="<%=getTittle("user-name",errors)%>"><br>
+                <input class ="<%=verifyErrors("cedula",errors)%>" type="text" name="cedula" placeholder=" Cedula" 
+                       value="<%=credencials.get("cedula")[0]%>" title="<%=getTittle("cedula",errors)%>"><br>
                 <img src="/Banco_PIV/images/icon-password.png" alt="no-image"> 
                 <input class="<%=verifyErrors("password",errors)%>" type="password" name="password" placeholder=" Contraseña" 
                        value="<%=credencials.get("password")[0]%>" title="<%=getTittle("password",errors)%>">
@@ -44,8 +44,8 @@
     
     private Map<String,String[]> getCredencials(Model model){
         Map<String,String[]> credencials = new HashMap<String,String[]>();
-        credencials.put("user-name", new String[]{model.getUser().getIdUsuario()});
-        credencials.put("password", new String[]{model.getUser().getPassword()});
+        credencials.put("cedula", new String[]{model.getClient().getCedula()});
+        credencials.put("password", new String[]{model.getClient().getUsuario().getPassword()});
         return credencials;
     }
 %>

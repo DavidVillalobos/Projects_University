@@ -7,7 +7,7 @@
 </head>
 <body >
     <%@ include file="/presentation/Header.jsp" %>   
-    <div class="content" style="font-size: 60px">
+    <div class="content">
         <br><br><br>
         <center>Su Banco de Confianza</center>
     </div>
