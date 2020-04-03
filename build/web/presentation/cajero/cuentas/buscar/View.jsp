@@ -21,8 +21,8 @@
         <%@include file="/presentation/Header.jsp" %>
         <div class="content">
             <form name="form"  action="/presentation/cashier/accounts/search/search" method="post">         
-                <table id="search">
-                    <td id="searchHeader" colspan="3">Buscador de Cuentas y Clientes</td>
+                <table class="search-cashier">
+                    <td id="Header" colspan="3">Buscador de Cuentas y Clientes</td>
                     <tr>
                         <td>Cedula</td>
                         <td><input class ="<%=verifyErrors("id",errors)%>" type="text" name="id" placeholder=" Cedula" 
@@ -39,7 +39,7 @@
                     </tr>
                 </table>
             </form>
-            <table id="accounts">
+            <table class="search-cashier-accounts">
                 <tr class="cabecera"><td>Cedula Propietario</td><td>Nº Cuenta</td><td>Moneda</td><td>Saldo</td><td>Límite</td></tr>
                 <%for(Cuenta c : cuentas){%>
                     <tr> 

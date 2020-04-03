@@ -11,7 +11,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <%@include file="/presentation/Head.jsp" %>
-        <title>Login</title>
+        <title>Iniciar Sesion</title>
     </head>
     <body>
         <%@include file="/presentation/Header.jsp" %>

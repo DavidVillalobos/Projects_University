@@ -16,16 +16,17 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <%@include file="/presentation/Head.jsp" %>
-        <title>Login</title>
+        <title>Cuentas Vinculadas</title>
     </head>
     <body>
         <%@include file="/presentation/Header.jsp" %>
         <div class="content">
-            <table id="accounts">
+            <table class="accountsLink">
+                <tr class="cabecera"><td colspan="4">Lista de Cuentas Vinculadas</td></tr>
                 <tr class="cabecera"><td>Numero de Cuenta</td><td>Cedula</td><td>Propietario</td><td>Moneda</td>
                 <%for(Cuenta c : cuentas){%>  
                     <tr>
-                        <td><a href="<%=c.getIdCuenta()%>"><%=c.getIdCuenta()%> </td>  
+                        <td><%=c.getIdCuenta()%></td>  
                         <td><%= c.getCliente().getCedula() %></td>
                         <td><%= c.getCliente().getNombre() %></td>
                         <td><%= c.getMoneda() %></td>
@@ -33,8 +34,8 @@
                 <%}%>
             </table>
             <form name="form"  action="/Banco_PIV/presentation/client/accountsLinked/search" method="post">         
-                <table id="search">
-                    <td id="searchHeader" colspan="3">Nuevo Vinculo</td>
+                <table class="search">
+                    <td id="Header" colspan="3">Vincular Cuentas</td>
                     <tr>
                         <td>N° Cuenta</td>
                         <td><input class ="<%=verifyErrors("idAccount",errors)%>" type="text" name="idAccount" placeholder=" Numero de Cuenta" 
@@ -47,8 +48,8 @@
             </form>
             <% if(bylink != null){ %>
                 <form name="form"  action="/Banco_PIV/presentation/client/accountsLinked/link" method="post">         
-                    <table id="link">
-                        <td id="linkHeader" colspan="3">Informacion de la Cuenta</td>
+                    <table class="link">
+                        <td id="Header" colspan="2">Informacion de la Cuenta</td>
                         <tr>
                             <td>N° Cuenta</td><td>Propietario</td>
                         </tr>

@@ -11,7 +11,9 @@ import bank.logic.Usuario;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -111,9 +113,15 @@ public class Controller extends HttpServlet {
                 accountToLink = domainModel.cuentaFind(Integer.parseInt(request.getParameter("idAccount").replace(" ", "")));
                 model.setAccountToLink(accountToLink);
                 cliente = domainModel.clienteFind(user);
-                domainModel.agregarVinculo(cliente, model.getAccountToLink());
-                model.setAccountsLinked(domainModel.cuentasVinculadasFind(cliente));
-                return "/presentation/cliente/cuentasVinculadas/View.jsp";
+                errores = this.checkLinkAccount(cliente, accountToLink);
+                if (errores.isEmpty()) {
+                    domainModel.agregarVinculo(cliente, model.getAccountToLink());
+                    model.setAccountsLinked(domainModel.cuentasVinculadasFind(cliente));
+                    return "/presentation/cliente/cuentasVinculadas/View.jsp";
+                }else{
+                    request.setAttribute("errors", errores);
+                    return "/presentation/cliente/cuentasVinculadas/View.jsp";
+                }
             } else {
                 request.setAttribute("errors", errores);
                 return "/presentation/cliente/cuentasVinculadas/View.jsp";
@@ -140,6 +148,18 @@ public class Controller extends HttpServlet {
         Map<String, String> errors = new HashMap<>();
         if (request.getParameter("idAccount").isEmpty()) {
             errors.put("idAccount", "Numero de Cuenta Necesario");
+        }
+        return errors;
+    }
+    
+    private Map<String, String> checkLinkAccount(Cliente cliente, Cuenta account) throws Exception {
+        Map<String, String> errors = new HashMap<>();
+        bank.logic.Model domainModel = bank.logic.Model.instance();
+        List<Cuenta> cuentas = domainModel.cuentasVinculadasFind(cliente);
+        for (Cuenta c: cuentas) {
+            if(Objects.equals(c.getIdCuenta(), account.getIdCuenta())){
+                errors.put("idAccount", "Cuenta ya fue vinculada");
+            }
         }
         return errors;
     }

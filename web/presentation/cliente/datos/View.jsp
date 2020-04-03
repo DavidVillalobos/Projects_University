@@ -8,7 +8,7 @@
 <html>
 <head>
  <%@ include file="/presentation/Head.jsp" %>
- <title>Personal Data</title> 
+ <title>Informacion Personal</title> 
 </head>
 <body>
     <%@ include file="/presentation/Header.jsp" %>
@@ -22,23 +22,30 @@
 
     <div class="content">
         <form class="formData" name="form" action="/Banco_PIV/presentation/client/data/update" method="post">
-            <header>Informacion Personal</header>
-            <label>Cedula&nbsp;&nbsp;<%= cliente.getCedula() %><label><br>
-            <label>Nombre</label>
-            <input class ="<%=verifyErrors("name",errors)%>" type="text" name="name" placeholder="Nombre" 
-                value="<%=credencials.get("name")[0]%>" title="<%=getTittle("name",errors)%>"><br>
-            <label>Telefono</label>
-            <input class ="<%=verifyErrors("telephone",errors)%>" type="text" name="telephone" placeholder="Telefono" 
-                value="<%=credencials.get("telephone")[0]%>" title="<%=getTittle("telephone",errors)%>"><br>
-            <label>Usuario</label>
-            <input class ="<%=verifyErrors("user-name",errors)%>" type="text" name="user-name" placeholder="Usuario" 
-                value="<%=credencials.get("user-name")[0]%>" title="<%=getTittle("user-name",errors)%>"><br>
-            <label>Contraseña</label>
-            <input class ="<%=verifyErrors("password",errors)%>" type="text" name="password" placeholder="Contraseña" 
-                value="<%=credencials.get("password")[0]%>" title="<%=getTittle("password",errors)%>"><br>
-            <footer>
-                <input class="buttom" type="submit" value="Actualizar">
-            </footer>
+            <table>
+                <tr><td id="Header" colspan="2">Informacion Personal</td></tr>
+                <tr><td>Cedula</td><td><%= cliente.getCedula() %></td></tr>
+                <tr><td>Nombre</td>
+                    <td><input class ="<%=verifyErrors("name",errors)%>" type="text" name="name" placeholder="Nombre" 
+                    value="<%=credencials.get("name")[0]%>" title="<%=getTittle("name",errors)%>"></td>
+                </tr><tr>
+                    <td>Telefono</td>
+                    <td> <input class ="<%=verifyErrors("telephone",errors)%>" type="text" name="telephone" placeholder="Telefono" 
+                    value="<%=credencials.get("telephone")[0]%>" title="<%=getTittle("telephone",errors)%>"></td>
+                </tr><tr>
+                    <td>Usuario</td>
+                    <td> <input class ="<%=verifyErrors("user-name",errors)%>" type="text" name="user-name" placeholder="Usuario" 
+                    value="<%=credencials.get("user-name")[0]%>" title="<%=getTittle("user-name",errors)%>"></td>
+                </tr><tr>
+                    <td>Contraseña</td>
+                    <td><input class ="<%=verifyErrors("password",errors)%>" type="text" name="password" placeholder="Contraseña" 
+                    value="<%=credencials.get("password")[0]%>" title="<%=getTittle("password",errors)%>"></td>
+                </tr><tr>
+                    <td colspan="2"><footer>
+                    <input class="buttom" type="submit" value="Actualizar">
+                    </footer></td>
+                </tr>
+            </table>
         </form>
     </div>
     <%@ include file="/presentation/Footer.jsp" %>

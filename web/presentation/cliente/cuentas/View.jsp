@@ -10,12 +10,15 @@
 <html>
 <head>
  <%@ include file="/presentation/Head.jsp" %>
- <title>Accounts</title> 
+ <title>Mis Cuentas</title> 
 </head>
 <body>
     <%@ include file="/presentation/Header.jsp" %>
     <div class="content">
         <table class="form">
+            <tr class="cabecera">
+                <td colspan="4">Lista de Cuentas Bancarias</td>
+            </tr>
             <tr class="cabecera">
                 <td>Nº Cuenta</td><td>Moneda</td><td>Saldo</td><td>Límite</td>
             </tr>
