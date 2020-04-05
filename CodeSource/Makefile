@@ -1,15 +1,31 @@
-#Makefile 
-TARGETS = main
+OBJS	= main.o Vehicle.o Semaforo.o Sector.o Officer.o Queue.o Simulation.o 
+SOURCE	= main.c Vehicle.c Semaforo.c Sector.c Officer.c Queue.c Simulation.c
+HEADER	= Vehicle.h Semaforo.h Sector.h Officer.h Queue.h Simulation.h
+OUT	= out
+CC	 = gcc
+FLAGS	 = -g -c -Wall
+LFLAGS	 = -pthread -lm
 
-CROSS_TOOL = 
-CC_C = $(CROSS_TOOL)gcc
+all: clean $(OBJS)
+	$(CC) -g $(OBJS) -o $(OUT) $(LFLAGS)
 
-CFLAGS = -Wall -g -std=c99 -Werror -pthread -DTEST --debug
+main.o: main.c
+	$(CC) $(FLAGS) main.c 
 
-all: clean $(TARGETS)
+Vehicle.o: Vehicle.c
+	$(CC) $(FLAGS) Vehicle.c 
 
-$(TARGETS):
-	$(CC_C) $(CFLAGS) $@.c -lm -o $@
+Semaforo.o: Semaforo.c
+	$(CC) $(FLAGS) Semaforo.c 
+
+Sector.o: Sector.c
+	$(CC) $(FLAGS) Sector.c 
+
+Officer.o: Officer.c
+	$(CC) $(FLAGS) Officer.c 
+
+Queue.o: Queue.c
+	$(CC) $(FLAGS) Queue.c 
 
 clean:
-	rm $(TARGETS)
+	rm -f $(OBJS) $(OUT)
