@@ -19,6 +19,9 @@ struct Queue* initialize_queue();
 //Encolar o Poner en cola
 void enqueue(struct Queue* cola, struct Vehicle* car);
 
+//Encolar o Poner en cola con prioridad
+void enqueue_priority(struct Queue* cola, struct Vehicle* car);
+
 //Desencolar o quitar de la cola
 struct Vehicle* dequeue(struct Queue* cola);
 

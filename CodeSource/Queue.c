@@ -13,23 +13,24 @@ void enqueue(struct Queue* cola, struct Vehicle* car) {
     struct Node* nodo = malloc(sizeof(struct Node));
     nodo->car = car;
     nodo->next = NULL;
-    if(car->priority){
-        if(cola->first){
-            nodo->next = cola->first;
-        }else{
-            cola->last = nodo;
-        }
+    if(cola->first){
+        cola->last->next = nodo;
+        cola->last = nodo;
     }else{
-        if(cola->first){
-            if(cola->first->next){
-                cola->last->next = nodo;
-            }else{
-                cola->first->next = nodo; 
-            }
-            cola->last = nodo;
-        }
+        cola->first = cola->last = nodo;
     }
-    cola->first = nodo;
+}
+
+void enqueue_priority(struct Queue* cola, struct Vehicle* car){
+    struct Node* nodo = malloc(sizeof(struct Node));
+    nodo->car = car;
+    nodo->next = NULL;
+    if(cola->first){
+        nodo->next = cola->first; 
+        cola->first = nodo;
+    }else{
+        cola->first = cola->last = nodo;
+    }
 }
 
 //Desencolar o quitar de la cola
