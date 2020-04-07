@@ -26,6 +26,13 @@ public class Dao_Usuario {
     private Dao_Usuario() {
         this.db = Connection_db.instance();
     }
+    
+    public String lastUser() throws SQLException{
+        String sql="select max(idUsuario) as id from usuario";
+        ResultSet rs = db.executeQuery(sql);
+        rs.next();
+        return rs.getString("id");
+    }
          
     public void delete(Usuario p) throws Exception{
         String sql="DELETE FROM Usuario WHERE idUsuario='%s'";

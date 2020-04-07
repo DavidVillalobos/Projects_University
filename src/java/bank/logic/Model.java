@@ -2,9 +2,11 @@ package bank.logic;
 
 import bank.data.Dao_Cliente;
 import bank.data.Dao_Cuenta;
+import bank.data.Dao_Moneda;
 import bank.data.Dao_Movimiento;
 import bank.data.Dao_Usuario;
 import bank.data.Dao_Vinculo;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class Model {
     private final Dao_Cuenta cuentas;
     private final Dao_Movimiento movimientos;
     private final Dao_Vinculo vinculos;
+    private final Dao_Moneda monedas;
     
     public static Model instance(){
         if (uniqueInstance == null){
@@ -33,6 +36,7 @@ public class Model {
         cuentas = Dao_Cuenta.instance();
         movimientos = Dao_Movimiento.instance();
         vinculos = Dao_Vinculo.instance();
+        monedas = Dao_Moneda.instance();
         
     }
 
@@ -45,6 +49,21 @@ public class Model {
         vinculos.add(link);
     }
     
+    public void agregarCuenta(Cuenta c) throws Exception{
+        cuentas.add(c);
+    }
+    
+    public void agregarCliente(Cliente  c) throws Exception{
+        Integer id = Integer.parseInt(usuarios.lastUser());
+        id += 1;
+        Usuario s = new Usuario();
+        s.setIdUsuario(String.valueOf(id)); // tengo que cambiarlo a que sea como un AI
+        s.setPassword(this.getPassword()); // cambiarlo a que autogenere una contraseña
+        s.setTipo(false);
+        usuarios.add(s);
+        c.setUsuario(s);
+        clientes.add(c);
+    }
     //----------------------Busquedas-----------------------------//
     
     public Usuario usuarioFind(String cedula) throws Exception{
@@ -64,6 +83,10 @@ public class Model {
         } catch (Exception ex) {
             throw new Exception("Ocurrio algun error");
         }
+    }
+    
+    public Cliente clienteFind(String cedula) throws Exception{
+        return clientes.get(cedula);
     }
     
     public Cuenta cuentaFind(Integer idCuenta) throws Exception{
@@ -100,6 +123,14 @@ public class Model {
         return movimientos.getRecentMovements(cuenta);
     }
     
+    public List<Moneda> getAllMonedas() throws SQLException{
+        return monedas.getAll();
+    }
+    
+    public Integer lastAccountId() throws SQLException{
+        return cuentas.lastAccount();
+    }
+    
     //----------------------Verificaciones-----------------------------//
     
     public Boolean cuentaVerify(Usuario s, Cuenta c) throws Exception{
@@ -115,4 +146,15 @@ public class Model {
         clientes.update(client);
     }
 
+    //--------------------------------------------
+    
+    private String getPassword() {
+        String key = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzñÑ";
+        int length = 8;
+        String pswd = "";
+        for (int i = 0; i < length; i++) {
+            pswd+=(key.charAt((int)(Math.random() * key.length())));
+        }
+        return pswd;
+    }
 }

@@ -38,6 +38,13 @@ public class Dao_Cuenta {
         }
     }
     
+    public Integer lastAccount() throws SQLException{
+        String sql="select max(idCuenta) as id from cuenta";
+        ResultSet rs = db.executeQuery(sql);
+        rs.next();
+        return Integer.parseInt(rs.getString("id"));
+    }
+    
     public Cuenta get(Integer idCuenta) throws Exception{
         String sql = "SELECT * FROM cuenta c "
                 + "INNER JOIN cliente cl ON c.cliente = cl.cedula "
