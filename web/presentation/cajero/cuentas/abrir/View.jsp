@@ -19,6 +19,7 @@
     <body>
         <%@include file="/presentation/Header.jsp" %>
         <div class="content">
+            <% if(request.getAttribute("added") == null){ %>
             <form name="form" action="/Banco_PIV/presentation/cashier/accounts/open/create" method="post">
                 <table class="remote-transfer">
                     <tr id="Header">
@@ -42,19 +43,25 @@
                         <td>
                             <select class="<%=verifyErrors("moneda", errors)%>" name="moneda">
                             <option value="" disabled selected>Seleccione una Moneda</option>
-                            <%for (Moneda c : monedas) {%>  
-                            <option><%= c.getIdMoneda() %></option>
+                            <%for (Moneda c : monedas) {
+                                if(c.getIdMoneda().equals(credencials.get("moneda")[0])){%>
+                                <option selected="true" ><%= c.getIdMoneda() %></option>
+                                <% } else{ %>
+                                    <option><%= c.getIdMoneda() %></option> 
+                                <% }%>
                             <%}%>
                             </select>
                         </td>
                     <tr><td>
                         <footer>
-                            <input class="buttom" type="reset" value="Cancelar" name="cancel">
+                            <a href="/Banco_PIV/presentation/cashier/accounts/open/show">
+                                <input class="buttom" type="" value="Cancelar" name="cancel">
+                            </a>
                         </footer>
                     </td><td>
                         <footer>
-                            <input class="buttom" type="submit" value="Procesar">
-                        </footer>
+                            <input class="buttom" type="submit" value="Procesar" name="process">
+                        </footer> 
                     </td></tr>
                 </table>
                 <% if(model.getRegistrated() == false){ %>
@@ -86,6 +93,29 @@
                         <td colspan="2"> <br> </td>
                     </tr>  
                 </table> <% } %>
+            </form><% } %>
+            <% if(request.getAttribute("added")!= null){ %>
+            <form name="form_2" action="/Banco_PIV/presentation/cashier/accounts/open/show" method="post">
+                <center>
+                <table class="remote-transfer">
+                    <tr id="Header">
+                        <td colspan="2">Detalle de Cuenta</td>
+                    </tr>
+                    <tr><td>Cliente</td><td><%=credencials.get("cedula")[0]%></td></tr>
+                    <% if(request.getAttribute("newClient")!=null){ %>
+                    <tr><td>Contraseña</td><td><%=credencials.get("contrasena")[0]%></td></tr>
+                    <% } %>
+                    <tr><td>Nombre</td><td><%=credencials.get("nombre")[0]%></td></tr>
+                    <tr><td>Teléfono</td><td><%=credencials.get("telefono")[0]%></td></tr>
+                    <tr><td>Numero de Cuenta</td><td><%=credencials.get("num_cuenta")[0]%></td></tr>
+                    <tr><td>Limite Diario</td><td><%=credencials.get("limite")[0]%></td></tr>
+                    <tr><td>Moneda</td><td><%=credencials.get("moneda")[0]%></td></tr>
+                    <tr><td colspan="2"><footer>
+                        <input class="buttom" type="submit" value="OK" name="process">
+                    </footer></td></tr>  
+                </table>
+                </center>
+            </form> <% } %>
         </div>
         <%@include file="/presentation/Footer.jsp" %>
     </body>
@@ -110,6 +140,9 @@
         credencials.put("moneda", new String[]{
             (model.getAccount().getMoneda() == null)?"":model.getAccount().getMoneda().getIdMoneda()
         });
+        credencials.put("num_cuenta", new String[]{String.valueOf(model.getAccount().getIdCuenta())});
+        credencials.put("contrasena", new String[]{
+            (model.getClient().getUsuario() == null)?"":model.getClient().getUsuario().getPassword()});
         return credencials;
     }
 %>

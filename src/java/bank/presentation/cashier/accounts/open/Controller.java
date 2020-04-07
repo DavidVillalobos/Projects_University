@@ -19,8 +19,10 @@ import javax.servlet.http.HttpSession;
  * @author Kevin Flores
  */
 @WebServlet(name = "CashierOpenAccountController", urlPatterns = {"/presentation/cashier/accounts/open/show", 
-                                                                   "/presentation/cashier/accounts/open/create"})
+                                                                  "/presentation/cashier/accounts/open/create"})
 public class Controller extends HttpServlet {
+    
+    private Boolean new_client = false;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -89,26 +91,27 @@ public class Controller extends HttpServlet {
                         model.setRegistrated(false);
                         model.getClient().setNombre("");
                         model.getClient().setTelefono(0);
-                        request.setAttribute("added", false);
                         return "/presentation/cajero/cuentas/abrir/View.jsp";
                     }
                     model.setClient(client);
-                    model.getAccount().setCliente(client);
-                    domainModel.agregarCuenta(model.getAccount());
-                    domainModel.agregarVinculo(client, model.getAccount());
-                    request.setAttribute("added", true);
+                    model.getAccount().setCliente(client); 
                 }
                 else{
                     client = model.getClient();
                     domainModel.agregarCliente(client);
                     model.setRegistrated(true);
+                    this.new_client = true;
                     client = domainModel.clienteFind(model.getClient().getCedula());
-                    model.getAccount().setCliente(client);
-                    domainModel.agregarCuenta(model.getAccount());
-                    model.getAccount().setIdCuenta(domainModel.lastAccountId());
-                    domainModel.agregarVinculo(client, model.getAccount());
-                    request.setAttribute("added", true);
+                    model.getAccount().setCliente(client); 
                 }
+                if(this.new_client){
+                    this.new_client = false;
+                    request.setAttribute("newClient", true);
+                }
+                domainModel.agregarCuenta(model.getAccount());
+                model.getAccount().setIdCuenta(domainModel.lastAccountId());
+                domainModel.agregarVinculo(client, model.getAccount());
+                request.setAttribute("added", true);
                 
                 return "/presentation/cajero/cuentas/abrir/View.jsp";
             } else {
