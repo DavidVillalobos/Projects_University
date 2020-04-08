@@ -50,7 +50,7 @@ public class Dao_Cuenta {
                 + "INNER JOIN cliente cl ON c.cliente = cl.cedula "
                 + "INNER JOIN usuario u ON cl.usuario = u.idUsuario "
                 + "INNER JOIN moneda m ON c.moneda = m.idMoneda "
-                + "WHERE idCuenta = %s";
+                + "WHERE idCuenta = %d";
         sql = String.format(sql,idCuenta);
         ResultSet rs = db.executeQuery(sql);
         if(rs.next()){
@@ -115,7 +115,9 @@ public class Dao_Cuenta {
             p.setTelefono(rs.getInt("telefono"));
             p.setUsuario(u);
             m.setIdMoneda(rs.getString("idMoneda"));
-            m.setValorColones(rs.getBigDecimal("valorColones"));
+            m.setValorColones(rs.getDouble("valorColones"));
+            m.setNombreMoneda(rs.getString("nombreMoneda"));
+            m.setInteres(rs.getDouble("interes"));
             c.setIdCuenta(rs.getInt("idCuenta"));
             c.setSaldo(rs.getDouble("saldo"));
             c.setLimite(rs.getDouble("limite"));

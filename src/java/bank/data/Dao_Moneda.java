@@ -78,7 +78,9 @@ public class Dao_Moneda {
         try {
             Moneda p = new Moneda();
             p.setIdMoneda(rs.getString("idMoneda"));
-            p.setValorColones(rs.getBigDecimal("valorColones"));
+            p.setValorColones(rs.getDouble("valorColones"));
+            p.setNombreMoneda(rs.getString("nombreMoneda"));
+            p.setInteres(rs.getDouble("interes"));
             return p;
         } catch (SQLException ex) {
             return null;

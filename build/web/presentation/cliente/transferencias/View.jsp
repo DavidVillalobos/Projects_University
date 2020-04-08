@@ -30,26 +30,34 @@
                     </tr>
                     <tr>
                         <td>Cuenta Origen</td>
-                        <td><select name="cuentaOrigen">
-                        <option value="" disabled selected>Seleccione una de sus cuentas</option>
-                        <%for (Cuenta c : origin_accounts) {%>  
-                        <option><%= c.getIdCuenta()%></option>
+                        <td><select class ="<%=verifyErrors("cuentaOrigen", errors)%>" name="cuentaOrigen" >
+                        <% if(select_origin == null){%>
+                            <option value="" disabled selected><%= "Seleccione una de sus cuentas "%></option>
+                        <%}else{%>
+                            <option value="" disabled selected><%=select_origin.getIdCuenta()%></option>
                         <%}%>
-                        </select></td>
+                        <%for (Cuenta c : origin_accounts) {%>  
+                            <option><%= c.getIdCuenta()%></option>
+                        <%}%>
+                        </select>
                     </tr>
                     <tr>
                         <td>Monto</td>
                         <td>
-                            <input class ="<%=verifyErrors("monto", errors)%>" type="text" name="monto" placeholder="Nombre" 
+                            <input class ="<%=verifyErrors("monto", errors)%>" type="text" name="monto" placeholder="Monto" 
                             value="<%=credencials.get("monto")[0]%>" title="<%=getTittle("monto", errors)%>">
                         </td>
                     </tr>
                     <tr>
                         <td>Cuenta Destino</td>
-                        <td><select name="cuentaDestino">
-                                <option value="" disabled selected>Seleccione una de sus cuentas vinculadas</option>
-                            <%for (Cuenta c : destination_accounts) {%>  
-                            <option><%= c.getIdCuenta()%></option>
+                        <td><select class ="<%=verifyErrors("cuentaDestino", errors)%>" name="cuentaDestino">
+                            <% if(select_destiny == null){%>
+                                <option value="" disabled selected><%= "Seleccione una de sus cuentas vinculadas"%></option>
+                            <%}else{%>
+                                <option value="" disabled selected><%=select_destiny.getIdCuenta()%></option>
+                            <%}%>
+                            <%for (Cuenta c : destination_accounts) {%>
+                                <option><%= c.getIdCuenta()%></option>
                             <%}%>
                         </select></td>
                     </tr>
@@ -67,29 +75,34 @@
             <% if(select_origin != null && select_destiny != null){ %>
                 <form name="form" action="/Banco_PIV/presentation/client/transfers/transfer" method="post">
                     <table class="confirm-transfer">
-                        <tr id="Header"><td colspan="5">Detalle de la Tranferencia</td></tr>
-                        <tr id="Header"><td>Tipo</td><td>N° Cuenta</td><td>Propietario</td><td>Saldo</td><td>Movimiento</td></tr>
+                        <tr id="Header"><td colspan="6">Detalle de la Tranferencia</td></tr>
+                        <tr id="Header"><td>Tipo</td><td>N° Cuenta</td><td>Propietario</td><td>Moneda</td><td>Saldo</td><td>Movimiento</td></tr>
                         <tr>
                             <td>Origen</td>
                             <td><%= select_origin.getIdCuenta() %></td> 
                             <td><%= select_origin.getCliente().getNombre() %></td> 
+                            <td><%= select_origin.getMoneda() %></td> 
                             <td><%= select_origin.getSaldo()%></td> 
                             <td> - <%= model.getMonto() %></td> 
                         </tr>
                         <tr>
                             <td>Destino</td>
                             <td><%= select_destiny.getIdCuenta() %></td> 
-                            <td><%= select_destiny.getCliente().getNombre() %></td> 
-                            <td> <label> ??? </label> </td> 
+                            <td><%= select_destiny.getCliente().getNombre() %></td>
+                            <td></td>
+                            <td></td> 
                             <td> + <%= model.getMonto() %></td> 
-                        </tr>       
+                        </tr>
+                        <tr><td><input type="hidden" name="cuentaOrigen" value="<%=select_origin.getIdCuenta() %>"></td></tr>
+                        <tr><td><input type="hidden" name="cuentaDestino" value="<%=select_destiny.getIdCuenta() %>"></td></tr>
+                        <tr><td><input type="hidden" name="monto" value="<%= model.getMonto() %>"></td></tr>
                         <tr id="Header">
+                             <td colspan="2">
+                            <input class="buttom" type="reset" value="Cancelar">
+                            </td>
+                            <td colspan="2"></td>
                             <td colspan="2">
                             <input class="buttom" type="submit" value="Confirmar">
-                            </td>
-                            <td id="Header"></td>
-                            <td colspan="2">
-                            <input class="buttom" type="reset" value="Cancelar">
                             </td>
                         </tr>
                     </table>
@@ -120,4 +133,5 @@
         credencials.put("monto", new String[]{String.valueOf(model.getMonto())});
         return credencials;
     }
+
 %>

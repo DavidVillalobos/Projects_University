@@ -42,7 +42,7 @@
                     <td style="width: 50%">Motivo</td>
                 </tr>
                 <% for(Movimiento m:list){%>
-                <tr class="td_m">
+                <tr style="font-size: 25px">
                     <td><%=m.getMonto()%></td>
                     <td><%=m.getFechaString()%></td>
                     <td><%=m.getTipo().getNombre()%></td>

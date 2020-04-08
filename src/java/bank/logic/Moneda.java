@@ -6,7 +6,6 @@
 package bank.logic;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -19,34 +18,38 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Kevin Flores
+ * @author David Villalobos
  */
 @Entity
 @Table(name = "moneda")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Moneda.findAll", query = "SELECT m FROM Moneda m")
-    , @NamedQuery(name = "Moneda.findByIdMoneda", query = "SELECT m FROM Moneda m WHERE m.idMoneda = :idMoneda")
-    , @NamedQuery(name = "Moneda.findByValorColones", query = "SELECT m FROM Moneda m WHERE m.valorColones = :valorColones")})
+    @NamedQuery(name = "Moneda.findAll", query = "SELECT m FROM Moneda m")})
 public class Moneda implements Serializable {
 
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "nombreMoneda")
+    private String nombreMoneda;
+    
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+    @Size(min = 1, max = 3)
     @Column(name = "idMoneda")
     private String idMoneda;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Column(name = "valorColones")
-    private BigDecimal valorColones;
+    private double valorColones;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "interes")
+    private double interes;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "moneda")
     private List<Cuenta> cuentaList;
 
@@ -57,9 +60,11 @@ public class Moneda implements Serializable {
         this.idMoneda = idMoneda;
     }
 
-    public Moneda(String idMoneda, BigDecimal valorColones) {
+    public Moneda(String idMoneda, String nombreMoneda, double valorColones, double interes) {
         this.idMoneda = idMoneda;
+        this.nombreMoneda = nombreMoneda;
         this.valorColones = valorColones;
+        this.interes = interes;
     }
 
     public String getIdMoneda() {
@@ -70,15 +75,22 @@ public class Moneda implements Serializable {
         this.idMoneda = idMoneda;
     }
 
-    public BigDecimal getValorColones() {
+    public double getValorColones() {
         return valorColones;
     }
 
-    public void setValorColones(BigDecimal valorColones) {
+    public void setValorColones(double valorColones) {
         this.valorColones = valorColones;
     }
 
-    @XmlTransient
+    public double getInteres() {
+        return interes;
+    }
+
+    public void setInteres(double interes) {
+        this.interes = interes;
+    }
+
     public List<Cuenta> getCuentaList() {
         return cuentaList;
     }
@@ -107,9 +119,16 @@ public class Moneda implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return this.getIdMoneda();
+    public String getNombreMoneda() {
+        return nombreMoneda;
+    }
+
+    public void setNombreMoneda(String nombreMoneda) {
+        this.nombreMoneda = nombreMoneda;
     }
     
+    @Override
+    public String toString() {
+        return nombreMoneda;
+    }
 }

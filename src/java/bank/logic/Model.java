@@ -4,6 +4,7 @@ import bank.data.Dao_Cliente;
 import bank.data.Dao_Cuenta;
 import bank.data.Dao_Moneda;
 import bank.data.Dao_Movimiento;
+import bank.data.Dao_TipoMovimiento;
 import bank.data.Dao_Usuario;
 import bank.data.Dao_Vinculo;
 import java.sql.SQLException;
@@ -22,6 +23,7 @@ public class Model {
     private final Dao_Movimiento movimientos;
     private final Dao_Vinculo vinculos;
     private final Dao_Moneda monedas;
+    private final Dao_TipoMovimiento tipomovimientos;
     
     public static Model instance(){
         if (uniqueInstance == null){
@@ -37,7 +39,7 @@ public class Model {
         movimientos = Dao_Movimiento.instance();
         vinculos = Dao_Vinculo.instance();
         monedas = Dao_Moneda.instance();
-        
+        tipomovimientos = Dao_TipoMovimiento.instance();
     }
 
     //----------------------Insertar datos-----------------------------//
@@ -64,6 +66,11 @@ public class Model {
         c.setUsuario(s);
         clientes.add(c);
     }
+    
+    public void agregarMovimiento(Movimiento move) throws Exception {
+        movimientos.add(move);
+    }
+    
     //----------------------Busquedas-----------------------------//
     
     public Usuario usuarioFind(String cedula) throws Exception{
@@ -131,6 +138,10 @@ public class Model {
         return cuentas.lastAccount();
     }
     
+    public Tipomovimiento tipoMovimientoFind(int type) throws Exception {
+        return tipomovimientos.get(type);
+    }
+    
     //----------------------Verificaciones-----------------------------//
     
     public Boolean cuentaVerify(Usuario s, Cuenta c) throws Exception{
@@ -145,7 +156,15 @@ public class Model {
     public void clienteUpdate(Cliente client) throws Exception {
         clientes.update(client);
     }
-
+    
+    public void usuarioUpdate(Usuario user) throws Exception {
+        usuarios.update(user);
+    }
+    
+    public void cuentaUpdate(Cuenta account) throws Exception {
+        cuentas.update(account);
+    }
+        
     //--------------------------------------------
     
     private String getPassword() {

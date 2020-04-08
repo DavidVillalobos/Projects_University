@@ -32,11 +32,8 @@
                     <td>Telefono</td>
                     <td> <input class ="<%=verifyErrors("telephone",errors)%>" type="text" name="telephone" placeholder="Telefono" 
                     value="<%=credencials.get("telephone")[0]%>" title="<%=getTittle("telephone",errors)%>"></td>
-                </tr><tr>
-                    <td>Usuario</td>
-                    <td> <input class ="<%=verifyErrors("user-name",errors)%>" type="text" name="user-name" placeholder="Usuario" 
-                    value="<%=credencials.get("user-name")[0]%>" title="<%=getTittle("user-name",errors)%>"></td>
-                </tr><tr>
+                <tr><td>Usuario</td><td><%= cliente.getUsuario().getIdUsuario() %></td></tr>
+                <tr>
                     <td>Contraseña</td>
                     <td><input class ="<%=verifyErrors("password",errors)%>" type="text" name="password" placeholder="Contraseña" 
                     value="<%=credencials.get("password")[0]%>" title="<%=getTittle("password",errors)%>"></td>

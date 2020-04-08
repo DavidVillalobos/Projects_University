@@ -15,7 +15,7 @@ public class Model {
     private List<Cuenta> destination_accounts;
     private Cuenta origin_account;
     private Cuenta destination_account;
-    private float monto;
+    private double monto;
     
     public Model() {
         origin_accounts = new ArrayList<>();
@@ -56,11 +56,11 @@ public class Model {
         this.destination_account = destination_account;
     }
 
-    public float getMonto() {
+    public double getMonto() {
         return monto;
     }
 
-    public void setMonto(float monto) {
+    public void setMonto(double monto) {
         this.monto = monto;
     }
     

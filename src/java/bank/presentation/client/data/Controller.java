@@ -78,16 +78,6 @@ public class Controller extends HttpServlet {
         if(request.getParameter("telephone").isEmpty()){
             errors.put("telephone", "Telefono Necesario");
         }
-        if(request.getParameter("user-name").isEmpty()){
-            errors.put("user-name", "Usuario Necesario");
-        }
-        /*try {//check user-name not repeat
-            HttpSession session = request.getSession(true);
-            Usuario usuario = (Usuario) session.getAttribute("user");
-            if(usuario != null && usuario.getIdUsuario() != usuario.getIdUsuario()){
-                errors.put("user-name", "Usuario Ya Existe");
-            }
-        } catch (Exception ex) {}*/
         if(request.getParameter("password").isEmpty()){
             errors.put("password", "Contraseña Necesaria");
         }
@@ -99,7 +89,6 @@ public class Controller extends HttpServlet {
         Cliente client = model.getClient();
         client.setNombre(request.getParameter("name"));
         client.setTelefono(Integer.parseInt(request.getParameter("telephone")));
-        client.getUsuario().setIdUsuario(request.getParameter("user-name"));
         client.getUsuario().setPassword(request.getParameter("password"));
     }
 
@@ -108,6 +97,7 @@ public class Controller extends HttpServlet {
         Model model= (Model) request.getAttribute("model");
         bank.logic.Model  domainModel = bank.logic.Model.instance();
         try {
+            domainModel.usuarioUpdate(model.getClient().getUsuario());
             domainModel.clienteUpdate(model.getClient());
             return "/presentation/cliente/datos/View.jsp";
         } catch (Exception ex) {

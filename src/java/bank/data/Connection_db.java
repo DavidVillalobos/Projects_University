@@ -17,7 +17,7 @@ import java.util.Properties;
  */
 public class Connection_db {
     
-    private static final String PROPERTIES_FILE_NAME="/Bank_db_kevin.properties";        
+    private static final String PROPERTIES_FILE_NAME="/Bank_db.properties";        
     private Connection cnx;
     
     private static Connection_db _instance;

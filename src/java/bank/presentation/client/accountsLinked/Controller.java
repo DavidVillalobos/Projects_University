@@ -140,7 +140,10 @@ public class Controller extends HttpServlet {
             model.setAccountToLink(accountToLink);
             return "/presentation/cliente/cuentasVinculadas/View.jsp";
         } catch (Exception ex) {
-            return "";
+            Map<String, String> errors = new HashMap<>();
+            errors.put("idAccount", "Cuenta no existe");
+            request.setAttribute("errors", errors);
+            return "/presentation/cliente/cuentasVinculadas/View.jsp";
         }
     }
 
