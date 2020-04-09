@@ -142,7 +142,7 @@ input[type="text"].invalid, input[type="password"].invalid, select.invalid{
 
 .remote-transfer{
     text-align: left;
-    margin-left: 100px;
+    margin-left: 50px;
     margin-top: 80px;
     border: black 2px outset;
     background-color: #E1E7F3;
@@ -151,14 +151,25 @@ input[type="text"].invalid, input[type="password"].invalid, select.invalid{
 }
 
 .confirm-transfer{
-    margin-left: 600px;
-    margin-top: -180px;
+    margin-left: 530px;
+    margin-top: -210px;
     border: black 2px outset;
     background-color: #E1E7F3;
     font-size: 20px;
     text-align: center;
     width: 51%;
     height: 180px;
+}
+
+.datail-transfer{
+    margin-left: 230px;
+    margin-top: 50px;
+    border: black 2px outset;
+    background-color: #E1E7F3;
+    font-size: 20px;
+    text-align: center;
+    width: 70%;
+    height: 210px;
 }
 
 .search-cashier{

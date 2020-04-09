@@ -8,14 +8,16 @@ insert into moneda(idMoneda, nombreMoneda, valorColones, interes) values ('CNY',
 insert into tipomovimiento(idTipoMovimiento, nombre) values (1, 'Retiro');
 insert into tipomovimiento(idTipoMovimiento, nombre) values (2, 'Deposito');
 
-insert into usuario (idUsuario, password, tipo) values (333, 333, 1);
+insert into usuario (idUsuario, password, tipo) values (111, 111, 1);
 
-insert into cliente (cedula, nombre, telefono, usuario) values ('333', 'Juan Rodriguez', '333333', '333');
+insert into cliente (cedula, nombre, telefono, usuario) values ('111', 'Juan Rodriguez', '111', '111');
 
 select * from cliente;
 select * from cuenta;
+select * from usuario;
 select * from movimiento;
 select * from tipomovimiento;
-select * from usuario;
 select * from vinculo;
 select * from moneda;
+
+SELECT * FROM movimiento WHERE ((cuentaOrigen=1 and fecha='2020-04-09') and tipo=1);

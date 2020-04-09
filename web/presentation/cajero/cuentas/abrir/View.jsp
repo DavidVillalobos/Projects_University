@@ -47,7 +47,7 @@
                                 if(c.getIdMoneda().equals(credencials.get("moneda")[0])){%>
                                 <option selected="true" ><%= c.getIdMoneda() %></option>
                                 <% } else{ %>
-                                    <option><%= c.getNombreMoneda() %></option> 
+                                    <option><%= c.getIdMoneda() %></option> 
                                 <% }%>
                             <%}%>
                             </select>
