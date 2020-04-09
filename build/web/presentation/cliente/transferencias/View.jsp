@@ -61,13 +61,6 @@
                             <%}%>
                         </select></td>
                     </tr>
-                    <tr>
-                        <td>Motivo</td>
-                        <td>
-                            <input class ="<%=verifyErrors("motivo", errors)%>" type="text" name="motivo" placeholder="Motivo" 
-                            value="<%=credencials.get("motivo")[0]%>" title="<%=getTittle("motivo", errors)%>">
-                        </td>
-                    </tr>
                     <tr><td>
                         <footer>
                             <input class="buttom" type="reset" value="Cancelar">
@@ -82,7 +75,7 @@
             <% if(select_origin != null && select_destiny != null){ %>
                 <form name="form" action="/Banco_PIV/presentation/client/transfers/transfer" method="post">
                     <table class="confirm-transfer">
-                        <tr id="Header"><td colspan="6">Confirmar Tranferencia</td></tr>
+                        <tr id="Header"><td colspan="6">Detalle de la Tranferencia</td></tr>
                         <tr id="Header"><td>Tipo</td><td>N° Cuenta</td><td>Propietario</td><td>Moneda</td><td>Saldo</td><td>Movimiento</td></tr>
                         <tr>
                             <td>Origen</td>
@@ -92,10 +85,6 @@
                             <td><%= select_origin.getSaldo()%></td> 
                             <td> - <%= model.getMonto() %></td> 
                         </tr>
-                        <tr><td><input type="hidden" name="cuentaOrigen" value="<%=select_origin.getIdCuenta() %>"></td></tr>
-                        <tr><td><input type="hidden" name="cuentaDestino" value="<%=select_destiny.getIdCuenta() %>"></td></tr>
-                        <tr><td><input type="hidden" name="monto" value="<%= model.getMonto() %>"></td></tr>
-                        <tr><td><input type="hidden" name="motivo" value="<%= model.getMotivo() %>"></td></tr>
                         <tr>
                             <td>Destino</td>
                             <td><%= select_destiny.getIdCuenta() %></td> 
@@ -104,12 +93,14 @@
                             <td></td> 
                             <td> + <%= model.getMonto() %></td> 
                         </tr>
-                      
+                        <tr><td><input type="hidden" name="cuentaOrigen" value="<%=select_origin.getIdCuenta() %>"></td></tr>
+                        <tr><td><input type="hidden" name="cuentaDestino" value="<%=select_destiny.getIdCuenta() %>"></td></tr>
+                        <tr><td><input type="hidden" name="monto" value="<%= model.getMonto() %>"></td></tr>
                         <tr id="Header">
                              <td colspan="2">
                             <input class="buttom" type="reset" value="Cancelar">
                             </td>
-                            <td colspan="2">Motivo: <%=model.getMotivo()%> </td>
+                            <td colspan="2"></td>
                             <td colspan="2">
                             <input class="buttom" type="submit" value="Confirmar">
                             </td>
@@ -140,7 +131,6 @@
     private Map<String, String[]> getCredencials(Model model) {
         Map<String, String[]> credencials = new HashMap<String, String[]>();
         credencials.put("monto", new String[]{String.valueOf(model.getMonto())});
-        credencials.put("motivo", new String[]{String.valueOf(model.getMotivo())});
         return credencials;
     }
 

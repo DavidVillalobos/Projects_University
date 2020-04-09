@@ -9,7 +9,6 @@ import bank.data.Dao_Usuario;
 import bank.data.Dao_Vinculo;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -129,10 +128,6 @@ public class Model {
     
     public List<Movimiento> getRecentMovements(Cuenta cuenta) throws Exception{
         return movimientos.getRecentMovements(cuenta);
-    }
-    
-    public List<Movimiento> getMovementsByDate(Cuenta cuenta, Date fecha)throws Exception {
-        return movimientos.getMovementsByDate(cuenta, fecha);
     }
     
     public List<Moneda> getAllMonedas() throws SQLException{
