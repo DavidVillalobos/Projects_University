@@ -172,7 +172,7 @@ public class Model {
     //--------------------------------------------
     
     private String getPassword() {
-        String key = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzñÑ";
+        String key = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         int length = 8;
         String pswd = "";
         for (int i = 0; i < length; i++) {
