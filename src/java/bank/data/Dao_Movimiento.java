@@ -4,9 +4,10 @@ import bank.logic.Cuenta;
 import bank.logic.Movimiento;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Date;
 /**
  *
  * @author Kevin Flores
@@ -67,6 +68,19 @@ public class Dao_Movimiento {
         while(rs.next()){}
         while(rs.previous() && x > 0){
             l.add(render_movimiento(rs)); x--;
+        }
+        return l;
+    }
+    
+    public List<Movimiento> getMovementsByDate(Cuenta c, Date fecha) throws SQLException, Exception{
+        List<Movimiento> l = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaString = sdf.format(fecha);
+        String sql = "SELECT * FROM movimiento WHERE ((cuentaOrigen=%d AND fecha='%s') AND tipo=1)";
+        sql = String.format(sql, c.getIdCuenta(), fechaString);
+        ResultSet rs = db.executeQuery(sql);
+        while(rs.next()){
+            l.add(render_movimiento(rs));
         }
         return l;
     }
