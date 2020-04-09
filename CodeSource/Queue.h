@@ -6,6 +6,8 @@
 struct Queue{
     struct Node* first;
     struct Node* last;
+    int size;
+    int cantAmbulances;
 };
 
 //Nodo de Cola, {Carro, Siguiente}

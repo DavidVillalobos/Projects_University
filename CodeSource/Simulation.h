@@ -1,7 +1,6 @@
-#include <stdio.h> // for printf and scanf
 #include <pthread.h> // for threads
+#include <stdio.h> // for printf and scanf
 #include <math.h> // for log
-#include <unistd.h>// for sleep
 #include <stdlib.h> // for srand and malloc
 #include<string.h> // for strlen
 #include"Sector.h"
@@ -17,7 +16,7 @@ struct Simulation{
     pthread_mutex_t way_bridge;
     int way;//Direccion de la via
     int running; //simulacion encendida o apagada
-    int num_cars;//Numero de autos ('Placas')
+    int plates;//Numero de autos ('Placas')
     int lenght; //Largo del puente
     int modality; //Modalidad
     struct Sector* east;
@@ -30,20 +29,20 @@ struct Simulation* simulation;
 struct Simulation* initialize_simulation();
 
 //Imprime el puente
-void printBridge();
+void show_bridge();
 
 //Imprime la simulacion
-void printSimulacion();
+void show_simulation();
 
 //Metodo que el Automovil, utiliza para simular que
 //Esta recorriendo el puente
 void* cross_bridge(void* arg);
 
 //Creador de Vehiculos con la distribucion exponencial
-void* activatecarMaker(void* arg);
+void* activate_car_maker(void* arg);
 
 //Verifica si el puente se encuentra vacio
-int emptyBridge();
+int empty_bridge();
 
 //Modalidad FIFO
 void* fifo(void* arg);
@@ -52,22 +51,22 @@ void* fifo(void* arg);
 void* timer(void* arg);
 
 //Activador o "Motor" de un semaforo para algun sector
-void* activateSemaphore(void* arg);
+void* activate_semaforo(void* arg);
 
 //Modalidad Semaforos
 void* semaphore(void* arg);
 
 //Establece un Oficial para algun sector
-void* establishofficer(void* arg);
+void* establish_officer(void* arg);
 
 //Modalidad Oficial de transito
-void* officerTransit(void *arg);
+void* officer_transit(void *arg);
 
-//Se encarga de escuchar las peticiones del usuario
-void* userListener(void* arg);
+//Se encarga de esperar que el usuario apague la simulacion
+void* user_listener(void* arg);
 
 //Reproduce la simulacion
-void playSimulation();
+void play_simulation();
 
 //Obtiene un trozo de un char* == (string)
 char* slide(char *str, char begin, char finish);
@@ -76,11 +75,21 @@ char* slide(char *str, char begin, char finish);
 int compare(char* string_a, char* string_b);
 
 //Registra un variable en el sistema, dependiendo de la seccion y el nombre
-void saveVariableSetting(char* section, char* name, int num, char* comment);
+void save_setting(char* section, char* name, int num, char* comment);
 
 //Inicializa las configuraciones de la simulacion
 //Segun un archivo de configuracion
-int initConfigurations(char* path);
+int init_configurations(char* path);
 
 //Detiene la simulacion
-void stopSimulation();
+void stop_simulation();
+
+//Muestra ayuda al usuario
+void show_help();
+
+/*Verifica que todas las configuraciones
+  fueron establecidas con algun valor*/
+int verify_all_configured();
+
+//Permite obtener un analisis simple, acerca de la simulacion
+void show_final_statistics();

@@ -5,6 +5,8 @@ struct Queue* initialize_queue(){
     struct Queue* cola = malloc(sizeof(struct Queue));
     cola->first = NULL;
     cola->last = NULL;
+    cola->size = 0;
+    cola->cantAmbulances = 0;
     return cola;
 }
 
@@ -19,6 +21,10 @@ void enqueue(struct Queue* cola, struct Vehicle* car) {
     }else{
         cola->first = cola->last = nodo;
     }
+    if(car->priority){
+        cola->cantAmbulances++;
+    }
+    cola->size++;
 }
 
 void enqueue_priority(struct Queue* cola, struct Vehicle* car){
@@ -31,6 +37,8 @@ void enqueue_priority(struct Queue* cola, struct Vehicle* car){
     }else{
         cola->first = cola->last = nodo;
     }
+    cola->size++;
+    cola->cantAmbulances++;
 }
 
 //Desencolar o quitar de la cola
@@ -38,6 +46,10 @@ struct Vehicle* dequeue(struct Queue* cola){
     if(cola->first){
         struct Node* nodo = cola->first;
         cola->first = cola->first->next;
+        cola->size--;
+        if(nodo->car->priority){
+            cola->cantAmbulances--;
+        }
         return nodo->car;
     }
     return NULL;
@@ -49,11 +61,7 @@ void show_queue(struct Queue* cola){
     printf("[ ");
     while(aux){
         printf("%d(%c)", aux->car->num, (aux->car->priority)?'+':'-');
-        aux = aux->next;
-        if(aux){
-            printf(", ");
-        }
+        if((aux = aux->next)) printf(", ");
     }
-    printf(" ]");
-    printf("\n");
+    printf(" ] - > size: %d\n", cola->size);
 }
