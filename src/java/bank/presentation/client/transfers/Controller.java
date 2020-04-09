@@ -8,7 +8,6 @@ import bank.logic.Usuario;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -92,7 +91,11 @@ public class Controller extends HttpServlet {
     private String processTransferAction(HttpServletRequest request) {
         Model model = (Model) request.getAttribute("model");
         bank.logic.Model domainModel = bank.logic.Model.instance();
-        try {
+        HttpSession session = request.getSession(true);
+        Usuario usuario = (Usuario) session.getAttribute("user");
+        Cliente cliente;
+        try {// working . . . here
+            cliente = domainModel.clienteFind(usuario);
             Cuenta origen = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaOrigen")));
             Cuenta destino = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaDestino")));
             //Las cuentas siempre existen por que se muestran en un combobox
@@ -100,14 +103,13 @@ public class Controller extends HttpServlet {
             model.setDestination_account(destino);
             double monto = Double.parseDouble(request.getParameter("monto"));
             model.setMonto(monto);
-            model.setMotivo(request.getParameter("motivo"));
             Map<String, String> errors = new HashMap<>();
             if(origen.getSaldo() < monto){
                 errors.put("monto", "Saldo insuficiente en la cuenta de origen " + origen.getIdCuenta() + "\n El saldo actual es de " + origen.getSaldo());                
                 model.setOrigin_account(null);
                 model.setDestination_account(null);
             }else if(verifyLimitAccount(origen, monto)){
-                errors.put("monto", "Monto excede el saldo limite de la cuenta " + origen.getIdCuenta() + "\n Para el dia de hoy. El limite es de " + origen.getLimite());
+                errors.put("monto", "Monto excede el saldo limite de la cuenta " + origen.getIdCuenta() + "\n El limite es de " + origen.getLimite());
                 model.setOrigin_account(null);
                 model.setDestination_account(null);
             }
@@ -119,31 +121,15 @@ public class Controller extends HttpServlet {
     }
     
     private boolean verifyLimitAccount(Cuenta account, double monto){
-        bank.logic.Model domainModel = bank.logic.Model.instance();
         double total = monto;
-        try {
-            List<Movimiento> recentMovements = domainModel.getMovementsByDate(account, new Date());
-            for (Movimiento move : recentMovements) {
-                total += move.getMonto();
-            }
-            return account.getLimite() < total; //Se paso del limite?
-        } catch (Exception ex) {}
-        return false;
+        //Agregar a total el monto de todos los movimientos realizados hoy
+        return account.getLimite() < total; //Se paso del limite?
     }
 
     private Map<String, String> completeData(HttpServletRequest request) {
         Map<String, String> errors = new HashMap<>();
         if (request.getParameter("monto").isEmpty()) {
             errors.put("monto", "Debe ingresar un monto");
-        }
-        try{
-            double monto = Double.parseDouble(request.getParameter("monto"));
-            if(monto <= 0){  throw new Exception("Monto invalido"); }
-        }catch(Exception ex){
-            errors.put("monto", "El monto de la transferencia debe \n    ser numerico y mayor que 0");
-        }
-        if (request.getParameter("motivo").isEmpty()) {
-            errors.put("motivo", "Debe ingresar un motivo");
         }
         if (request.getParameter("cuentaOrigen") == null || request.getParameter("cuentaDestino") == null) {
             errors.put("cuentaDestino", "Cuenta de Destino necesaria");
@@ -155,73 +141,59 @@ public class Controller extends HttpServlet {
     private String transfer(HttpServletRequest request) {
         Model model = (Model) request.getAttribute("model");
         bank.logic.Model domainModel = bank.logic.Model.instance();
+        Date today = new Date(); 
         try {
+            //Colocar los datos en el Model
             Cuenta origen = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaOrigen")));
             Cuenta destino = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaDestino")));
             //Las cuentas siempre existen por que se las muestra en un combobox
             model.setOrigin_account(origen);
-            model.setDestination_account(destino);
-            model.setMonto(Double.parseDouble(request.getParameter("monto")));
-            model.setMotivo(request.getParameter("motivo"));
-            if(retirement(request) && deposit(request)){
-                origen = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaOrigen")));
-                destino = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaDestino")));  
-                model.setOrigin_account(origen);
-                model.setDestination_account(destino);
-                return "/presentation/cliente/transferencias/View_Detail.jsp";
-            }
-            return "/presentation/Error.jsp";
-        } catch (Exception ex) {
-            return "/presentation/Error.jsp";
-        }
-    }
-    
-    private boolean retirement(HttpServletRequest request) {
-        Model model = (Model) request.getAttribute("model");
-        bank.logic.Model domainModel = bank.logic.Model.instance();
-        try {
-            Movimiento move = new Movimiento();
-            move.setCuentaOrigen(model.getOrigin_account());
-            move.setCuentaDestino(model.getDestination_account());
-            move.setMonto(model.getMonto());
-            move.setFecha(new Date());
-            Tipomovimiento tp1;
-            tp1 = domainModel.tipoMovimientoFind(1);
-            move.setTipo(tp1);
-            move.setMotivo(model.getMotivo());
-            model.getOrigin_account().setSaldo(model.getOrigin_account().getSaldo() - model.getMonto());
-            domainModel.cuentaUpdate(model.getOrigin_account());
-            domainModel.agregarMovimiento(move);
-        } catch (Exception ex) {
-            return false;
-        }
-        return true;
-    }
-    
-    private boolean deposit(HttpServletRequest request){
-        Model model = (Model) request.getAttribute("model");
-        bank.logic.Model domainModel = bank.logic.Model.instance();
-        try {
-            double monto = model.getMonto();
-            monto *= model.getOrigin_account().getMoneda().getValorColones();
-            monto /= model.getDestination_account().getMoneda().getValorColones(); 
-            Movimiento move = new Movimiento();
-            move.setCuentaOrigen(model.getOrigin_account());
-            move.setCuentaDestino(model.getDestination_account());
-            move.setMonto(monto);
+            model.setDestination_account(destino);  
+            //Obtener el monto
+            double monto = Double.parseDouble(request.getParameter("monto"));
+            model.setMonto(monto);
+            
+            //Ingresar el primer movimiento retiro
+            Movimiento m1 = new Movimiento();
+            m1.setCuentaOrigen(origen);
+            m1.setCuentaDestino(destino);
+            m1.setMonto(monto);
+            m1.setFecha(today);
+            //Buscamos el tipo de movimiento retiro
+            Tipomovimiento tp1 = domainModel.tipoMovimientoFind(1);
+            m1.setTipo(tp1);
+            m1.setMotivo(tp1.getNombre()); //Esto se pregunta al usuario
+           
+            //Realizamos la conversion del monto
+            monto *= origen.getMoneda().getValorColones();
+            monto /= destino.getMoneda().getValorColones();
+            
+            //Ingresar el segundo movimiento deposito
+            Movimiento m2 = new Movimiento();
+            m2.setCuentaOrigen(origen);
+            m2.setCuentaDestino(destino);
+            m2.setMonto(monto);
+            //Buscamos el tipo de movimiento deposito
             Tipomovimiento tp2 = domainModel.tipoMovimientoFind(2);
-            move.setTipo(tp2);
-            move.setMotivo(model.getMotivo());
-            move.setFecha(new Date());
-            //Se debe actualizar la cuenta destino en caso de que se deposite a si mismo
-            model.setDestination_account(domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaDestino"))));          
-            model.getDestination_account().setSaldo(model.getDestination_account().getSaldo() + monto);
-            domainModel.agregarMovimiento(move);
-            domainModel.cuentaUpdate(model.getDestination_account());
+            m2.setTipo(tp2);
+            m2.setMotivo(tp2.getNombre()); //Esto se pregunta al usuario
+            m2.setFecha(today);
+            //Realizamos el retiro
+            origen.setSaldo(origen.getSaldo() - monto);
+            domainModel.agregarMovimiento(m1); //Se registra el movimiento
+            //Realizamos el deposito
+            destino.setSaldo(destino.getSaldo() + monto);
+            domainModel.agregarMovimiento(m2); //Se registra el movimiento
+            
+            //Actualizamos las cuentas
+            domainModel.cuentaUpdate(origen);
+            domainModel.cuentaUpdate(destino);
+
+            
+            return "/presentation/cliente/transferencias/View.jsp";
         } catch (Exception ex) {
-            return false;
+            return "";
         }
-        return true;
     }
     
     @Override
