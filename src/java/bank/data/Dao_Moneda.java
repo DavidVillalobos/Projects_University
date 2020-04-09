@@ -47,6 +47,18 @@ public class Dao_Moneda {
         }
     }
     
+    public Moneda getByName(String name) throws Exception{
+        String sql = "SELECT * FROM moneda WHERE nombreMoneda='%s'";
+        sql = String.format(sql,name);
+        ResultSet rs = db.executeQuery(sql);
+        if(rs.next()){
+            return render_moneda(rs);
+        }
+        else{
+            throw new Exception("Moneda no existe.");
+        }
+    }
+    
     public List<Moneda> getAll() throws SQLException{
         List<Moneda> l = new ArrayList<>();
         String sql = "SELECT * FROM moneda";

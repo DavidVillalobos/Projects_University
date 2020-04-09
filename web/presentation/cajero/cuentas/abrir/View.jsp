@@ -44,12 +44,14 @@
                             <select class="<%=verifyErrors("moneda", errors)%>" name="moneda">
                             <option value="" disabled selected>Seleccione una Moneda</option>
                             <%for (Moneda c : monedas) {
-                                if(c.getIdMoneda().equals(credencials.get("moneda")[0])){%>
-                                <option selected="true" ><%= c.getIdMoneda() %></option>
-                                <% } else{ %>
-                                    <option><%= c.getNombreMoneda() %></option> 
-                                <% }%>
-                            <%}%>
+                                if(credencials.get("moneda") != null){
+                                    if(c.getNombreMoneda().equals(credencials.get("moneda")[0])){%>
+                                        <option selected="true" ><%= c.getNombreMoneda() %></option>
+                                    <% } else{ %>
+                                        <option><%= c.getNombreMoneda() %></option> 
+                                    <% }} else { %>
+                                       <option><%= c.getNombreMoneda() %></option>
+                            <% }}%>
                             </select>
                         </td>
                     <tr><td>
@@ -138,7 +140,7 @@
         credencials.put("nombre", new String[]{model.getClient().getNombre()});
         credencials.put("telefono", new String[]{String.valueOf(model.getClient().getTelefono())});
         credencials.put("moneda", new String[]{
-            (model.getAccount().getMoneda() == null)?"":model.getAccount().getMoneda().getIdMoneda()
+            (model.getAccount().getMoneda() == null)?"":model.getAccount().getMoneda().getNombreMoneda()
         });
         credencials.put("num_cuenta", new String[]{String.valueOf(model.getAccount().getIdCuenta())});
         credencials.put("contrasena", new String[]{

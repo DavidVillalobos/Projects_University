@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -157,6 +159,7 @@ public class Controller extends HttpServlet {
         Model model = (Model) request.getAttribute("model");
         String cedula = request.getParameter("cedula");
         Double limite = Double.valueOf(request.getParameter("limite"));
+        bank.logic.Model domainModel = bank.logic.Model.instance();
         String moneda = request.getParameter("moneda");
         if(!model.getRegistrated()){
             Integer telefono = Integer.parseInt(request.getParameter("telefono"));
@@ -164,7 +167,10 @@ public class Controller extends HttpServlet {
             model.getClient().setNombre(nombre);
             model.getClient().setTelefono(telefono);
         }
-        model.getAccount().setMoneda(new Moneda(moneda));
+        try {
+            model.getAccount().setMoneda(domainModel.monedaFindByName(moneda));
+        } catch (Exception ex) {
+        }
         model.getAccount().setSaldo(0);
         model.getClient().setCedula(cedula);
         model.getAccount().setLimite(limite);

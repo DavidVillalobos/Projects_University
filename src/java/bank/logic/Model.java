@@ -142,6 +142,10 @@ public class Model {
         return tipomovimientos.get(type);
     }
     
+    public Moneda monedaFindByName(String name) throws Exception{
+        return monedas.getByName(name);
+    }
+    
     //----------------------Verificaciones-----------------------------//
     
     public Boolean cuentaVerify(Usuario s, Cuenta c) throws Exception{
