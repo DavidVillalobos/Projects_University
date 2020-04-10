@@ -4,8 +4,6 @@ import bank.logic.Cuenta;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 /**
  *
  * @author David Villalobos
@@ -16,12 +14,22 @@ public class Model {
     private Cuenta origin_account;
     private Cuenta destination_account;
     private double monto;
+    private String motivo;
     
     public Model() {
         origin_accounts = new ArrayList<>();
         destination_accounts = new ArrayList<>();
         origin_account = null;
         destination_account = null;
+        motivo = "";
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
     }
 
     public List<Cuenta> getOrigin_accounts() {

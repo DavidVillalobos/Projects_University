@@ -161,6 +161,17 @@ input[type="text"].invalid, input[type="password"].invalid, select.invalid{
     height: 180px;
 }
 
+.datail-transfer{
+    margin-left: 230px;
+    margin-top: 50px;
+    border: black 2px outset;
+    background-color: #E1E7F3;
+    font-size: 20px;
+    text-align: center;
+    width: 70%;
+    height: 210px;
+}
+
 .search-cashier{
     margin-left: 100px;
     margin-top: 60px;
