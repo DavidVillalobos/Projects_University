@@ -50,7 +50,7 @@ public class Dao_Cuenta {
                 + "INNER JOIN cliente cl ON c.cliente = cl.cedula "
                 + "INNER JOIN usuario u ON cl.usuario = u.idUsuario "
                 + "INNER JOIN moneda m ON c.moneda = m.idMoneda "
-                + "WHERE idCuenta = %d";
+                + "WHERE idCuenta = %s";
         sql = String.format(sql,idCuenta);
         ResultSet rs = db.executeQuery(sql);
         if(rs.next()){
@@ -67,6 +67,21 @@ public class Dao_Cuenta {
                 + "INNER JOIN cliente cl ON c.cliente = cl.cedula "
                 + "INNER JOIN usuario u ON cl.usuario = u.idUsuario "
                 + "INNER JOIN moneda m ON c.moneda = m.idMoneda";
+        ResultSet rs = db.executeQuery(sql);
+        while(rs.next()){
+            l.add(render_cuenta(rs));
+        }
+        return l;
+    }
+    
+    public List<Cuenta> searchByIdClient(String idClient) throws SQLException{
+        List<Cuenta> l = new ArrayList<>();
+        String sql = "SELECT * FROM cuenta c "
+                + "INNER JOIN cliente cl ON c.cliente = cl.cedula "
+                + "INNER JOIN usuario u ON cl.usuario = u.idUsuario "
+                + "INNER JOIN moneda m ON c.moneda = m.idMoneda "
+                + "WHERE cliente='%s'";
+        sql = String.format(sql,idClient);
         ResultSet rs = db.executeQuery(sql);
         while(rs.next()){
             l.add(render_cuenta(rs));

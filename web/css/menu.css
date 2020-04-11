@@ -22,3 +22,19 @@
     color:white;
     padding: 10px;
 }
+
+.menu li:hover > ul {
+    display:block;
+    background-color: #052D40;
+    float:left;
+    width: 30px;
+    height: 100px;
+}
+
+.menu li ul {
+    display:none;
+    position:absolute;
+    min-width:250px;
+}
+
+			

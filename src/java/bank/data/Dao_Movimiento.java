@@ -89,8 +89,8 @@ public class Dao_Movimiento {
     
     public void add(Movimiento p) throws Exception{
         String sql="INSERT INTO "
-                + "movimiento(monto, fecha, motivo, tipo, cuentaOrigen, cuentaDestino)"
-                + " VALUES(%s,'%s','%s',%s,%s,%s)";
+                + "movimiento(monto, fecha, motivo, tipo, cuentaOrigen, cuentaDestino, solicitante)"
+                + " VALUES(%s,'%s','%s',%s,%s,%s,'%s')";
         
         Integer origen = null, destino = null;
         if(p.getCuentaOrigen() != null){ origen = p.getCuentaOrigen().getIdCuenta(); }
@@ -101,7 +101,7 @@ public class Dao_Movimiento {
                 p.getFechaString(),
                 p.getMotivo(),
                 p.getTipo().getIdTipoMovimiento(),
-                origen, destino);        
+                origen, destino, p.getSolicitante());        
         if (db.executeUpdate(sql) == 0){
             throw new Exception("Movimiento ya existe");
         }
@@ -133,6 +133,7 @@ public class Dao_Movimiento {
             m.setMonto(rs.getDouble("monto"));
             m.setMotivo(rs.getString("motivo"));
             m.setTipo(Dao_TipoMovimiento.instance().get(rs.getInt("tipo")));
+            m.setSolicitante(rs.getString("solicitante"));
             m.setIdMovimiento(rs.getInt("idMovimiento"));
             Integer origen = rs.getInt("cuentaOrigen");
             Integer destino = rs.getInt("cuentaDestino");

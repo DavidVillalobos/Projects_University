@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 /**
  *
  * @author Escinf
@@ -151,6 +152,33 @@ public class Model {
         return monedas.getByName(name);
     }
     
+    public List<Cuenta> cuentasFind(String idAccount, String idCliente) throws SQLException{
+        Cuenta byAccountNum; 
+        List<Cuenta> byIdClient = new ArrayList<>(); 
+        List<Cuenta> result = new ArrayList<>();
+        if(idAccount.equals("")){
+            byAccountNum = null;
+        }else{ 
+            try {
+                byAccountNum = cuentas.get(Integer.parseInt(idAccount));
+            } catch (Exception ex) {
+                byAccountNum = null;
+            }
+        }
+        if(!idCliente.equals("")){
+            byIdClient = cuentas.searchByIdClient(idCliente);
+        }
+        if(byAccountNum != null){
+            result.add(byAccountNum);
+            for(Cuenta c: byIdClient){
+                if(!c.getIdCuenta().equals(byAccountNum.getIdCuenta())){
+                    result.add(c);
+                }
+            }
+        }else{ result = byIdClient; }
+        return result;
+    }
+    
     //----------------------Verificaciones-----------------------------//
     
     public Boolean cuentaVerify(Usuario s, Cuenta c) throws Exception{
@@ -185,4 +213,28 @@ public class Model {
         }
         return pswd;
     }
+    
+    public void movementByCashier(Cuenta c, String motivo, String solicitante, Double monto,
+            Integer tipo, Moneda m) throws Exception{
+        Movimiento movimiento = new Movimiento();
+        monto *= m.getValorColones();
+        monto /= c.getMoneda().getValorColones();
+        Date d = new Date();
+        movimiento.setFecha(new Date());
+        movimiento.setMonto(monto);
+        movimiento.setMotivo(motivo);
+        movimiento.setSolicitante(solicitante);
+        movimiento.setTipo(tipomovimientos.get(tipo));
+        if(tipo == 1){
+            movimiento.setCuentaOrigen(c);
+            c.setSaldo(c.getSaldo() - monto);
+        }else{ 
+            movimiento.setCuentaDestino(c);
+            c.setSaldo(c.getSaldo() + monto);
+        }
+        cuentas.update(c);
+        movimientos.add(movimiento);
+
+    }
+    
 }

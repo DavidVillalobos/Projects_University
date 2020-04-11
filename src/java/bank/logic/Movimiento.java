@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bank.logic;
 
 import java.io.Serializable;
@@ -60,6 +55,9 @@ public class Movimiento implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "motivo")
     private String motivo;
+    @Size(max = 100)
+    @Column(name = "solicitante")
+    private String solicitante;
     @JoinColumn(name = "cuentaOrigen", referencedColumnName = "idCuenta")
     @ManyToOne
     private Cuenta cuentaOrigen;
@@ -107,6 +105,14 @@ public class Movimiento implements Serializable {
     public String getFechaString(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(fecha);
+    }
+    
+    public String getSolicitante() {
+        return solicitante;
+    }
+
+    public void setSolicitante(String solicitante) {
+        this.solicitante = solicitante;
     }
 
     public void setFecha(Date fecha) {
@@ -171,3 +177,4 @@ public class Movimiento implements Serializable {
     }
     
 }
+
