@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class Dao_Movimiento {
     
     public List<Movimiento> getRecentMovements(Cuenta c) throws SQLException, Exception{
         List<Movimiento> l = new ArrayList<>();
-        String sql = "SELECT * FROM movimiento WHERE ((cuentaOrigen=%s or cuentaDestino=%s) and tipo!=3)";
+        String sql = "SELECT * FROM movimiento WHERE ((cuentaOrigen=%d and tipo=1) or (cuentaDestino=%d and tipo=2));";
         sql = String.format(sql, c.getIdCuenta(), c.getIdCuenta());
         int x = 8;
         ResultSet rs = db.executeQuery(sql);
@@ -77,7 +78,7 @@ public class Dao_Movimiento {
         List<Movimiento> l = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String fechaString = sdf.format(fecha);
-        String sql = "SELECT * FROM movimiento WHERE ((cuentaOrigen=%d AND fecha='%s') AND tipo=1)";
+        String sql = "SELECT * FROM movimiento WHERE (cuentaOrigen=%d AND fecha='%s' AND tipo=1);";
         sql = String.format(sql, c.getIdCuenta(), fechaString);
         ResultSet rs = db.executeQuery(sql);
         while(rs.next()){
@@ -86,6 +87,17 @@ public class Dao_Movimiento {
         return l;
     }
   
+    
+    public List<Movimiento> getMovementsBetweenDates(Cuenta account, String date_since, String date_until) throws SQLException, Exception{
+        List<Movimiento> l = new ArrayList<>();
+        String sql = "SELECT * FROM movimiento WHERE fecha BETWEEN '%s' and '%s' and ((cuentaOrigen=%d and tipo=1) or (cuentaDestino=%d and tipo=2));";
+        sql = String.format(sql, date_since, date_until, account.getIdCuenta(), account.getIdCuenta());
+        ResultSet rs = db.executeQuery(sql);
+        while(rs.next()){
+            l.add(render_movimiento(rs));
+        }
+        return l;
+    }
     
     public void add(Movimiento p) throws Exception{
         String sql="INSERT INTO "
@@ -129,7 +141,10 @@ public class Dao_Movimiento {
     private Movimiento render_movimiento(ResultSet rs) throws Exception{
         try {
             Movimiento m = new Movimiento();
-            m.setFecha(rs.getDate("fecha"));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(rs.getDate("fecha")); 
+            calendar.add(Calendar.DATE, 1);//El mes inicia en 0, por ello + 1
+            m.setFecha(calendar.getTime()); 
             m.setMonto(rs.getDouble("monto"));
             m.setMotivo(rs.getString("motivo"));
             m.setTipo(Dao_TipoMovimiento.instance().get(rs.getInt("tipo")));

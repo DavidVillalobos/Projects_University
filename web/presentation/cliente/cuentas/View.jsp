@@ -16,10 +16,10 @@
     <%@ include file="/presentation/Header.jsp" %>
     <div class="content">
         <table class="form">
-            <tr class="cabecera">
+            <tr id="Header">
                 <td colspan="4">Lista de Cuentas Bancarias</td>
             </tr>
-            <tr class="cabecera">
+            <tr id="Header">
                 <td>Nº Cuenta</td><td>Moneda</td><td>Saldo</td><td>Límite</td>
             </tr>
             <%for(Cuenta c : cuentas){%>  

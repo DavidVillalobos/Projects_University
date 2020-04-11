@@ -1,3 +1,6 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="bank.logic.Movimiento"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -5,6 +8,7 @@
 <%@page import="bank.logic.Cuenta"%>
 
 <% 
+    Map<String, String> errors =(Map<String,String>) request.getAttribute("errors");
     Model model = (Model) request.getAttribute("model");
     Cuenta account = model.getAccount();
     List<Movimiento> list = model.getMovements();
@@ -29,24 +33,40 @@
                         <a href="/Banco_PIV/presentation/client/accounts/show">
                             <input class="buttom" type="submit" name="back-buttom" value="Atrás">
                         </a>
-                        
                     </td>
                 </tr>
             </table>
+            <form name="form"  action="/Banco_PIV/presentation/client/account/searchMove" method="post">         
+            <table class="table_cuenta">
+                <tr><td colspan="3">Buscar Movimientos</td></tr>
+                <tr><td>Desde</td>
+                    <td><input type="date" name="fechaInicial" class ="<%=verifyErrors("fechaInicial",errors)%>"
+                               min="2020-01-01" max="2020-12-31"></td>
+                </tr>
+                <tr><td>Hasta</td>
+                    <td><input type="date" name="fechaFinal" class ="<%=verifyErrors("fechaFinal",errors)%>"
+                               min="2020-01-01" max="2020-12-31"></td>
+                </tr>
+                <tr><td colspan="3"><input class="buttom" type="submit" value="Buscar"></td></tr>
+            </table>
+            <input type="hidden" name="idCuentafld" value="<%= account.getIdCuenta() %>">
+            </form>
             <table class="table_movimientos">
-                <th colspan="4">HISTORIAL DE MOVIMIENTOS RECIENTES</th>
-                <tr class="cabecera">
-                    <td style="width: 20%">Monto</td>
-                    <td style="width: 15%">Fecha</td>
-                    <td style="width: 15%">tipo</td>
-                    <td style="width: 50%">Motivo</td>
+                <tr id="Header"><td colspan="5">Historial de movimientos recientes</td></tr>
+                <tr id="Header">
+                    <td>Monto</td>
+                    <td>Fecha</td>
+                    <td>tipo</td>
+                    <td>Motivo</td>
+                    <td>Por</td>
                 </tr>
                 <% for(Movimiento m:list){%>
-                <tr style="font-size: 25px">
+                <tr>
                     <td><%=m.getMonto()%></td>
                     <td><%=m.getFechaString()%></td>
                     <td><%=m.getTipo().getNombre()%></td>
                     <td><%=m.getMotivo()%></td>
+                    <td>Solicitante</td>
                 </tr>
                 <%}%>   
             </table> 
@@ -54,3 +74,12 @@
         <%@include file="/presentation/Footer.jsp" %>
     </body>
 </html>
+
+<%!
+    private String verifyErrors(String name, Map<String,String> errors){
+        if(errors!=null && errors.get(name)!=null){ 
+            return "invalid"; 
+        }
+        return "";
+    }
+%>

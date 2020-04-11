@@ -26,7 +26,7 @@
                 <%if(!user.getTipo()){ %>
                     <li><a href="/Banco_PIV/presentation/client/accounts/show">Mis Cuentas</a></li>
                     <li><a href="/Banco_PIV/presentation/client/accountsLinked/show">Cuentas Vinculadas</a></li>
-                    <li><a href="/Banco_PIV/presentation/client/transfers/show">Trasferencias</a></li>
+                    <li><a href="/Banco_PIV/presentation/client/transfers/show">Transferencias</a></li>
                 <%} %>
                 <li><a href="/Banco_PIV/presentation/logout/show">Cerrar Sesion</a></li>
             <% } %>

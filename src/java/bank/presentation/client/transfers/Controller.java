@@ -163,17 +163,29 @@ public class Controller extends HttpServlet {
             model.setDestination_account(destino);
             model.setMonto(Double.parseDouble(request.getParameter("monto")));
             model.setMotivo(request.getParameter("motivo"));
-            if(retirement(request) && deposit(request)){
-                origen = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaOrigen")));
-                destino = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaDestino")));  
-                model.setOrigin_account(origen);
-                model.setDestination_account(destino);
-                return "/presentation/cliente/transferencias/View_Detail.jsp";
+            if(checkTransfer(model)){
+                if(retirement(request) && deposit(request)){
+                    origen = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaOrigen")));
+                    destino = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaDestino")));  
+                    model.setOrigin_account(origen);
+                    model.setDestination_account(destino);
+                    return "/presentation/cliente/transferencias/View_Detail.jsp";
+                }
+                return "/presentation/Error.jsp";
             }
-            return "/presentation/Error.jsp";
+            return "/presentation/client/accounts/show";
         } catch (Exception ex) {
             return "/presentation/Error.jsp";
         }
+    }
+    
+    private boolean checkTransfer(Model model) throws Exception {
+        bank.logic.Model domainModel = bank.logic.Model.instance();
+        List<Movimiento> movements = domainModel.getMovementsByDate(model.getOrigin_account(), new Date());
+        for (Movimiento move: movements) {
+            if(move.equals(move)){ return false; }
+        }
+        return true;
     }
     
     private boolean retirement(HttpServletRequest request) {
@@ -240,5 +252,5 @@ public class Controller extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }
-
+    
 }

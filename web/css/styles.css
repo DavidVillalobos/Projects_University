@@ -104,7 +104,7 @@ input[type="text"].invalid, input[type="password"].invalid, select.invalid{
     margin-top: 60px;
     margin-left: 10%;
     font-size: 20px;  
-    border: 3px solid black;
+    border: gray 3px outset;
     text-align: center;
     background-color: white;
 }
@@ -144,7 +144,7 @@ input[type="text"].invalid, input[type="password"].invalid, select.invalid{
     text-align: left;
     margin-left: 100px;
     margin-top: 80px;
-    border: black 2px outset;
+    border: white 4px outset;
     background-color: #E1E7F3;
     font-size: 20px;
     width: 450px;
@@ -153,7 +153,7 @@ input[type="text"].invalid, input[type="password"].invalid, select.invalid{
 .confirm-transfer{
     margin-left: 600px;
     margin-top: -180px;
-    border: black 2px outset;
+    border: white 4px outset;
     background-color: #E1E7F3;
     font-size: 20px;
     text-align: center;
@@ -164,7 +164,7 @@ input[type="text"].invalid, input[type="password"].invalid, select.invalid{
 .datail-transfer{
     margin-left: 230px;
     margin-top: 50px;
-    border: black 2px outset;
+    border: white 4px outset;
     background-color: #E1E7F3;
     font-size: 20px;
     text-align: center;
@@ -193,11 +193,11 @@ input[type="text"].invalid, input[type="password"].invalid, select.invalid{
 .table_cuenta{
     width: 20%;
     text-align: center;
-    margin-top: 8%;
+    margin-top: 1%;
     margin-left: 5%;
     background-color: #052D40;
     color: white;
-    border: black 2px solid;
+    border: white 4px inset;
     border-top-left-radius: 30px;
     border-bottom-right-radius: 30px;
     font-size: 22px;
@@ -206,24 +206,23 @@ input[type="text"].invalid, input[type="password"].invalid, select.invalid{
 
 .table_movimientos{
     width: 65%;
-    margin-top: 2%;
-    margin-right: 5%;
+    margin-top: -26%;
+    margin-right: 4%;
     float:right;
-    padding: 10px;
-    border: 3px solid black;
+    border: gray 4px outset;
     text-align: center;
     background-color: white;
+    font-size: 22px;
 }
 
-.table_movimientos th{
-    font-size: 20px;
+input[type="date"]{
+    display: block;
+    font: 1rem 'Fira Sans', sans-serif;
+    margin: .4rem 0;
 }
 
-.table_movimientos header{
-    border-bottom: black 2px outset;
-    background-color: #052D40;   
-    font-size: 30px;
-    color: white;
+input[type="date"].invalid{
+    border: 3px solid #FC6544;
 }
 
 .new-client{
@@ -237,4 +236,3 @@ input[type="text"].invalid, input[type="password"].invalid, select.invalid{
     width:30%;
     height:185px;
 }
-

@@ -136,6 +136,10 @@ public class Model {
         return movimientos.getMovementsByDate(cuenta, fecha);
     }
     
+    public List<Movimiento> getMovementsBetweenDates(Cuenta account, String date_since, String date_until) throws Exception {
+        return movimientos.getMovementsBetweenDates(account, date_since, date_until);
+    }
+    
     public List<Moneda> getAllMonedas() throws SQLException{
         return monedas.getAll();
     }

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Kevin Flores
  */
-@WebServlet(name = "ClientAccountController", urlPatterns = {"/presentation/client/account/show"})
+@WebServlet(name = "ClientAccountController", urlPatterns = {"/presentation/client/account/show", "/presentation/client/account/searchMove"})
 public class Controller extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -26,8 +26,8 @@ public class Controller extends HttpServlet {
         request.setAttribute("model", new Model());        
         String viewUrl="";     
         switch (request.getServletPath()) {
-            case "/presentation/client/account/show": viewUrl = this.show(request);
-            break;
+            case "/presentation/client/account/show": viewUrl = this.show(request); break;
+            case "/presentation/client/account/searchMove": viewUrl = this.searchMove(request); break;
         }          
         request.getRequestDispatcher(viewUrl).forward( request, response); 
     }
@@ -38,10 +38,8 @@ public class Controller extends HttpServlet {
             this.updateData(request);
             return this.showAction(request);
         }
-        else{
-            request.setAttribute("errors", errors);
-            return "/presentation/Error.jsp";
-        }        
+        request.setAttribute("errors", errors);
+        return "/presentation/Error.jsp";        
     }
     
     private String showAction(HttpServletRequest request){
@@ -90,7 +88,53 @@ public class Controller extends HttpServlet {
             throw new Exception(ex.getMessage());
         }
     }
-
+    
+    
+    private String searchMove(HttpServletRequest request) {
+        Map<String, String> errors = verifyDate(request);
+        if(errors.isEmpty()){
+            this.updateData(request);
+            return searchMoveAction(request);
+        }
+        request.setAttribute("errors", errors);
+        return this.show(request);
+    }
+    
+    private Map<String, String> verifyDate(HttpServletRequest request){
+        Map<String, String> errors = new HashMap<>();
+        if(request.getParameter("fechaInicial").isEmpty()){
+            errors.put("fechaInicial", "Fecha inicial no ingresada");
+        }
+        if(request.getParameter("fechaFinal").isEmpty()){
+            errors.put("fechaFinal", "Fecha final no ingresada");
+        }
+        return errors;
+    } 
+    
+    private String searchMoveAction(HttpServletRequest request){
+        Model model= (Model) request.getAttribute("model");
+        HttpSession session = request.getSession(true);
+        try {
+            Cuenta db_account = this.validateCredentials(model.getAccount());
+            String date_begin = request.getParameter("fechaInicial");
+            String date_until = request.getParameter("fechaFinal");
+            List<Movimiento> db_movements = bank.logic.Model.instance().getMovementsBetweenDates(db_account, date_begin, date_until);
+            Usuario s = (Usuario) session.getAttribute("user");
+            model.setAccount(db_account);
+            if (bank.logic.Model.instance().cuentaVerify(s, model.getAccount())) {
+                model.setMovements(db_movements);
+                return "/presentation/cliente/cuenta/View.jsp";
+            } else {
+                throw new Exception("Usuario incompatible con la Cuenta.");
+            }
+        } catch (Exception ex) {
+            Map<String, String> errors = new HashMap<>();
+            errors.put("Fatal-error", ex.getMessage());
+            request.setAttribute("errors", errors);
+            return "/presentation/Error.jsp"; 
+        }
+    }
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -107,5 +151,6 @@ public class Controller extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }
+
 
 }

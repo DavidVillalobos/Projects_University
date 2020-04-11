@@ -104,13 +104,9 @@
                             <td></td> 
                             <td> + <%= model.getMonto() %></td> 
                         </tr>
-                      
                         <tr id="Header">
-                             <td colspan="2">
-                            <input class="buttom" type="reset" value="Cancelar">
-                            </td>
-                            <td colspan="2">Motivo: <%=model.getMotivo()%> </td>
-                            <td colspan="2">
+                            <td colspan="5">Motivo: <%=model.getMotivo()%> </td>
+                            <td>
                             <input class="buttom" type="submit" value="Confirmar">
                             </td>
                         </tr>
