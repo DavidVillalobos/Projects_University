@@ -9,7 +9,6 @@ LFLAGS	 = -pthread -lm
 all: clean $(OBJS)
 	$(CC) -g $(OBJS) -o $(OUT) $(LFLAGS)
 
-
 main.o: main.c
 	$(CC) $(FLAGS) main.c
 

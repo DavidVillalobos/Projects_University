@@ -3,7 +3,7 @@
 #include"Semaforo.h"
 #include"Officer.h"
 
-//sector, cada lado de la simulacion
+//Entidad del sector
 struct Sector{
     //Lado del sector 0 oeste, 1 este, . . .
     int side;//id

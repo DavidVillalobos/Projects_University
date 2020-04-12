@@ -23,7 +23,13 @@ struct Simulation{
     struct Sector* west;
 };
 
-struct Simulation* simulation;
+/* Utilizado para enviar multiples parametros
+   a un metodo con pthread_create */
+struct Args{
+    struct Simulation* simulation;
+    struct Vehicle* vehicle;
+    struct Sector* sector;
+};
 
 //Inicializa la simulacion
 struct Simulation* initialize_simulation();
@@ -42,31 +48,34 @@ void* cross_bridge(void* arg);
 void* activate_car_maker(void* arg);
 
 //Verifica si el puente se encuentra vacio
-int empty_bridge();
+int empty_bridge(struct Simulation* simulation);
 
 //Modalidad FIFO
 void* fifo(void* arg);
 
-//Temporizador de los semaforos
-void* timer(void* arg);
-
 //Activador o "Motor" de un semaforo para algun sector
 void* activate_semaforo(void* arg);
 
-//Modalidad Semaforos
+//Modalidad SEMAFOROS
 void* semaphore(void* arg);
 
 //Establece un Oficial para algun sector
 void* establish_officer(void* arg);
 
-//Modalidad Oficial de transito
+//Modalidad OFICIALES
 void* officer_transit(void *arg);
 
 //Se encarga de esperar que el usuario apague la simulacion
 void* user_listener(void* arg);
 
 //Reproduce la simulacion
-void play_simulation();
+void run_simulation(struct Simulation* simulation);
+
+//Detiene la simulacion
+void stop_simulation();
+
+//Permite obtener un analisis simple, acerca de la simulacion
+void show_final_statistics();
 
 //Obtiene un trozo de un char* == (string)
 char* slide(char *str, char begin, char finish);
@@ -75,21 +84,18 @@ char* slide(char *str, char begin, char finish);
 int compare(char* string_a, char* string_b);
 
 //Registra un variable en el sistema, dependiendo de la seccion y el nombre
-void save_setting(char* section, char* name, int num, char* comment);
+void save_setting(struct Simulation* simulation, char* section, char* name, int num, char* comment);
 
-//Inicializa las configuraciones de la simulacion
-//Segun un archivo de configuracion
-int init_configurations(char* path);
-
-//Detiene la simulacion
-void stop_simulation();
+/* Inicializa las configuraciones de la simulacion
+   Segun un archivo de configuracion*/
+int init_configurations(struct Simulation* simulation, char* path);
 
 //Muestra ayuda al usuario
 void show_help();
 
 /*Verifica que todas las configuraciones
   fueron establecidas con algun valor*/
-int verify_all_configured();
+int verify_all_configured(struct Simulation* simulation);
 
-//Permite obtener un analisis simple, acerca de la simulacion
-void show_final_statistics();
+//Verifica que la simulacion este correcta
+int verify_modality(struct Simulation* simulation, int argc, char *argv[]);
