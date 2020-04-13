@@ -51,22 +51,24 @@
             </table>
             <input type="hidden" name="idCuentafld" value="<%= account.getIdCuenta() %>">
             </form>
-            <table class="table_movimientos">
-                <tr id="Header"><td colspan="5">Historial de movimientos recientes</td></tr>
+            <table class="table_movimientos" border="1">
+                <tr id="Header"><td colspan="6">Historial de movimientos recientes</td></tr>
                 <tr id="Header">
-                    <td>Monto</td>
                     <td>Fecha</td>
-                    <td>tipo</td>
+                    <td>Numero</td>
                     <td>Motivo</td>
-                    <td>Por</td>
+                    <td>Solicitante</td>
+                    <td>Tipo</td>
+                    <td>Monto</td>
                 </tr>
                 <% for(Movimiento m:list){%>
                 <tr>
-                    <td><%=m.getMonto()%></td>
                     <td><%=m.getFechaString()%></td>
-                    <td><%=m.getTipo().getNombre()%></td>
+                    <td><%=m.getIdMovimiento() %></td>
                     <td><%=m.getMotivo()%></td>
-                    <td>Solicitante</td>
+                    <td><%=m.getSolicitante()%></td>
+                    <td><%=m.getTipo().getNombre()%></td>
+                    <td><%=m.getMonto()%></td>
                 </tr>
                 <%}%>   
             </table> 

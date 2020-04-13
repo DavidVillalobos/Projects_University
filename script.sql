@@ -14,8 +14,8 @@ insert into cliente (cedula, nombre, telefono, usuario) values ('333', 'Juan Rod
 
 select * from cliente;
 select * from cuenta;
+select * from usuario;
 select * from movimiento;
 select * from tipomovimiento;
-select * from usuario;
 select * from vinculo;
 select * from moneda;

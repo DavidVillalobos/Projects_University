@@ -24,7 +24,7 @@
         
         <div class="content">
             <form name="form_1" action="/Banco_PIV/presentation/cashier/movements/transfer/searchOrigin" method="post">
-            <table class="table_cuenta">
+            <table class="table_search_cuenta_origen">
                 <tr><td colspan="2">Cuenta Origen</td></tr>
                 <tr>
                     <td>Nº Cuenta</td>
@@ -54,7 +54,7 @@
             </table>
             </form>
             <form name="form_2" action="/Banco_PIV/presentation/cashier/movements/transfer/searchDestiny" method="post">
-            <table class="table_cuenta">
+            <table class="table_search_cuenta_destino">
                 <tr><td colspan="2">Cuenta Destino</td></tr>
                 <tr>
                     <td>Nº Cuenta</td>

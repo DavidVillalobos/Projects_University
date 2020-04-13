@@ -1,14 +1,11 @@
 package bank.presentation.cashier.accounts.open;
 
 import bank.logic.Cliente;
-import bank.logic.Moneda;
 import bank.logic.Usuario;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

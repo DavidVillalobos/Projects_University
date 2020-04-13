@@ -80,7 +80,7 @@ public class Controller extends HttpServlet {
             Usuario db_user = this.validateCredentials(model.getClient());
             session.setAttribute("user", db_user);
             if (db_user.getTipo()) {
-                return "/presentation/cashier/accounts/search/show";
+                return "/presentation/Index.jsp";
             } else {
                 return "/presentation/client/accounts/show";
             }

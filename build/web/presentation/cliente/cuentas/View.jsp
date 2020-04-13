@@ -15,7 +15,7 @@
 <body>
     <%@ include file="/presentation/Header.jsp" %>
     <div class="content">
-        <table class="form">
+        <table class="form" border="1">
             <tr id="Header">
                 <td colspan="4">Lista de Cuentas Bancarias</td>
             </tr>

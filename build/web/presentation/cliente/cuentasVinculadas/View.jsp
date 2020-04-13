@@ -21,18 +21,6 @@
     <body>
         <%@include file="/presentation/Header.jsp" %>
         <div class="content">
-            <table class="accountsLink">
-                <tr class="cabecera"><td colspan="4">Lista de Cuentas Vinculadas</td></tr>
-                <tr class="cabecera"><td>Numero de Cuenta</td><td>Cedula</td><td>Propietario</td><td>Moneda</td>
-                <%for(Cuenta c : cuentas){%>  
-                    <tr>
-                        <td><%=c.getIdCuenta()%></td>  
-                        <td><%= c.getCliente().getCedula() %></td>
-                        <td><%= c.getCliente().getNombre() %></td>
-                        <td><%= c.getMoneda() %></td>
-                    </tr>
-                <%}%>
-            </table>
             <form name="form"  action="/Banco_PIV/presentation/client/accountsLinked/search" method="post">         
                 <table class="search">
                     <td id="Header" colspan="3">Vincular Cuentas</td>
@@ -46,6 +34,18 @@
                     </tr>
                 </table>
             </form>
+            <table class="accountsLink" border="1">
+                <tr class="cabecera"><td colspan="4">Lista de Cuentas Vinculadas</td></tr>
+                <tr class="cabecera"><td>Numero de Cuenta</td><td>Cedula</td><td>Propietario</td><td>Moneda</td>
+                <%for(Cuenta c : cuentas){%>  
+                    <tr>
+                        <td><%=c.getIdCuenta()%></td>  
+                        <td><%= c.getCliente().getCedula() %></td>
+                        <td><%= c.getCliente().getNombre() %></td>
+                        <td><%= c.getMoneda() %></td>
+                    </tr>
+                <%}%>
+            </table>
             <% if(bylink != null){ %>
                 <form name="form"  action="/Banco_PIV/presentation/client/accountsLinked/link" method="post">         
                     <table class="link">

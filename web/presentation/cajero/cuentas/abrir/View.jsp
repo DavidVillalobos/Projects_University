@@ -39,6 +39,7 @@
                             value="<%=credencials.get("limite")[0]%>" title="<%=getTittle("limite", errors)%>">
                         </td>
                     </tr>
+                    <tr>
                         <td>Moneda</td>
                         <td>
                             <select class="<%=verifyErrors("moneda", errors)%>" name="moneda">
@@ -54,6 +55,7 @@
                             <% }}%>
                             </select>
                         </td>
+                    </tr>
                     <tr><td>
                         <footer>
                             <a href="/Banco_PIV/presentation/cashier/accounts/open/show">

@@ -30,18 +30,10 @@ public class Controller extends HttpServlet {
         request.setAttribute("model", new Model());
         String viewUrl;
         switch (request.getServletPath()) {
-            case "/presentation/client/transfers/show":
-                viewUrl = this.show(request);
-                break;
-            case "/presentation/client/transfers/processTransfer":
-                viewUrl = this.processTransfer(request);
-                break;
-            case "/presentation/client/transfers/transfer":
-                viewUrl = this.transfer(request);
-                break;
-            default:
-                viewUrl = "";
-                break;
+            case "/presentation/client/transfers/show": viewUrl = this.show(request); break;
+            case "/presentation/client/transfers/processTransfer": viewUrl = this.processTransfer(request); break;
+            case "/presentation/client/transfers/transfer": viewUrl = this.transfer(request); break;
+            default: viewUrl = ""; break;
         }
         request.getRequestDispatcher(viewUrl).forward(request, response);
     }
@@ -95,7 +87,7 @@ public class Controller extends HttpServlet {
         try {
             Cuenta origen = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaOrigen")));
             Cuenta destino = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaDestino")));
-            //Las cuentas siempre existen por que se muestran en un combobox
+            //Las cuentas siempre existen por que se muestran en un select option
             model.setOrigin_account(origen);
             model.setDestination_account(destino);
             double monto = Double.parseDouble(request.getParameter("monto"));
@@ -163,29 +155,17 @@ public class Controller extends HttpServlet {
             model.setDestination_account(destino);
             model.setMonto(Double.parseDouble(request.getParameter("monto")));
             model.setMotivo(request.getParameter("motivo"));
-            if(checkTransfer(model)){
-                if(retirement(request) && deposit(request)){
-                    origen = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaOrigen")));
-                    destino = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaDestino")));  
-                    model.setOrigin_account(origen);
-                    model.setDestination_account(destino);
-                    return "/presentation/cliente/transferencias/View_Detail.jsp";
-                }
-                return "/presentation/Error.jsp";
+            if(retirement(request) && deposit(request)){
+                origen = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaOrigen")));
+                destino = domainModel.cuentaFind(Integer.parseInt(request.getParameter("cuentaDestino")));  
+                model.setOrigin_account(origen);
+                model.setDestination_account(destino);
+                return "/presentation/cliente/transferencias/View_Detail.jsp";
             }
-            return "/presentation/client/accounts/show";
+            return "/presentation/Error.jsp";
         } catch (Exception ex) {
             return "/presentation/Error.jsp";
         }
-    }
-    
-    private boolean checkTransfer(Model model) throws Exception {
-        bank.logic.Model domainModel = bank.logic.Model.instance();
-        List<Movimiento> movements = domainModel.getMovementsByDate(model.getOrigin_account(), new Date());
-        for (Movimiento move: movements) {
-            if(move.equals(move)){ return false; }
-        }
-        return true;
     }
     
     private boolean retirement(HttpServletRequest request) {
@@ -197,6 +177,7 @@ public class Controller extends HttpServlet {
             move.setCuentaDestino(model.getDestination_account());
             move.setMonto(model.getMonto());
             move.setFecha(new Date());
+            move.setSolicitante(model.getOrigin_account().getCliente().getNombre());
             Tipomovimiento tp1;
             tp1 = domainModel.tipoMovimientoFind(1);
             move.setTipo(tp1);
@@ -221,6 +202,7 @@ public class Controller extends HttpServlet {
             move.setCuentaOrigen(model.getOrigin_account());
             move.setCuentaDestino(model.getDestination_account());
             move.setMonto(monto);
+            move.setSolicitante(model.getOrigin_account().getCliente().getNombre());
             Tipomovimiento tp2 = domainModel.tipoMovimientoFind(2);
             move.setTipo(tp2);
             move.setMotivo(model.getMotivo());

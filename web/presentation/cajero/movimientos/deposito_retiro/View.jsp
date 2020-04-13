@@ -23,7 +23,7 @@
             <form name="form" action="/Banco_PIV/presentation/cashier/movements/d_wd/doMovement" method="post">
                 <table class="remote-transfer">
                     <tr id="Header">
-                        <td colspan="2">Tranferencia en Caja</td>
+                        <td colspan="2">Movimiento en Caja</td>
                     </tr>
                     <tr>
                         <td>Nº Cuenta</td>

@@ -140,8 +140,16 @@ public class Model {
         return movimientos.getMovementsBetweenDates(account, date_since, date_until);
     }
     
+    public List<Movimiento> getMovementsForInterestAccredit()throws Exception {
+        return movimientos.getMovementsForInterestAccredit();
+    }
+    
     public List<Moneda> getAllMonedas() throws SQLException{
         return monedas.getAll();
+    }
+    
+    public List<Cuenta> getAllCuentas() throws SQLException{
+        return cuentas.getAll();
     }
     
     public Integer lastAccountId() throws SQLException{
@@ -237,7 +245,5 @@ public class Model {
         }
         cuentas.update(c);
         movimientos.add(movimiento);
-
     }
-    
 }

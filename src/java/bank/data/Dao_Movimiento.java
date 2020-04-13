@@ -99,6 +99,18 @@ public class Dao_Movimiento {
         return l;
     }
     
+    public List<Movimiento> getMovementsForInterestAccredit() throws SQLException, Exception {
+        List<Movimiento> l = new ArrayList<>();
+        Date today = new Date();
+        String sql = "SELECT * FROM movimiento WHERE (solicitante='Banco Estatal' AND motivo='Intereses Ganados' AND tipo=2 AND month(fecha)=%d);";
+        sql = String.format(sql, today.getMonth()+1);
+        ResultSet rs = db.executeQuery(sql);
+        while(rs.next()){
+            l.add(render_movimiento(rs));
+        }
+        return l;
+    }
+
     public void add(Movimiento p) throws Exception{
         String sql="INSERT INTO "
                 + "movimiento(monto, fecha, motivo, tipo, cuentaOrigen, cuentaDestino, solicitante)"
