@@ -74,6 +74,12 @@
                             <input  type="radio" name="tipoMovimiento" value="2">Deposito<br>
                         </td>
                     </tr>
+                    <% if(verifyErrors("tipoMovimiento", errors).equals("invalid")){ %>
+                        <tr>
+                        <td id="invalid-message" colspan="2">Es necesario elegir un movimiento.</td>
+                        
+                        </tr>
+                    <% } %>
                     <tr><td>
                         <footer>
                             <input class="buttom" type="reset" value="Cancelar">

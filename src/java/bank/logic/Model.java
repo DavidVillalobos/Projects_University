@@ -223,7 +223,6 @@ public class Model {
         Movimiento movimiento = new Movimiento();
         monto *= m.getValorColones();
         monto /= c.getMoneda().getValorColones();
-        Date d = new Date();
         movimiento.setFecha(new Date());
         movimiento.setMonto(monto);
         movimiento.setMotivo(motivo);

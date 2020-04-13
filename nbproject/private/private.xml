@@ -3,11 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Home/Desktop/Bank_PIV/src/java/bank/data/Dao_Movimiento.java</file>
-            <file>file:/C:/Users/Home/Desktop/Bank_PIV/src/java/bank/presentation/client/transfers/Controller.java</file>
-            <file>file:/C:/Users/Home/Desktop/Bank_PIV/web/presentation/cliente/cuenta/View.jsp</file>
-            <file>file:/C:/Users/Home/Desktop/Bank_PIV/web/presentation/cliente/transferencias/View_Detail.jsp</file>
-            <file>file:/C:/Users/Home/Desktop/Bank_PIV/src/java/bank/logic/Model.java</file>
+            <file>file:/C:/Users/usuario/Desktop/Bank_PIV/Bank_PIV/web/presentation/cajero/movimientos/transferencia/View.jsp</file>
+            <file>file:/C:/Users/usuario/Desktop/Bank_PIV/Bank_PIV/web/css/styles.css</file>
+            <file>file:/C:/Users/usuario/Desktop/Bank_PIV/Bank_PIV/src/java/bank/presentation/cashier/movements/deposit_withdrawal/Controller.java</file>
+            <file>file:/C:/Users/usuario/Desktop/Bank_PIV/Bank_PIV/web/presentation/Header.jsp</file>
+            <file>file:/C:/Users/usuario/Desktop/Bank_PIV/Bank_PIV/web/presentation/cliente/cuenta/View.jsp</file>
+            <file>file:/C:/Users/usuario/Desktop/Bank_PIV/Bank_PIV/src/java/bank/presentation/client/transfers/Controller.java</file>
+            <file>file:/C:/Users/usuario/Desktop/Bank_PIV/Bank_PIV/src/java/bank/presentation/cashier/movements/transfer/Controller.java</file>
+            <file>file:/C:/Users/usuario/Desktop/Bank_PIV/Bank_PIV/web/presentation/cliente/transferencias/View.jsp</file>
+            <file>file:/C:/Users/usuario/Desktop/Bank_PIV/Bank_PIV/src/java/bank/presentation/cashier/movements/transfer/Model.java</file>
         </group>
     </open-files>
 </project-private>

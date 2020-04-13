@@ -19,7 +19,7 @@
                     <li><a href="">Movimientos</a>
                     <ul>
 			<li><a href="/Banco_PIV/presentation/cashier/movements/d_wd/show">Deposito o Retiro</a></li>
-			<li><a href="">Tranferencia</a></li>
+			<li><a href="/Banco_PIV/presentation/cashier/movements/transfer/show">Tranferencia</a></li>
                     </ul>
                     </li>
                 <%}%>

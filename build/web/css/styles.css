@@ -236,3 +236,16 @@ input[type="date"].invalid{
     width:30%;
     height:185px;
 }
+
+#cajas-transfer{
+    float:right;
+    margin-right: 25%;
+    margin-top: -18%;
+}
+
+#invalid-message{
+    text-align: center;
+    color: red;
+    font-style: italic;
+    font-size: 20px;
+}
