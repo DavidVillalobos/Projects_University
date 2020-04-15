@@ -13,30 +13,103 @@ struct Simulation* initialize_simulation(){
 }
 
 void show_bridge(struct Simulation* simulation){
+    printf("  Este  ║|||||||║");
+    switch (simulation->modality){
+    case 1:
+        printf(" ");
+        break;
+    case 2:
+        printf("[■](10) ");
+        break;
+    case 3:
+        printf(" ");
+        break;
+    default:
+        break;
+    }
+    printf("Via: Este ");
+    (simulation->way)?printf("-->"):printf("<--");
+    printf(" Oeste\n");
+    printf("--------╚═╗   ╔═╝---------------------------------------------------------\n");
     if(simulation->way){
         for (int i = 0; i < simulation->lenght; i++){
-            if(simulation->bridge[i] != -1){
-                printf("\t|%d|\n",simulation->bridge[i]);
+            if(simulation->bridge[i]){
+                printf(" ~ ~ ~ ~ ~║┌=┐║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+                printf("~ ~ ~ ~ ~ ║┤%s",(simulation->bridge[i]->priority)?"┼":"█");printf("├║");
+                printf("[%0*d]", 3, simulation->bridge[i]->num);
+                printf("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+                printf(" ~ ~ ~ ~ ~║└─┘║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
             }else{
-                printf("\t| |\n");
+                printf(" ~ ~ ~ ~ ~║   ║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+                printf("~ ~ ~ ~ ~ ║ | ║ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+                printf(" ~ ~ ~ ~ ~║   ║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
             }
         }
     }else{
         for (int i = simulation->lenght-1; 0 <= i; i--){
-            if(simulation->bridge[i] != -1){
-                printf("\t|%d|\n",simulation->bridge[i]);
+            if(simulation->bridge[i]){
+                printf(" ~ ~ ~ ~ ~║┌=┐║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+                printf("~ ~ ~ ~ ~ ║┤%s",(simulation->bridge[i]->priority)?"┼":"█");printf("├║");
+                printf("[%0*d]", 3, simulation->bridge[i]->num);
+                printf("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+                printf(" ~ ~ ~ ~ ~║└─┘║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
             }else{
-                printf("\t| |\n");
+                printf(" ~ ~ ~ ~ ~║   ║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+                printf("~ ~ ~ ~ ~ ║ | ║ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+                printf(" ~ ~ ~ ~ ~║   ║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
             }
         }
     }
+    printf("--------╔═╝   ╚═╗---------------------------------------------------------\n");
+    printf(" Oeste  ║|||||||║");
+    switch (simulation->modality){
+    case 1:
+        printf(" ");
+        printf("FIFO\n");
+        break;
+    case 2:
+        printf("[■](10) ");
+        printf("SEMAFOROS\n");
+        break;
+    case 3:
+        printf(" ");
+        printf("OFICIALES\n");
+        break;
+    default:
+        break;
+    }
+}
+
+void show_entrance_bridge(struct Sector* sector){ 
+    struct Node* aux = sector->ready->first;
+    printf("                 ");
+    for (int i = 0; i < sector->ready->size; i++){
+        printf("[%0*d]", 3, aux->car->num);
+        aux = aux->next;
+    }
+    printf("\n                 ");
+    for (int i = 0; i < sector->ready->size; i++){
+        printf("═════");
+    }
+    printf("\n                 ");
+    aux = sector->ready->first;
+    for (int i = 0; i < sector->ready->size; i++){            
+        printf(" %s ", (aux->car->priority)?"[+]":"▄▄▄");
+        aux = aux->next;
+    }
+    printf("\n                 ");
+    for (int i = 0; i < sector->ready->size; i++){
+        printf("└O─O ");
+    }
+    printf("\n\n                 ");
+    for (int i = 0; i < sector->ready->size; i++){
+        printf("═════");
+    }
+    printf("\n"); 
 }
 
 void show_simulation(struct Simulation* simulation){
     system("clear");
-    printf("\nVia: Este ");
-    (simulation->way)?printf("-->"):printf("<--");
-    printf(" Oeste\n");
     printf("\nCruzaron al Este: ");
     show_queue(simulation->east->finish);
     if(simulation->modality == 2){ 
@@ -49,11 +122,13 @@ void show_simulation(struct Simulation* simulation){
     if(simulation->modality == 3){
         printf("\nOficial Este k(%d)",simulation->east->transit_officer->number); 
     }
-    printf("\nEste -> ");
-    show_queue(simulation->east->ready);
+    //printf("\nEste -> ");
+    //show_queue(simulation->east->ready);
+    show_entrance_bridge(simulation->east);
     show_bridge(simulation);
-    printf("Oeste ->");
-    show_queue(simulation->west->ready);
+    //printf("Oeste ->");
+    show_entrance_bridge(simulation->west);
+    //show_queue(simulation->west->ready);
     if(simulation->modality == 2){ 
         printf("\nSemaforo Oeste "); 
         if(simulation->west->semaforo->light)
@@ -72,14 +147,14 @@ void* cross_bridge(void* arg){
     struct Args* arguments = (struct Args*) arg;
     struct Vehicle *car = arguments->vehicle;
     struct Simulation* simulation = arguments->simulation;
-    simulation->bridge[0] = car->num;
+    simulation->bridge[0] = car;
     for (int i = 0; i < simulation->lenght; i++){
         sleep(car->speed);//Utilizando el puente
         if(i+1<simulation->lenght){//Si me falta camino, pido el de adelante
             pthread_mutex_lock(&simulation->semaphores[i+1]);//P(Puente[i + 1])
-            simulation->bridge[i+1] = car->num;
+            simulation->bridge[i+1] = car;
         }
-        simulation->bridge[i] = -1;
+        simulation->bridge[i] = NULL;
         pthread_mutex_unlock(&simulation->semaphores[i]);//V(Puente[i]) libero el que estoy
     }
     //Agregamos el carro a la lista de procesos terminados segun el lado
@@ -96,7 +171,14 @@ void* activate_car_maker(void* arg){
     struct Simulation* simulation = arguments->simulation;
     struct Sector* sector = arguments->sector;
     while(simulation->running){// - media * log(e)[1 - (0 < rand() < 1)]
-        sleep(- sector->average_cars * log( 1 - (double) (rand()%1000)/1000));
+        int t = - sector->average_cars * log( 1 - (double) (rand()%1000)/1000);
+        for (int i = 0; i < t; i++){
+            if(!simulation->running){
+                pthread_exit(0);
+            }
+            sleep(1);
+        }
+        
         //Crear carro y definimos los atributos
         struct Vehicle* car = malloc(sizeof(struct Vehicle));
         car->direction = sector->side;
@@ -113,9 +195,9 @@ void* activate_car_maker(void* arg){
 }
 
 int empty_bridge(struct Simulation* simulation){
-    for (int j = 0; j < 50; j++){
+    for (int j = 0; j < 100; j++){
         for (int i = 0; i < simulation->lenght; i++){
-            if(simulation->bridge[i] != -1){
+            if(simulation->bridge[i]){
                 return 0;
             }
         }
@@ -149,6 +231,7 @@ void* fifo(void* arg){
             pthread_mutex_lock(&simulation->semaphores[0]);
             car = dequeue(pasar->ready);
             arguments->vehicle = car;
+            simulation->way = car->direction;
             pthread_create(&(car->tid), NULL, cross_bridge, arguments);
             car = NULL;
         }else if(ceder->ready->first && empty_bridge(simulation)){
@@ -157,7 +240,7 @@ void* fifo(void* arg){
             //P(Puente[0]) pido el primer espacio
             pthread_mutex_lock(&simulation->semaphores[0]);
             car = dequeue(ceder->ready);
-            simulation->way = ceder->side;
+            simulation->way = car->direction;
             arguments->vehicle = car;
             pthread_create(&(car->tid), NULL, cross_bridge, arguments);
             car = NULL;
@@ -302,8 +385,6 @@ void run_simulation(struct Simulation* simulation){
     pthread_create(&cars_west_maker, NULL, activate_car_maker, arguments2);
     //Veamos la simulacion
     while(simulation->running) show_simulation(simulation);
-    //Esperamos que los carros que ya iban en el puente terminen de pasar 
-    while(!empty_bridge(simulation));
     //Esperamos que los hilos terminen
     pthread_join(user, NULL);
     pthread_join(mod, NULL);
@@ -319,34 +400,43 @@ void stop_simulation(struct Simulation* simulation){
     //Finalizamos los hilos
     for(int i = 0; i < simulation->lenght; i++){
         pthread_mutex_destroy(&simulation->semaphores[i]);
+        if(simulation->bridge[i]){
+            free(simulation->bridge[i]);
+        }
     }
+    free(simulation->bridge);
+    free(simulation->semaphores);
     pthread_mutex_destroy(&simulation->way_bridge);
     free(simulation->east->semaforo);
     free(simulation->west->semaforo);
+    struct Vehicle* car;
     while(simulation->east->ready->first){
-        struct Vehicle* car = dequeue(simulation->east->ready);
+        car = dequeue(simulation->east->ready);
         pthread_join(car->tid, NULL);
         free(car);
     }
     free(simulation->east->ready);
     while(simulation->west->ready->first){
-        struct Vehicle* car = dequeue(simulation->west->ready);
+        car = dequeue(simulation->west->ready);
         pthread_join(car->tid, NULL);
         free(car);
     }
     free(simulation->west->ready);
     while(simulation->east->finish->first){
-        struct Vehicle* car = dequeue(simulation->east->finish);
+        car = dequeue(simulation->east->finish);
         pthread_join(car->tid, NULL);
         free(car);
     }
     free(simulation->east->finish); 
     while(simulation->west->finish->first){
-        struct Vehicle* car = dequeue(simulation->west->finish);
+        car = dequeue(simulation->west->finish);
         pthread_join(car->tid, NULL);
         free(car);
     }
     free(simulation->west->finish);
+    free(simulation->east);
+    free(simulation->west);
+    free(simulation);
 }
 
 void show_final_statistics(struct Simulation* simulation){
@@ -365,8 +455,12 @@ void show_final_statistics(struct Simulation* simulation){
     printf("Amount ambulances in ready: %d\n", simulation->east->ready->cantAmbulances);
     printf("Amount cars processed: %d\n", simulation->west->finish->size);
     printf("Amount ambulances processed: %d\n", simulation->west->finish->cantAmbulances);
-    printf("Percentage of cars that processed: %5.2f%% \n", ((float)simulation->west->finish->size / carsEast) * 100);
     float porcent = 0;
+    if(0 < carsEast){
+        porcent = ((float)simulation->west->finish->size / carsEast) * 100;
+    }
+    printf("Percentage of cars that processed: %5.2f%% \n", porcent);
+    porcent = 0;
     if(0 < ambulancesEast){
         porcent = ( (float) simulation->west->finish->cantAmbulances / ambulancesEast) * 100;
     }
@@ -379,7 +473,11 @@ void show_final_statistics(struct Simulation* simulation){
     printf("Amount ambulances in ready: %d\n", simulation->west->ready->cantAmbulances);
     printf("Amount cars processed: %d\n", simulation->east->finish->size);
     printf("Amount ambulances processed: %d\n", simulation->east->finish->cantAmbulances);
-    printf("Percentage of cars that processed: %5.2f%% \n", ((float)simulation->east->finish->size / carsWest) * 100);
+    porcent = 0;
+    if(0 < ambulancesEast){
+        porcent = ((float)simulation->east->finish->size / carsWest) * 100;
+    }
+    printf("Percentage of cars that processed: %5.2f%% \n", porcent);
     porcent = 0;
     if(0 < ambulancesWest){
         porcent = ( (float) simulation->east->finish->cantAmbulances / ambulancesWest) * 100;
@@ -428,9 +526,9 @@ void save_setting(struct Simulation* simulation, char* section, char* name, int 
         }
     }else if(compare(section, "bridge")){
         if(compare(name, "length")){
-            if(-1 < num){
+            if(0 < num){
                 simulation->lenght = num;
-                simulation->bridge = (int*) malloc (simulation->lenght * sizeof(int));
+                simulation->bridge = (struct Vehicle**) malloc (simulation->lenght * sizeof(struct Vehicle**));
                 simulation->semaphores = (pthread_mutex_t*) malloc (simulation->lenght * sizeof(pthread_mutex_t));
             }
         }
@@ -503,7 +601,7 @@ int init_configurations(struct Simulation* simulation, char* path) {
     //Inicializamos los bloqueos y espacios del puente
     for(int i = 0; i < simulation->lenght; i++){
         pthread_mutex_init(&simulation->semaphores[i], NULL);
-        simulation->bridge[i] = -1;
+        simulation->bridge[i] = NULL;
     } 
     pthread_mutex_init(&simulation->way_bridge, NULL);
     if(simulation->modality == -1){
@@ -547,7 +645,7 @@ int verify_all_configured(struct Simulation* simulation){
     int flag = 1;
     if(simulation->lenght == -1){
         printf("   The lenght of bridge is missing\n");
-        printf("   or enter a negative value\n");
+        printf("   or enter zero or negative value\n");
         flag = 0;
     }
     if(simulation->east->average_cars == -1){

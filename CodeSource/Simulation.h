@@ -7,7 +7,7 @@
 
 struct Simulation{
     //vectores de campos del puente
-    int *bridge;
+    struct Vehicle** bridge;
     //Seguros para evitar que varios carros 
     //utilicen el mismo espacio del puente
     pthread_mutex_t *semaphores;
@@ -21,6 +21,7 @@ struct Simulation{
     int modality; //Modalidad
     struct Sector* east;
     struct Sector* west;
+    char** table_information;//Muestra que esta sucediendo en el puente
 };
 
 /* Utilizado para enviar multiples parametros
@@ -72,7 +73,7 @@ void* user_listener(void* arg);
 void run_simulation(struct Simulation* simulation);
 
 //Detiene la simulacion
-void stop_simulation();
+void stop_simulation(struct Simulation* simulation);
 
 //Permite obtener un analisis simple, acerca de la simulacion
 void show_final_statistics();
