@@ -1,32 +1,33 @@
 #include"Simulation.h"
 
 void show_bridge(){
-    printf("  Este  ║|||||||║");
+    printf("  Este  ║|||||||║   MODALIDAD");
     switch (modality){
     case 1:
         printf(" ");
+        printf(" 1) FIFO\n");
         break;
     case 2:
         printf("[%s](%d) ", (way_bridge)?"■":" ", sector_east->time_semaphore);
+        printf(" 2) SEMAFOROS\n");
         break;
     case 3:
         printf(" ");
+        printf(" 3) OFICIALES\n");
         break;
     default:
         break;
     }
-    printf("Via: Este ");
-    (way_bridge)?printf("-->"):printf("<--");
-    printf(" Oeste\n");
+    
     printf("--------╚═╗   ╔═╝---------------------------------------------------------\n");
     if(way_bridge){
         for (int i = 0; i < lenght; i++){
             if(bridge[i]){
-                printf(" ~ ~ ~ ~ ~║┌=┐║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+                printf(" ~ ~ ~ ~ ~║┌─┐║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
                 printf("~ ~ ~ ~ ~ ║┤%s",(bridge[i]->priority)?"┼":"█");printf("├║");
                 printf("[%0*d]", 3, bridge[i]->plate);
                 printf("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
-                printf(" ~ ~ ~ ~ ~║└─┘║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+                printf(" ~ ~ ~ ~ ~║└=┘║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
             }else{
                 printf(" ~ ~ ~ ~ ~║   ║~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
                 printf("~ ~ ~ ~ ~ ║ | ║ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
@@ -50,18 +51,17 @@ void show_bridge(){
     }
     printf("--------╔═╝   ╚═╗---------------------------------------------------------\n");
     printf(" Oeste  ║|||||||║");
+    printf("   Direccion de la Via: ");
+    (way_bridge)?printf("Este - Oeste\n"):printf("Oeste - Este\n");
     switch (modality){
     case 1:
         printf(" ");
-        printf("FIFO\n");
         break;
     case 2:
         printf("[%s](%d) ", (!way_bridge)?"■":" ", sector_east->time_semaphore);
-        printf("SEMAFOROS\n");
         break;
     case 3:
         printf(" ");
-        printf("OFICIALES\n");
         break;
     default:
         break;
@@ -130,24 +130,36 @@ void* show_simulation(){
     }
 }
 
-int empty_bridge(){
-    for (int j = 0; j < 100; j++){
-        for (int i = 0; i < lenght; i++){
-            if(bridge[i]){
-                return 0;
+void* verify_bridge(){
+    int flag;
+    while(1){
+        flag = 1;
+        for (int j = 0; j < 50; j++){
+            for (int i = 0; i < lenght; i++){
+                if(bridge[i]){
+                    flag = 0;
+                    break;
+                }
+            }
+            if(flag == 0){
+                break;
             }
         }
+        if(flag){ //Notificar que el puente tuvo un cambio
+            empty_bridge = 1;
+            pthread_cond_broadcast(&emptybridge_cond);
+        }
+        sleep(1);
     }
-    return 1;
 }
 
 void* semaphore(){
     while(1){
         way_bridge = 1;
-        pthread_cond_signal(&way_bridge_cond);
+        pthread_cond_broadcast(&way_bridge_cond);
         sleep(sector_east->time_semaphore);
         way_bridge = 0;
-        pthread_cond_signal(&way_bridge_cond);
+        pthread_cond_broadcast(&way_bridge_cond);
         sleep(sector_west->time_semaphore);
     }
 }
@@ -155,22 +167,46 @@ void* semaphore(){
 void* officers(){
     while(1){
         way_bridge = 1;
-        //while contador diferente de mi ki
-        //   pthread_cond_wait(&emptybridge_cond, &emptybridge_mutex); 
-        // cada vez que un automovil pase ki++ entonces signal
+        while(ki < sector_east->ki_cars){
+           pthread_cond_wait(&way_bridge_cond, &way_bridge_mutex); 
+        }
+        ki = 0;
         way_bridge = 0;
+        while(ki < sector_west->ki_cars){
+           pthread_cond_wait(&way_bridge_cond, &way_bridge_mutex); 
+        }
     }
 }
 
 void* start_tour(void* arg){
     struct Vehicle* car = (struct Vehicle*) arg;
     struct Sector* sector = (car->direction)? sector_east: sector_west;
-    enqueue(sector->ready,car);
-    while(car->direction != way_bridge){
-        pthread_cond_wait(&way_bridge_cond, &way_bridge_mutex);
+    if(car->priority && way_bridge == car->direction){
+        enqueue_priority(sector->ready, car);
+    }else{
+        enqueue(sector->ready, car);
     }
+    pthread_mutex_lock(&emptybridge_mutex);
+    while(car->direction != way_bridge){
+        pthread_cond_wait(&emptybridge_cond, &emptybridge_mutex);//Esperar que el puente este
+        if(modality == 1 && empty_bridge){//                       vacio y verificar
+            //Solo la modalidad de fifo los carros tienen la libertad de cambiar la via
+            way_bridge = car->direction;
+        }
+    }
+    pthread_mutex_unlock(&emptybridge_mutex);
+    while(sector->ready->first->car != car){
+        sleep(1);
+    }
+    //Entrando al puente
     pthread_mutex_lock(&semaphores[0]);
+    empty_bridge = 0; // Puente no esta vacio
+    //pthread_cond_signal(&emptybridge_cond);
     dequeue(sector->ready);
+    if(modality == 3){
+        ki++; //Pasa un carro
+        pthread_cond_signal(&way_bridge_cond);// Avisar al oficial
+    }
     //Empezar a cruzar el puente 
     bridge[0] = car;
     for (int i = 0; i < lenght; i++){
@@ -182,22 +218,22 @@ void* start_tour(void* arg){
         bridge[i] = NULL;
         pthread_mutex_unlock(&semaphores[i]);//V(Puente[i]) libero el que estoy
     }
+    //pthread_cond_signal(&emptybridge_cond);
     //Agregamos el carro a la lista de procesos terminados segun el lado
     if(car->direction){
-        enqueue(sector_east->finish, car);
-    }else{
         enqueue(sector_west->finish, car);
+    }else{
+        enqueue(sector_east->finish, car);
     }
     pthread_exit(0);
 }
 
 void* start_rutine(void* arg){
-    int* side = (int*) arg; 
-    pthread_t* arr = (side)? threads_east : threads_west;
-    struct Sector* sector = (side)? sector_east : sector_west;
+    struct Sector* sector = (struct Sector*) arg;
+    pthread_t* arr = (sector->side)? threads_east : threads_west;
     for (int i = 0; i < cant_cars; i++){ //Cantidad arbitraria de carros segun el sector
-        int t = - sector->average_cars * log( 1 - (double) (rand()%1000)/1000); // Tiempo de espera
-        sleep(t);
+        // Tiempo de espera
+        sleep(- sector->average_cars * log( 1 - (double) (rand()%1000)/1000));
         struct Vehicle* car = malloc(sizeof(struct Vehicle)); //Inicializamos el automovil
         car->direction = sector->side;
         car->plate = plates++;
@@ -215,21 +251,22 @@ void run_simulation(){
         case 3: pthread_create(&mod, NULL, officers, NULL); break;
         default: break;
     }
-  /*   pthread_t east; //Inician los automoviles
-    int* side_east = malloc(sizeof(int*));
-    *side_east = 1;
-    pthread_create(&east, NULL, start_rutine, side_east); */
+    pthread_t bridge_available; //Verifica que el puente este disponible
+    pthread_create(&bridge_available, NULL, verify_bridge, NULL); 
+    //Inician los automoviles
+    pthread_t east; 
+    pthread_create(&east, NULL, start_rutine, sector_east); 
     pthread_t west;
-    int side_west = 0;
-    pthread_create(&west, NULL, start_rutine, &side_west);
+    pthread_create(&west, NULL, start_rutine, sector_west);
+    //Para mantener imprimiendo la informacion
     pthread_t show;
     pthread_create(&show, NULL, show_simulation, NULL);
     //Esperar que los arreglos terminen
-/*     pthread_join(east, NULL); */
+    pthread_join(east, NULL);
     pthread_join(west, NULL);
     for (int i = 0; i < cant_cars; i++){
         pthread_join(threads_east[i], NULL);
-        //pthread_join(threads_west[i], NULL);
+        pthread_join(threads_west[i], NULL);
     }
     for(int i = 0; i < lenght; i++){
         pthread_mutex_destroy(&semaphores[i]);
@@ -239,6 +276,8 @@ void run_simulation(){
     free(semaphores);
     pthread_mutex_destroy(&way_bridge_mutex);
     pthread_mutex_destroy(&emptybridge_mutex);
+    pthread_cond_destroy(&way_bridge_cond);
+    pthread_cond_destroy(&emptybridge_cond);
 /*     while(sector_west->finish->first)
         free(dequeue(sector_west->finish));
     free(sector_west->finish);
@@ -247,6 +286,7 @@ void run_simulation(){
     free(sector_east->finish); 
     free(sector_east);
     free(sector_west); */
+    sleep(2);
 } 
 
 char* slide(char *str, char begin, char finish){
@@ -322,7 +362,7 @@ int init_configurations(char* path){
     lenght = -1;
     modality = -1;
     plates = 0;
-    way_bridge = 0;
+    way_bridge = 1;
     FILE *config = fopen (path, "r");
     if(!config) {
         printf("Settings file does not exist in the path: %s\n", path);
@@ -346,10 +386,9 @@ int init_configurations(char* path){
             char* value = slide(line, 61, 10);
             num = atoi(value);
             comment = slide(line,35, 10);
-            save_setting(section, name, num);    
+            save_setting(section, name, num);
             printf("\t%s: %d", name, num);
             (comment != NULL)? printf("\tComment: %s\n", comment):printf("\n");
-        
         }
     }
     fclose (config);//cerramos el fichero
@@ -370,6 +409,8 @@ int init_configurations(char* path){
     } 
     pthread_mutex_init(&way_bridge_mutex, NULL);
     pthread_mutex_init(&emptybridge_mutex, NULL);
+    pthread_cond_init(&way_bridge_cond, NULL);
+    pthread_cond_init(&emptybridge_cond, NULL);
     if(modality == -1){
         printf("Choose one mode of simulation\n");
         printf("\t1) FIFO\n");

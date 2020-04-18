@@ -24,7 +24,8 @@ int way_bridge;//Direccion de la via
 int plates;//Numero de autos ('Placas')
 int lenght; //Largo del puente
 int modality; //Modalidad
-int running; //Simulacion encendida, apagada
+int empty_bridge; //Puente vacio
+int ki;
 struct Sector* sector_east;
 struct Sector* sector_west;
 pthread_t *threads_east;
@@ -41,26 +42,15 @@ void* show_simulation();
 //Esta recorriendo el puente
 void cross_bridge(struct Vehicle* car);
 
-//Verifica si el puente se encuentra vacio
-int empty_bridge();
-
-//Modalidad FIFO
-void* fifo(void* arg);
-
-//Activador o "Motor" de un semaforo para algun sector
-void* activate_semaforo(void* arg);
+/*  Verifica si el puente se encuentra vacio
+    De estar vacio pone una bandera en true */
+void* verify_bridge();
 
 //Modalidad SEMAFOROS
 void* semaphore();
 
-//Establece un Oficial para algun sector
-void* activate_officer(void* arg);
-
 //Modalidad OFICIALES
-void* officer_transit(void *arg);
-
-//Se encarga de esperar que el usuario apague la simulacion
-void* user_listener(void* arg);
+void* officers();
 
 //Reproduce la simulacion
 void run_simulation();
@@ -74,9 +64,6 @@ char* slide(char *str, char begin, char finish);
 /* Registra un variable en el programa desde el archivo de 
    configuracion dependiendo de la seccion y el nombre */
 void save_setting(char* section, char* name, int num);
-
-//Realiza una conversion de ASCII decimal o hexadecimal a int  
-int charToInt(char* value);
 
 /* Inicializa las configuraciones de la simulacion
    Segun un archivo de configuracion*/

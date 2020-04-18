@@ -29,13 +29,24 @@ void enqueue_priority(struct Queue* cola, struct Vehicle* car){
     nodo->car = car;
     nodo->next = NULL;
     if(cola->first){
-        nodo->next = cola->first; 
+        /* if(cola->first->car->priority){
+            struct Node* aux = cola->first;
+            while(aux->next){
+                if(!aux->car->priority) break;
+                aux->next = aux->next->next;
+            }
+            nodo->next = aux->next;
+            aux->next = nodo;
+        }else{ */
+        nodo->next = cola->first;
         cola->first = nodo;
+        /* } */
     }else{
         cola->first = cola->last = nodo;
     }
     cola->size++;
 }
+
 
 //Desencolar o quitar de la cola
 struct Vehicle* dequeue(struct Queue* cola){
