@@ -8,12 +8,12 @@
             "name": "(gdb) Iniciar",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/main",
-            "args": [],
+            "program": "${workspaceFolder}/out",
+            "args": ["../tests/faster.ini","3"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": true,
             "MIMode": "gdb",
             "setupCommands": [
                 {
@@ -21,7 +21,9 @@
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "preLaunchTask": "init",
+            "miDebuggerPath": "/usr/bin/gdb"
         }
     ]
 }
