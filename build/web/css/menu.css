@@ -27,14 +27,14 @@
     display:block;
     background-color: #052D40;
     float:left;
-    width: 30px;
-    height: 100px;
+    width: 10px;
+    height: 85px;
 }
 
 .menu li ul {
     display:none;
     position:absolute;
-    min-width:250px;
+    font-size: 20px;
+    min-width:190px;
+    border-radius: 7px;
 }
-
-			

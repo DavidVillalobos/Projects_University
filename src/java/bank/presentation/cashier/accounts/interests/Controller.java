@@ -90,16 +90,20 @@ public class Controller extends HttpServlet {
     private void accreditInterest(Cuenta c){
         bank.logic.Model domainModel = bank.logic.Model.instance();
         try {
-            double monto = c.getSaldo() * (c.getMoneda().getInteres()/100);
-            Movimiento deposit = new Movimiento();
-            deposit.setMonto(monto);
-            deposit.setSolicitante("Banco Estatal");
-            Tipomovimiento tp2 = domainModel.tipoMovimientoFind(2);
-            deposit.setTipo(tp2);
-            deposit.setMotivo("Intereses Ganados");
-            deposit.setFecha(new Date());
-            deposit.setCuentaDestino(c);
-            domainModel.agregarMovimiento(deposit);
+            if(0 < c.getSaldo()){
+                double monto = c.getSaldo() * (c.getMoneda().getInteres()/100);
+                Movimiento deposit = new Movimiento();
+                deposit.setMonto(monto);
+                deposit.setSolicitante("Banco Estatal");
+                Tipomovimiento tp2 = domainModel.tipoMovimientoFind(2);
+                deposit.setTipo(tp2);
+                deposit.setMotivo("Intereses Ganados");
+                deposit.setFecha(new Date());
+                deposit.setCuentaDestino(c);
+                domainModel.agregarMovimiento(deposit);
+                c.setSaldo( c.getSaldo() + monto);
+                domainModel.cuentaUpdate(c);
+            }
         } catch (Exception ex) {}
     }
     
