@@ -20,33 +20,39 @@
         
         <div class="content">
             <form name="form" action="/Banco_PIV/presentation/Index.jsp" method="post">
-                <table class="table-accredit" border="1">
-                    <tr><td id="Header" colspan="6">Intereses Acreditados Correctamente</td></tr>
-                    <tr id="Header">
+                <table class="table_view_accredit">
+                    <thead class="header">
+                    <tr><td colspan="7">Intereses Acreditados Correctamente</td></tr>
+                    <tr>
                         <td>Fecha</td>
                         <td>Numero</td>
+                        <td>Cuenta</td>
                         <td>Motivo</td>
                         <td>Solicitante</td>
                         <td>Tipo</td>
                         <td>Monto</td>
                     </tr>
-                    <% for(Movimiento m: model.getAcreditas() ){%>
+                    </thead>
+                    <tbody>
+                        <% for(Movimiento m: model.getAcreditas() ){%>
+                            <tr>
+                                <td><%=m.getFechaString()%></td>
+                                <td><%=m.getIdMovimiento() %></td>
+                                <td><%=m.getCuentaDestino().getIdCuenta() %></td>
+                                <td><%=m.getMotivo()%></td>
+                                <td><%=m.getSolicitante()%></td>
+                                <td><%=m.getTipo().getNombre()%></td>
+                                <td><%=m.getMonto()%></td>
+                            </tr>
+                        <%}%>   
                         <tr>
-                            <td><%=m.getFechaString()%></td>
-                            <td><%=m.getIdMovimiento() %></td>
-                            <td><%=m.getMotivo()%></td>
-                            <td><%=m.getSolicitante()%></td>
-                            <td><%=m.getTipo().getNombre()%></td>
-                            <td><%=m.getMonto()%></td>
+                        <td colspan="7">
+                            <footer>
+                            <input class="buttom" type="submit" value="OK">
+                            </footer>
+                        </td>
                         </tr>
-                    <%}%>   
-                    <tr>
-                    <td colspan="6">
-                        <footer>
-                        <input class="buttom" type="submit" value="OK">
-                        </footer>
-                    </td>
-                    </tr>
+                    </tbody>
                 </table>
             </form>
         </div>

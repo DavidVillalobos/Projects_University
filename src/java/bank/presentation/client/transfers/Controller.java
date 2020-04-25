@@ -116,7 +116,9 @@ public class Controller extends HttpServlet {
         try {
             List<Movimiento> recentMovements = domainModel.getMovementsByDate(account, new Date());
             for (Movimiento move : recentMovements) {
-                total += move.getMonto();
+                if(move.getCuentaDestino() != null){
+                    total += move.getMonto();
+                }
             }
             return account.getLimite() < total; //Se paso del limite?
         } catch (Exception ex) {}

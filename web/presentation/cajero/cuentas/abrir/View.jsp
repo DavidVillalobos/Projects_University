@@ -21,8 +21,8 @@
         <div class="content">
             <% if(request.getAttribute("added") == null){ %>
             <form name="form" action="/Banco_PIV/presentation/cashier/accounts/open/create" method="post">
-                <table class="remote-transfer">
-                    <tr id="Header">
+                <table class="open_account">
+                    <tr class="header">
                         <td colspan="2">Abrir Cuenta</td>
                     </tr>
                     <tr>
@@ -58,7 +58,7 @@
                     </tr>
                     <tr><td>
                         <footer>
-                            <a href="/Banco_PIV/presentation/cashier/accounts/open/show">
+                            <a href="/Banco_PIV/presentation/Index.jsp">
                                 <input class="buttom" type="" value="Cancelar" name="cancel">
                             </a>
                         </footer>
@@ -69,8 +69,8 @@
                     </td></tr>
                 </table>
                 <% if(model.getRegistrated() == false){ %>
-                <table class="new-client">
-                    <tr id="Header">
+                <table class="new_client">
+                    <tr class="header">
                         <td colspan="2">Nuevo Cliente</td>
                     </tr>
                     <tr>
@@ -93,7 +93,7 @@
                             value="<%=credencials.get("telefono")[0]%>" title="<%=getTittle("telefono", errors)%>">
                         </td>
                     </tr>
-                    <tr id="Header">
+                    <tr class="header">
                         <td colspan="2"> <br> </td>
                     </tr>  
                 </table> <% } %>
@@ -101,8 +101,8 @@
             <% if(request.getAttribute("added")!= null){ %>
             <form name="form_2" action="/Banco_PIV/presentation/cashier/accounts/open/show" method="post">
                 <center>
-                <table class="remote-transfer">
-                    <tr id="Header">
+                <table class="remote_transfer">
+                    <tr class="header">
                         <td colspan="2">Detalle de Cuenta</td>
                     </tr>
                     <tr><td>Cliente</td><td><%=credencials.get("cedula")[0]%></td></tr>

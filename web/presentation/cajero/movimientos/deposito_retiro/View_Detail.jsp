@@ -26,9 +26,9 @@
         <div class="content">
             <% if(select_origin != null){ %>
                 <form name="form" action="/Banco_PIV/presentation/cashier/movements/d_wd/show" method="post">
-                    <table class="datail-transfer">
-                        <tr id="Header"><td colspan="7">Detalle del <%= model.getTipoMovimiento()==1?"Retiro":"Deposito" %> Realizado</td></tr>
-                        <tr id="Header"><td>N° Cuenta</td><td>Propietario</td><td>Fecha</td><td>Monto</td><td>Saldo Actual</td></tr>
+                    <table class="detail_transfer">
+                        <tr class="header"><td colspan="7">Detalle del <%= model.getTipoMovimiento()==1?"Retiro":"Deposito" %> Realizado</td></tr>
+                        <tr class="header"><td>N° Cuenta</td><td>Propietario</td><td>Fecha</td><td>Monto</td><td>Saldo Actual</td></tr>
                         <tr>
                             <td><%= select_origin.getIdCuenta() %></td> 
                             <td><%= select_origin.getCliente().getNombre() %></td>

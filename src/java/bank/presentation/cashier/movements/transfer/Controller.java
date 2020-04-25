@@ -1,14 +1,9 @@
 package bank.presentation.cashier.movements.transfer;
 
-import bank.logic.Cliente;
-import bank.logic.Cuenta;
-import bank.logic.Movimiento;
 import bank.logic.Usuario;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

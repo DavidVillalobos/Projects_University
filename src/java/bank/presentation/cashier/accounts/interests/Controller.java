@@ -5,13 +5,10 @@ import bank.logic.Movimiento;
 import bank.logic.Tipomovimiento;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -126,7 +123,6 @@ public class Controller extends HttpServlet {
     }
 
     private boolean accreditProcessDone(HttpServletRequest request) {
-        Model model = (Model) request.getAttribute("model");
         bank.logic.Model domainModel = bank.logic.Model.instance();
         try {
             if(domainModel.getMovementsForInterestAccredit().isEmpty()){

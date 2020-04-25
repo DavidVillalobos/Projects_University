@@ -19,21 +19,23 @@
         
         <div class="content">
             <form name="form" action="/Banco_PIV/presentation/cashier/accounts/interests/accredit" method="post">
-                <table class="table-accredit" border="1">
-                    <tr><td id="Header" colspan="3">Monedas</td></tr>
-                    <tr id="Header">
-                        <td>Codigo</td><td>Nombre</td><td>Porcentaje de Interes</td>
-                    </tr>
-                    <%for (Moneda c : model.getMonedas()){%>
-                        <tr>
-                            <td><%=c.getIdMoneda()%></td>
-                            <td><%=c.getNombreMoneda() %></td>
-                            <td><%=c.getInteres() %>%</td>
-                        </tr>
-                    <%}%>
-                    <tr><td colspan="3"><footer>
-                    <input class="buttom" type="submit" value="Acreditar">
-                    </footer></td></tr>
+                <table class="table_accredit">
+                    <thead class="header">
+                        <tr><td colspan="3">Monedas con su porcentaje a acreditar</td></tr>
+                        <tr><td>Codigo</td><td>Nombre</td><td>Porcentaje de Interes</td></tr>
+                    </thead>
+                    <tbody>
+                        <%for (Moneda c : model.getMonedas()){%>
+                            <tr>
+                                <td><%=c.getIdMoneda()%></td>
+                                <td><%=c.getNombreMoneda() %></td>
+                                <td><%=c.getInteres() %>%</td>
+                            </tr>
+                        <%}%>
+                        <tr><td colspan="3"><footer>
+                        <input class="buttom" type="submit" value="Acreditar">
+                        </footer></td></tr>
+                    </tbody>
                 </table>
             <form>
         </div>

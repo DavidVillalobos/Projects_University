@@ -15,7 +15,7 @@
                 <li><a href="/Banco_PIV/presentation/client/data/show">Usuario: <%=user.getIdUsuario()%></a></li>
                 <% if(user.getTipo()){ %>
                     <li><a href="/Banco_PIV/presentation/cashier/accounts/open/show">Abrir Cuenta</a></li>
-                    <li><a href="">Movimientos</a>
+                    <li><a href="/Banco_PIV/presentation/Index.jsp">Movimientos</a>
                     <ul>
 			<li><a href="/Banco_PIV/presentation/cashier/movements/d_wd/show">Deposito o Retiro</a></li>
 			<li><a href="/Banco_PIV/presentation/cashier/movements/transfer/show">Tranferencia</a></li>

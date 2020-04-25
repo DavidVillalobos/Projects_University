@@ -23,7 +23,7 @@
         <div class="content">
             <form name="form"  action="/Banco_PIV/presentation/client/accountsLinked/search" method="post">         
                 <table class="search">
-                    <td id="Header" colspan="3">Vincular Cuentas</td>
+                    <td class="header" colspan="3">Vincular Cuentas</td>
                     <tr>
                         <td>N° Cuenta</td>
                         <td><input class ="<%=verifyErrors("idAccount",errors)%>" type="text" name="idAccount" placeholder=" Numero de Cuenta" 
@@ -34,22 +34,24 @@
                     </tr>
                 </table>
             </form>
-            <table class="accountsLink" border="1">
-                <tr class="cabecera"><td colspan="4">Lista de Cuentas Vinculadas</td></tr>
-                <tr class="cabecera"><td>Numero de Cuenta</td><td>Cedula</td><td>Propietario</td><td>Moneda</td>
-                <%for(Cuenta c : cuentas){%>  
-                    <tr>
-                        <td><%=c.getIdCuenta()%></td>  
-                        <td><%= c.getCliente().getCedula() %></td>
-                        <td><%= c.getCliente().getNombre() %></td>
-                        <td><%= c.getMoneda() %></td>
-                    </tr>
-                <%}%>
+            <table class="table_accounts_link">
+                <thead class="header">
+                    <tr><td colspan="2">Lista de Cuentas Vinculadas</td></tr>
+                    <tr><td>Numero de Cuenta</td><td>Propietario</td>
+                </thead>
+                <tbody>
+                    <%for(Cuenta c : cuentas){%>  
+                        <tr>
+                            <td><%=c.getIdCuenta()%></td>  
+                            <td><%= c.getCliente().getNombre() %></td>
+                        </tr>
+                    <%}%>
+                </tbody>
             </table>
             <% if(bylink != null){ %>
                 <form name="form"  action="/Banco_PIV/presentation/client/accountsLinked/link" method="post">         
                     <table class="link">
-                        <td id="Header" colspan="2">Informacion de la Cuenta</td>
+                        <td class="header" colspan="2">Informacion de la Cuenta</td>
                         <tr>
                             <td>N° Cuenta</td><td>Propietario</td>
                         </tr>

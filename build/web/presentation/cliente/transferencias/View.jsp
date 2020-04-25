@@ -24,8 +24,8 @@
         
         <div class="content">
             <form name="form" action="/Banco_PIV/presentation/client/transfers/processTransfer" method="post">
-                <table class="remote-transfer">
-                    <tr id="Header">
+                <table class="open_account">
+                    <tr class="header">
                         <td colspan="2">Tranferencia remota</td>
                     </tr>
                     <tr>
@@ -70,7 +70,9 @@
                     </tr>
                     <tr><td>
                         <footer>
-                            <input class="buttom" type="reset" value="Cancelar">
+                             <a href="/Banco_PIV/presentation/Index.jsp">
+                                <input class="buttom" type="" value="Cancelar" name="cancel">
+                            </a>
                         </footer>
                     </td><td>
                         <footer>
@@ -81,9 +83,9 @@
             </form>
             <% if(select_origin != null && select_destiny != null){ %>
                 <form name="form" action="/Banco_PIV/presentation/client/transfers/transfer" method="post">
-                    <table class="confirm-transfer">
-                        <tr id="Header"><td colspan="6">Confirmar Tranferencia</td></tr>
-                        <tr id="Header"><td>Tipo</td><td>N° Cuenta</td><td>Propietario</td><td>Moneda</td><td>Saldo</td><td>Movimiento</td></tr>
+                    <table class="confirm_transfer">
+                        <tr class="header"><td colspan="6">Confirmar Tranferencia</td></tr>
+                        <tr class="header"><td>Rol</td><td>N° Cuenta</td><td>Propietario</td><td>Moneda</td><td>Saldo</td><td>Movimiento</td></tr>
                         <tr>
                             <td>Origen</td>
                             <td><%= select_origin.getIdCuenta() %></td> 

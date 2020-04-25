@@ -10,6 +10,7 @@
     <%@ include file="/presentation/Header.jsp" %>
     <div id="body" style="margin: 0 auto; width:85%; ">   
         <h1>Ha ocurrido un error</h1>
+        <h1>Cierre la sesion y inicie de nuevo</h1>
     </div>  
 </body>
 </html>

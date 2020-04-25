@@ -24,10 +24,10 @@
         %>
         <div class="content">
             <% if(select_origin != null && select_destiny != null){ %>
-                <form name="form" action="/Banco_PIV/presentation/client/accounts/show" method="post">
-                    <table class="datail-transfer">
-                        <tr id="Header"><td colspan="7">Detalle de la Tranferencia Realizada</td></tr>
-                        <tr id="Header"><td>Tipo</td><td>N° Cuenta</td><td>Propietario</td><td>Fecha</td><td>Saldo Anterior</td><td>Monto</td><td>Saldo Actual</td></tr>
+                <form name="form" action="/Banco_PIV/presentation/Index.jsp" method="post">
+                    <table class="detail_transfer">
+                        <tr class="header"><td colspan="7">Detalle de la Tranferencia Realizada</td></tr>
+                        <tr class="header"><td>Tipo</td><td>N° Cuenta</td><td>Propietario</td><td>Fecha</td><td>Saldo Anterior</td><td>Monto</td><td>Saldo Actual</td></tr>
                         <tr>
                             <td>Origen</td>
                             <td><%= select_origin.getIdCuenta() %></td> 

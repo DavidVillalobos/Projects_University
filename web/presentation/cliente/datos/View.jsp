@@ -21,9 +21,9 @@
     %>
 
     <div class="content">
-        <form class="formData" name="form" action="/Banco_PIV/presentation/client/data/update" method="post">
+        <form class="table_data" name="form" action="/Banco_PIV/presentation/client/data/update" method="post">
             <table>
-                <tr><td id="Header" colspan="2">Informacion Personal</td></tr>
+                <tr><td class="header" colspan="2">Informacion Personal</td></tr>
                 <tr><td>Cedula</td><td><%= cliente.getCedula() %></td></tr>
                 <tr><td>Nombre</td>
                     <td><input class ="<%=verifyErrors("name",errors)%>" type="text" name="name" placeholder="Nombre" 

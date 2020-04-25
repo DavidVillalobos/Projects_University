@@ -24,7 +24,7 @@
         
         <div class="content">
             <form name="form_1" action="/Banco_PIV/presentation/cashier/movements/transfer/searchOrigin" method="post">
-            <table class="table_search_cuenta_origen">
+            <table class="search_account_origin">
                 <tr><td colspan="2">Cuenta Origen</td></tr>
                 <tr>
                     <td>Nº Cuenta</td>
@@ -54,7 +54,7 @@
             </table>
             </form>
             <form name="form_2" action="/Banco_PIV/presentation/cashier/movements/transfer/searchDestiny" method="post">
-            <table class="table_search_cuenta_destino">
+            <table class="search_account_destiny">
                 <tr><td colspan="2">Cuenta Destino</td></tr>
                 <tr>
                     <td>Nº Cuenta</td>
@@ -84,8 +84,8 @@
             </table>
             </form>
             <form name="form" action="/Banco_PIV/presentation/cashier/movements/transfer/processTransfer" method="post">
-                <table id="cajas-transfer" class="remote-transfer">
-                    <tr id="Header">
+                <table class="transfer_in_cash_register">
+                    <tr class="header">
                         <td colspan="2">Tranferencia en Cajas</td>
                     </tr>
                     <tr>

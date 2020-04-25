@@ -21,8 +21,8 @@
         
         <div class="content">
             <form name="form" action="/Banco_PIV/presentation/cashier/movements/d_wd/doMovement" method="post">
-                <table class="remote-transfer">
-                    <tr id="Header">
+                <table class="open_account">
+                    <tr class="header">
                         <td colspan="2">Movimiento en Caja</td>
                     </tr>
                     <tr>
@@ -76,13 +76,15 @@
                     </tr>
                     <% if(verifyErrors("tipoMovimiento", errors).equals("invalid")){ %>
                         <tr>
-                        <td id="invalid-message" colspan="2">Es necesario elegir un movimiento.</td>
+                        <td id="invalid_message" colspan="2">Es necesario elegir un movimiento.</td>
                         
                         </tr>
                     <% } %>
                     <tr><td>
                         <footer>
-                            <input class="buttom" type="reset" value="Cancelar">
+                            <a href="/Banco_PIV/presentation/Index.jsp">
+                                <input class="buttom" type="" value="Cancelar" name="cancel">
+                            </a>
                         </footer>
                     </td><td>
                         <footer>
