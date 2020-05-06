@@ -1,5 +1,5 @@
-OBJS	= main.o 
-SOURCE	= main.c 
+OBJS	= main.o simulation.o
+SOURCE	= main.c simulation.c
 HEADER	= 
 OUT	= program
 CC	 = gcc
@@ -11,6 +11,9 @@ all: clean $(OBJS)
 
 main.o: main.c
 	$(CC) $(FLAGS) main.c
+
+simulation.o: simulation.c
+	$(CC) $(FLAGS) simulation.c
 
 clean:
 	rm -f $(OBJS) $(OUT)
