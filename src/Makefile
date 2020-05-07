@@ -1,10 +1,10 @@
-OBJS	= main.o simulation.o
-SOURCE	= main.c simulation.c
-HEADER	= 
+OBJS = main.o simulation.o
+SOURCE = main.c simulation.c
+HEADER = simulation.h
 OUT	= program
-CC	 = gcc
-FLAGS	 = -g -c -Wall
-LFLAGS	 = -pthread -lm
+CC = gcc
+FLAGS = -g -c -Wall
+LFLAGS =  -lm
 
 all: clean $(OBJS)
 	$(CC) -g $(OBJS) -o $(OUT) $(LFLAGS)
