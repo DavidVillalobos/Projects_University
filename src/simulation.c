@@ -1,16 +1,7 @@
 #include"simulation.h"
 
-// Genera una pared rectangular en los puntos especificados
-void build_wall(int x1, int y1, int x2, int y2){
-    int i,j;
-    for (i = y1-1; i < y2; i++){ // Filas    Y
-        for (j = x1-1; j < x2; j++){ // Columnas X
-            map[i][j].state = 0;
-        }
-    }
-}
-
 int init_configurations(){
+    srand(time(NULL));
     // Configuracion del mapa
     char* path = "../test/map.ini";
     FILE *file = fopen(path, "r");
@@ -33,10 +24,10 @@ int init_configurations(){
     }
     int cant_walls;
     fscanf(file, "%d", &cant_walls);
-    int x1, y1, x2, y2;
+    struct point_t point1, point2;
     for (i = 0; i < cant_walls; i++){
-        fscanf(file, "%d %d %d %d", &x1, &y1, &x2, &y2);
-        build_wall(x1, y1, x2, y2);
+        fscanf(file, "%d %d %d %d", &point1.x, &point1.y, &point2.x, &point2.y);
+        build_wall(point1, point2);
     }
     fclose(file);
 
@@ -62,8 +53,8 @@ int init_configurations(){
             groups[i][j].type = type;
             groups[i][j].state = (state == 's')?1:2;
             groups[i][j].velocity = min + rand() % (max + 1 - min);
-            groups[i][j].position[0] = rand() % (map_weight + 1); //X
-            groups[i][j].position[1] = rand() % (map_height + 1); //Y
+            groups[i][j].position.x = rand() % (map_weight + 1); //X
+            groups[i][j].position.y = rand() % (map_height + 1); //Y
         }
     }
     fclose(file);
@@ -87,61 +78,71 @@ int init_configurations(){
     return 0;
 }
 
+void start_program(){
+    struct agent_t* agent = malloc(sizeof(struct agent_t));
+    agent->type = 1;
+    agent->state = 2;
+    generate_points(agent);
+    agent->position.x = rand() % (map_weight + 1);
+    agent->position.y = rand() % (map_height + 1);
+    if(generate_straight(agent))
+        view_straight(agent);
+    agent->position.x =  rand() % (map_weight + 1);
+    agent->position.y =  rand() % (map_height + 1);
+    agent->state = 1;
+    generate_points(agent);
+    if(generate_curve(agent))
+        view_curve(agent);
+    print_map();
+}
+
+void build_wall(struct point_t p1, struct point_t p2){
+    int i,j;
+    for (i = p1.y-1; i < p2.y; i++){ // Filas Y
+        for (j = p1.x-1; j < p2.x; j++){ // Columnas X
+            map[i][j].state = 0;
+        }
+    }
+}
+
 void print_map(){
     int i,j;
     printf("╔");
-    for (i = 0; i < map_weight; i++){
-        printf("═");
-    }
+    for (i = 0; i < map_weight; i++) printf("═");
     printf("╗\n");
     for (i = 0; i < map_height; i++){
         printf("║"); 
         for (j = 0; j < map_weight; j++){
-            if(map[i][j].state == 0 || map[i][j].state == -1){
+            if(map[i][j].state == 0 || map[i][j].state == -1)
                 printf("%s", (map[i][j].state == 0)?"║":" ");
-            }else{// 1 Sano, 2 Enfermo, 3 Curado
-                if(map[i][j].state == 1){
-                    printf("\x1B[32m");    
-                }else if(map[i][j].state == 2){
-                    printf("\x1B[31m");
-                }else{
-                    printf("\x1B[34m");
-                }
-                printf("*\x1B[0m");
-            }
+            else
+                if(map[i][j].state == 1) printf("\x1B[32m*\x1B[0m");    
+                else if(map[i][j].state == 2) printf("\x1B[31m*\x1B[0m");
+                else printf("\x1B[34m*\x1B[0m");
         }
         printf("║\n");
     }
     printf("╚");
-    for (i = 0; i < map_weight; i++){
-        printf("═");
-    }
+    for (i = 0; i < map_weight; i++) printf("═");
     printf("╝\n"); 
 }
 
-//Calcula una recta dados dos puntos, el primer punto es 
-//la posicion del agente y el segundo es la nueva posicion
-int generarRecta(struct agent_t* agent){
-    agent->position[2] = 0; //No es cuadratica
-    float x2 = agent->route[0][0]; // Puntos aleatorios en 
-    float y2 = agent->route[1][0]; // el borde de la matriz
-    if(x2 - agent->position[0] != 0){ // Actualiza los valores M y  B siempre que no implique una recta vertical
-        agent->coefficient[1] = (y2 - agent->position[1]) / (x2 - agent->position[0]);
-        agent->coefficient[0] = agent->position[1] - agent->coefficient[1] * agent->position[0];
-        return 1;
-    }
-    return 0;
+int generate_straight(struct agent_t* agent){
+    agent->coefficient[2] = 0; //No es cuadratica
+    // Actualiza los valores M y B siempre que no implique una recta vertical
+    if(agent->route[0].y - agent->position.x == 0) return 0;
+    agent->coefficient[1] = (agent->route[0].y - agent->position.x) / (agent->route->x - agent->position.x);
+    agent->coefficient[0] = agent->position.y - agent->coefficient[1] * agent->position.x;
+    return 1;
 }
 
-//Calcula una curva dados tres puntos, el primer punto es la 
-//posicion del agente y los otros son nuevas posiciones de la ruta
-int generarCurva(struct agent_t* agent){
-    float p1x =  agent->route[0][0];
-    float p1y =  agent->route[1][0];
-    float p2x =  agent->route[0][1]; 
-    float p2y =  agent->route[1][1];
-    float p3x =  agent->route[0][2]; 
-    float p3y =  agent->route[1][2];
+int generate_curve(struct agent_t* agent){
+    float p1x =  agent->route[0].x;
+    float p1y =  agent->route[0].y;
+    float p2x =  agent->route[1].x; 
+    float p2y =  agent->route[1].y;
+    float p3x =  agent->route[2].x; 
+    float p3y =  agent->route[2].y;
     float r1[3], r2[3], det;
     //+ Generamos sistema de Ecuaciones Lineales
     //*r 1
@@ -162,13 +163,10 @@ int generarCurva(struct agent_t* agent){
     return 1;
 }
 
-//Permite ver el camino generado con la funcion
-// hasta n posiciones de un agente
-
-void visualizarRecta(struct agent_t* agent){
+void view_straight(struct agent_t* agent){
     printf("Forma:  f(x) = %0.1f * x + %0.1f\n", agent->coefficient[1] , agent->coefficient[0]);
-    int x = agent->position[0];
-    float yprev = agent->position[1];
+    int x = agent->position.x;
+    float yprev = agent->position.y;
     float y;
     while(1){//seguir ejecutando mientras no choque con algo
         //printf("Funcion:f(%d) = %0.1f * %d + %0.1f\n", x, agent->coefficient[1] , x, agent->coefficient[0]);
@@ -195,9 +193,9 @@ void visualizarRecta(struct agent_t* agent){
     }
 }
 
-void visualizarCurva(struct agent_t* agent){
+void view_curve(struct agent_t* agent){
     printf("Forma:  f(x) = %0.1f * (x)^2 + %0.1f * x + %0.1f\n", agent->coefficient[2], agent->coefficient[1] , agent->coefficient[0]);
-    int x = agent->position[0];
+    int x = agent->position.x;
     //float yprev = agent->position[1];
     float y;
     while(1){//seguir ejecutando mientras no choque con algo
@@ -221,11 +219,10 @@ void visualizarCurva(struct agent_t* agent){
     }
 }
 
-//Genera 7 Puntos por donde debe pasar un estacional
-void generarPuntos(struct agent_t* agent){
+void generate_points(struct agent_t* agent){
     for (int i = 0; i < 7; i++){
-        agent->route[0][i] = rand() % (map_weight + 1);
-        agent->route[1][i] = rand() % (map_height + 1);
+        agent->route[i].x = rand() % (map_weight + 1);
+        agent->route[i].y = rand() % (map_height + 1);
     }
     return;
 }
