@@ -5,21 +5,16 @@
 #include <string.h> // for strlen
 #include <unistd.h>
 
-//Punto
-struct point_t{
-    int x, y;
-};
-
 // Agentes
 struct agent_t{
     int type; //1 Recto, 2 Estacional, 3 Aleatorio, 4 Estatico
     int state; //* 0 Muerto, 1 Sano, 2 Enfermo, 3 Curado
     pthread_mutex_t mutex; //* Bloqueo para el cambio de estados
-    struct point_t position;
+    int position[2];
     int velocity;
     pthread_t thread;
     float coefficient[3]; //~ a(x)^2 + b(x) + c
-    struct point_t route[7]; // Vector de 7 puntos, por donde pasa el Estacional
+    int route[2][7]; // Vector de 7 puntos, por donde pasa el Estacional
 };
 
 // Posicion de la matriz
@@ -43,6 +38,7 @@ int map_height;
 struct boxes_t** map;
 
 //Simulation
+int cant_groups; // cantidad de grupos
 int *tam_groups;//Vector con la cantidad de los grupos
 struct agent_t** groups;//Vector de Vectores de agentes(grupos)
 
@@ -53,13 +49,15 @@ int init_configurations();
 void start_program();
 
 // Genera una pared rectangular en los puntos especificados
-void build_wall(struct point_t p1, struct point_t p2);
+void build_wall(int x1, int y1, int x2, int y2);
 
 // Pinta el mapa por consola
 void print_map();
 
-// Calcula una recta dados dos puntos, el primer punto es 
-// la posicion del agente y el segundo es la nueva posicion
+/* Calcula una recta dados dos puntos, el primer punto es 
+   la posicion del agente y el segundo es la nueva posicion
+   Actualiza los valores M y B del agente siempre que no 
+   implique una recta vertical*/
 int generate_straight(struct agent_t* agent);
 
 // Calcula una curva dados tres puntos, el primer punto es la 
@@ -74,3 +72,11 @@ void view_curve(struct agent_t* agent);
 
 // Genera 7 Puntos por donde debe pasar un estacional
 void generate_points(struct agent_t* agent);
+
+// Guarda una captura de la simulacion
+void take_capture();
+
+/* Crea el pdf apartir del latex
+   toma cada pagina del pdf como png
+   toma cada png y crea un video
+   void create_video(); */
