@@ -1,0 +1,59 @@
+:root{
+     --color-principal: #0A641E;
+}
+
+body {
+    //background-image: url("../images/background.jpg");
+}
+
+header{
+    background-color: var (--color-principal);
+    font-size: 20px;
+    color: white;	
+    text-align: center;
+    padding: 15px;
+}
+
+.content{
+    //background-image: url("../images/backgroundcards.jpg");
+    height: 540px;
+    font-size: 80px;
+    font-style: oblique;
+    color: var(--color-principal);
+}
+
+
+footer{
+    background-color: var(--color-principal);
+    font-size: 20px;
+    color: white;	
+    text-align: center;
+    padding: 15px;
+}
+
+.login{
+    margin-left: 37%;
+    margin-right: 37%;
+    margin-top: 3%;
+    border: black 2px outset;
+    background-color: #E1E7F3;
+}
+
+.login header{
+    text-align: center;
+    border-bottom: black 2px outset;
+    background-color: #012434;   
+    font-size: 36px;
+    color: white;
+}
+
+.buttom{
+    width: 110px;
+    height: 30px;
+    margin: 2px;
+    font: oblique bold 20px sans-serif;
+}
+
+input[type="text"].invalid, input[type="password"].invalid, select.invalid{
+    border: 3px solid #FC6544;
+}
