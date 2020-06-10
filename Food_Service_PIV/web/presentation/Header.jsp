@@ -1,3 +1,3 @@
 <header>
-   
+   <!-- Menu Options -->
 </header>
