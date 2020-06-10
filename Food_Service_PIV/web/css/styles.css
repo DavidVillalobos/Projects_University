@@ -1,7 +1,6 @@
 :root{
      --color-principal: #0A641E;
 }
-
 .alto{
     height: 380px;
 }
@@ -15,8 +14,8 @@
 
 #icono2{
     height: 850%;
-    width: 1100%;
-    margin-left: 350%;
+    width: 700%;
+    margin-left: 600%;
     margin-top: 300%;
 }
 
