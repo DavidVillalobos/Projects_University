@@ -31,10 +31,10 @@ public class LoginClient {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)    
-    public Clients login(Clients client) {  // api/loginClient/login
+    public Clients login(Clients client) {
          Clients logged=null;
         try {
-            logged= Model.instance().clientegetByEmail(client.getEmail());
+            logged = Model.instance().clientegetByEmail(client.getEmail());
             if(!logged.getPassword().equals(client.getPassword())) throw new Exception("Clave incorrecta");
             request.getSession(true).setAttribute("client", logged);
             return logged;
@@ -44,9 +44,10 @@ public class LoginClient {
     }
     
     @DELETE 
-    public void logout() {  //   api/loginClient/logout
+    public void logout() {
         HttpSession session = request.getSession(true);
         session.removeAttribute("client");           
         session.invalidate();
     }
+    
 }

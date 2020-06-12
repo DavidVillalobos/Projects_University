@@ -41,7 +41,7 @@ public class Administrators implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
-    @Column(name = "user_name")
+    @Column(name = "userName")
     private String userName;
     @Basic(optional = false)
     @NotNull

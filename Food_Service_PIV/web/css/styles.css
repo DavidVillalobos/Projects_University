@@ -2,23 +2,27 @@
      --color-principal: #0A641E;
 }
 .alto{
-    height: 380px;
+    height: 450px;
 }
 
 #icono{
     height: 1000%;
     width: 1000%;
-    margin-left: -1000%;
-    margin-top: 250%;
+    margin-left: -1200%;
+    margin-top: 350%;
 }
 
 #icono2{
     height: 850%;
     width: 700%;
-    margin-left: 600%;
-    margin-top: 300%;
+    margin-left: -300%;
+    margin-top: 560%;
 }
 
 input[type="text"].invalid, input[type="password"].invalid, select.invalid{
     border: 3px solid #FC6544;
+}
+
+.button-Admin-Panel{
+    margin-top: -54px;
 }

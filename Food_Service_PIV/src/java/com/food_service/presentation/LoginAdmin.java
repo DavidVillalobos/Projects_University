@@ -6,7 +6,7 @@
 package com.food_service.presentation;
 
 import com.food_service.logic.Administrators;
-import com.food_service.logic.Model;
+import com.food_service.logic.Clients;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
@@ -17,11 +17,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import com.food_service.logic.Model;
+import javax.ws.rs.GET;
+import javax.ws.rs.PathParam;
 
-/**
- *
- * @author David Villalobos
- */
+
 @Path("/loginAdmin")
 public class LoginAdmin {
     
@@ -31,7 +31,7 @@ public class LoginAdmin {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)    
-    public Administrators login(Administrators admin) {  // api/loginAdmin/login
+    public Administrators login(Administrators admin) {
          Administrators logged=null;
         try {
             logged = Model.instance().administradorgetByUserName(admin.getUserName());
@@ -44,9 +44,10 @@ public class LoginAdmin {
     }
     
     @DELETE 
-    public void logout() {  //   api/loginAdmin/logout
+    public void logout() {
         HttpSession session = request.getSession(true);
         session.removeAttribute("admin");           
         session.invalidate();
     }
+   
 }

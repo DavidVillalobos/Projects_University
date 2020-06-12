@@ -1,18 +1,5 @@
 package com.food_service.logic;
-import com.food_service.data.Dao_Additionals;
-import com.food_service.data.Dao_Administrator_Status;
-import com.food_service.data.Dao_Administrators;
-import com.food_service.data.Dao_Adresses;
-import com.food_service.data.Dao_Categories;
-import com.food_service.data.Dao_Client_Dish;
-import com.food_service.data.Dao_Cliente_Additionals;
-import com.food_service.data.Dao_Cliente_Details;
-import com.food_service.data.Dao_Clients;
-import com.food_service.data.Dao_Details;
-import com.food_service.data.Dao_Dishes;
-import com.food_service.data.Dao_Locations;
-import com.food_service.data.Dao_Order_Status;
-import com.food_service.data.Dao_Orders;
+import com.food_service.data.*;
 import java.util.List;
 
 /**
