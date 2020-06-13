@@ -6,6 +6,7 @@
 package com.food_service.presentation;
 
 import com.food_service.logic.Administrators;
+import com.food_service.logic.Model;
 import com.google.gson.Gson;
 
 /**
@@ -17,7 +18,9 @@ public class NewMain {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        Model m = Model.instance();
+        Administrators ad = m.administradorget(1);
         String jason = "{userName: \"1\", password: \"1\"}";
         Gson gson = new Gson();
         Administrators admin = gson.fromJson(jason, Administrators.class);

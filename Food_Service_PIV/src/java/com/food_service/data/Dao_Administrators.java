@@ -47,7 +47,7 @@ public class Dao_Administrators {
     }
     
     public Administrators getbyUserName(String userName) throws Exception {
-        String sql = "SELECT * FROM administrators WHERE userName='%s'";
+        String sql = "SELECT * FROM administrators WHERE user_name='%s'";
         sql = String.format(sql, userName);
         ResultSet rs = db.executeQuery(sql);
         if(rs.next()){

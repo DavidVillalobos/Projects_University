@@ -50,7 +50,7 @@
             <div class="row text-white alto justify-content-center">
                 <div class="col-4 pt-5">
                     <button class="navbar-toggler" type="button"> 
-                        <a class="display-4 text-white">Storefront</a>
+                        <a class="display-4 text-white" href="/Food_Service_PIV/web/presentation/client/order.html">Storefront</a>
                     </button>
                     <span class="navbar-toggler-icon"> <img id="icono" src="images/icon.png"></span>
                 </div>  
@@ -62,6 +62,7 @@
                         </div> 
                     </button>
                 </div>
+                <div id="categories"></div>
             </div>
         </div>
     </body>

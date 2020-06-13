@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.food_service.presentation;
 
 import com.food_service.logic.Administrators;
-import com.food_service.logic.Clients;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
@@ -18,9 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import com.food_service.logic.Model;
-import javax.ws.rs.GET;
-import javax.ws.rs.PathParam;
-
 
 @Path("/loginAdmin")
 public class LoginAdmin {
