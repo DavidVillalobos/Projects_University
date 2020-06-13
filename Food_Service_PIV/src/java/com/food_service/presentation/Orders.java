@@ -42,7 +42,7 @@ public class Orders {
         try {
             return Model.instance().categoriasgetAll();
         } catch (Exception ex) {
-            throw new NotAcceptableException(); 
+            throw new NotFoundException(); 
         }
     }
 
