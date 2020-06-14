@@ -1,5 +1,6 @@
 package com.food_service.logic;
 import com.food_service.data.*;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -46,6 +47,11 @@ public class Model {
         ubicaciones = Dao_Locations.instance();
         estados_orden = Dao_Order_Status.instance();
         ordenes = Dao_Orders.instance();
+    }
+    
+    //----------------------Utiles--------------------------------//
+    public Boolean hasAdditionals(String idDish) throws SQLException{
+        return !adicionales.getByDish(idDish).isEmpty();
     }
 
     //----------------------Agregar datos-------------------------//
@@ -113,6 +119,11 @@ public class Model {
         return adicionales.get(id);
     }
     
+    public List<Additionals> adicionalesByDish(String idDish) throws SQLException{
+        return adicionales.getByDish(idDish);
+    }
+    
+    
     public AdministratorStatus estadosAdministradorget(int id) throws Exception {
         return estados_administrador.get(id);
     }
@@ -159,6 +170,10 @@ public class Model {
     
     public Dishes platillosget(int id) throws Exception {
         return platillos.get(id);
+    }
+    
+    public List<Dishes> platilloByCategoria(String idCategoria) throws SQLException{
+        return platillos.getByCategorie(idCategoria);
     }
     
     public Locations ubicacionesget(int id) throws Exception {

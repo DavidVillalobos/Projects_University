@@ -64,78 +64,28 @@
                     <div class="container-fluid bg-white rounded">
 			<h6 class="text-primary px-1 py-3">Menu</h6>
                     </div>
-                    <div class="container-fluid bg-white rounded">
-			<div class="pt-1" id="nombre-de-la-division">
-                            <button class="btn btn-block btn-outline-dark" type="button" data-toggle="collapse" 
-                            data-target="#seccion-platillos1" aria-expanded="false">
-				<h5>Nombre de la Sección</h5>
-				<span class="caret"></span>
-                            </button>
-                            <div id="seccion-platillos1" class="collapse">
-				<div class="row pt-2 pl-2">
-                                    <div class="col-8">
-					<h6 class="text-uppercase">Nombre Categoría</h6>
-					<div><small class="text-muted text-justify">
-                                            DESCRIPCION!!!!!!!!!! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto 
-                                            vero, veritatis sapiente blanditiis. Tempore quas, facere nam laudantium voluptatibus rem.
-					</small></div>	
+                    <div id="selected-categories" class="container-fluid bg-white rounded">
+                        <div id="new-seccion"></div>
+                        <div class="modal fade" id="detail_popup" tabindex="-1" role="dialog" 
+                        aria-labelledby="detail_popup_title" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="detail_popup_title"></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
-                                    <div class="col-3 font-weight-bold text-right">
-					c20.000
+                                    <div id="detail_popup_body" class="modal-body">
+                                        ...
                                     </div>
-                                    <div class="col-1">
-					<button type="button" class="btn btn-outline-primary" style="float:right; padding: 0px 5px;">
-                                            <b>+</b>
-					</button>
+                                    <div id="detail_popup_footer" class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
                                     </div>
-				</div>
-				<div class="row pt-2 pl-2">
-                                    <div class="col-8">
-					<h6 class="text-uppercase">Nombre Categoría</h6>
-                                        <div><small class="text-muted text-justify">
-                                            DESCRIPCION!!!!!!!!!! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto 
-                                            vero, veritatis sapiente blanditiis. Tempore quas, facere nam laudantium voluptatibus rem.
-					</small></div>	
-                                    </div>
-                                    <div class="col-3 font-weight-bold text-right">
-					c20.000
-                                    </div>
-                                    <div class="col-1">
-					<button type="button" class="btn btn-outline-primary" style="float:right; padding: 0px 5px;">
-                                            <b>+</b>
-					</button>
-                                    </div>
-				</div>	
+                                </div>
                             </div>
-			</div>
-			<div class="py-1" id="nombre-de-la-division-2">
-                            <button class="btn btn-block btn-outline-dark" type="button" data-toggle="collapse" 
-                            data-target="#seccion-platillos2" aria-expanded="false">
-                                <h5>Nombre de la Sección</h5>
-				<span class="caret"></span>
-                            </button>
-                            <div id="seccion-platillos2" class="collapse">
-				<div class="row pt-2 pl-2">
-                                    <div class="col-8">
-					<h6 class="text-uppercase">Nombre Categoría</h6>
-					<div><small class="text-muted text-justify">
-                                            DESCRIPCION!!!!!!!!!! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto vero
-                                            , veritatis sapiente blanditiis. Tempore quas, facere nam laudantium voluptatibus rem.
-					</small></div>	
-                                    </div>
-                                    <div class="col-3 font-weight-bold text-right">
-					c20.000
-                                    </div>
-                                    <div class="col-1">
-					<button type="button" class="btn btn-outline-primary" style="float:right; padding: 0px 5px;">
-                                            <b>+</b>
-					</button>
-                                    </div>
-				</div>	
-                            </div>
-			</div>
-                        <div id="nueva-seccion"></div>
-
+                        </div>
                     </div>
 		</div>
             </div>
@@ -247,7 +197,102 @@
         function addCategorie(list,c){
             var anchor=$('<a id="'+c.id+'" class="nav-link" href="#"></a>');
             anchor.html(c.name);
+            //tr.find("#edit").on("click",()=>{edit(persona.cedula);});
+            anchor.on("click",()=>{verifySelectedCategorie(c.id);});
             list.append(anchor);
+        }
+        
+        function verifySelectedCategorie(id){
+            if($("#"+id).hasClass("text-danger")){
+                $("#"+id).removeClass("text-danger");
+                $("#div-"+id).remove();
+            }
+            else{
+                $("#"+id).addClass("text-danger");
+                loadDishes(id);
+            }
+        }
+        
+        function loadDishes(id){
+            $.ajax({
+                type:"GET",
+                url:"/Food_Service_PIV/web/api/orders?categorie="+id,
+                contentType:"application/json"
+            }).then(
+                (dishes)=>{showDishes(dishes);},
+                (error)=>{errorMessage(error.status,$("#categories"));}
+            );
+        }
+       
+        function hasAdditionals(idDish,mainDiv){
+            $.ajax({
+                type:"GET",
+                url:"/Food_Service_PIV/web/api/orders/hasAdditionals/"+idDish,
+                contentType:"application/json"
+            }).then(
+                (additionals)=>{
+                    if(additionals.length>0){
+                        mainDiv.find("#add_button").attr("data-target","#detail_popup");
+                    };
+                },
+                (error)=>{errorMessage(error.status,$("#selected-categories"));}            
+            );
+            return mainDiv.find("#add_button").attr("data-target")==="#detail_popup";
+        }
+        
+        function showDishes(dishes){
+            if(dishes.length > 0){
+                var mainDiv=$("#new-seccion");
+                mainDiv.attr("id","div-"+dishes[0].categories.id);
+                mainDiv.addClass("py-1");
+                //var mainDiv=$('<div class="py-1" id="div-'+dishes[0].categories.id+'"></div>');
+                var mainButton=$('<button class="btn btn-block btn-outline-dark" type="button" data-toggle="collapse"'+ 
+                                 'data-target="#seccion-'+dishes[0].categories.id+'" aria-expanded="false">');
+                mainButton.html("<h5>"+dishes[0].categories.name+"</h5>");
+                mainDiv.append(mainButton);
+                dishes.forEach((d)=>{
+                    var newDish=$(
+                    '<div id="seccion-'+d.categories.id+'" class="collapse">'+
+			'<div class="row pt-2 pl-2">'+
+                            '<div class="col-8">'+
+				'<h6 class="text-uppercase">'+d.name+'</h6>'+
+                                '<div><small class="text-muted text-justify">'+
+                                    d.decription+
+                                '</small></div>'+	
+                            '</div>'+
+                            '<div class="col-3 font-weight-bold text-right">'+
+                                d.price+
+                            '</div>'+
+                            '<div class="col-1">'+
+                                '<button id="add_button" type="button" class="btn btn-outline-primary"'+
+                                ' data-toggle="modal" data-target="#DoNotHave"  style="float:right; padding: 0px 5px;">'+
+                                    '<b>+</b>'+
+                                '</button>'+
+                            '</div>'+
+			'</div>'+
+                    '</div>'    
+                    );
+                    mainDiv.append(newDish);
+                    var x = hasAdditionals(d.id,mainDiv);
+                    //mainDiv.find("#add_button").on("click",()=>{validateDish(d,x);});
+                });
+                var selected=$("#selected-categories");
+                selected.append(mainDiv);
+                selected.append($('<div id="new-seccion"></div>'));
+            }
+        }
+        
+        function validateDish(dish,x){
+            if(x){
+                $.ajax({
+                    type:"GET",
+                    url:"/Food_Service_PIV/web/api/orders/details/"+dish.id,
+                    contentType:"application/json"
+                }).then(
+                   (details)=>{updateDetailPopup(details);},
+                   (error)=>{errorMessage(error.status,("#detail_popup"));}
+                );
+            }
         }
         
         function errorMessage(status,place){

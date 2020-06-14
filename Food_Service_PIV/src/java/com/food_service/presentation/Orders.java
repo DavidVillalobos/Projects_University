@@ -4,9 +4,15 @@ package com.food_service.presentation;
  *
  * @author Kevin Flores
  */
+import com.food_service.logic.Additionals;
 import com.food_service.logic.Categories;
+import com.food_service.logic.Details;
+import com.food_service.logic.Dishes;
 import com.food_service.logic.Model;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -38,13 +44,46 @@ public class Orders {
     @GET
     @Path("categories")
     @Produces({MediaType.APPLICATION_JSON})
-    public List<Categories> get() {
+    public List<Categories> getCategories() {
         try {
             return Model.instance().categoriasgetAll();
         } catch (Exception ex) {
             throw new NotFoundException(); 
         }
     }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Dishes> getDishes(@QueryParam("categorie") String idCategoria){
+        try {
+            List<Dishes> l = Model.instance().platilloByCategoria(idCategoria);
+            return l;
+        } catch (SQLException ex) {
+            throw new NotFoundException();
+        }
+    }
+    
+    @GET
+    @Path("hasAdditionals/{idDish}")  
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Additionals> hasAdditionals(@PathParam("idDish") String idDish){
+        try {
+            return Model.instance().adicionalesByDish(idDish);
+        } catch (SQLException ex) {
+            throw new NotFoundException();
+        }
+    }
+    
+//    @GET
+//    @Path("details/{idDish}")  
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public List<Details> getDetails(@PathParam("idDish") String idDish){
+//        try {
+//            return Model.instance().adicionalesByDish(idDish);
+//        } catch (SQLException ex) {
+//            throw new NotFoundException();
+//        }
+//    }
 
 //    @DELETE
 //    @Path("{cedula}")

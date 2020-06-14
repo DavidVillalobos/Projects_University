@@ -56,6 +56,16 @@ public class Dao_Additionals {
         return li;
     }
     
+    public List<Additionals> getByDish(String idDish) throws SQLException{
+        List<Additionals> li = new ArrayList<>();
+        String sql = "SELECT * FROM additionals where dish="+idDish;
+        ResultSet rs = db.executeQuery(sql);
+        while(rs.next()){
+            li.add(render_additionals(rs));
+        }
+        return li;
+    }
+    
     public void add(Additionals p) throws Exception{
         String sql="INSERT INTO additionals (name, type, mandatory, dish) "
                 + "VALUES('%s', %b, %b, %d)";

@@ -46,6 +46,16 @@ public class Dao_Dishes {
         }
     }
     
+    public List<Dishes> getByCategorie(String idCategorie) throws SQLException{
+        List<Dishes> li = new ArrayList<>();
+        String sql = "SELECT * FROM dishes where categorie="+idCategorie;
+        ResultSet rs = db.executeQuery(sql);
+        while(rs.next()){
+            li.add(render_dishes(rs));
+        }
+        return li;
+    }
+    
     public List<Dishes> getAll() throws SQLException{
         List<Dishes> li = new ArrayList<>();
         String sql = "SELECT * FROM dishes";
@@ -57,7 +67,7 @@ public class Dao_Dishes {
     }
     
     public void add(Dishes p) throws Exception{
-        String sql="INSERT INTO dishes (name, price, description, categorie) "
+        String sql="INSERT INTO dishes (name, price, decription, categorie) "
                 + "VALUES('%s', %f, '%s', %d)";
         sql=String.format(sql, p.getName(), p.getPrice(), p.getDecription(), p.getCategories().getId()); 
         if (db.executeUpdate(sql) == 0){
@@ -66,7 +76,7 @@ public class Dao_Dishes {
     }
     
     public void update(Dishes p) throws Exception{
-        String sql="UPDATE dishes SET name='%s', price=%b, description=%b, categorie=%d, where name='%s";
+        String sql="UPDATE dishes SET name='%s', price=%b, decription=%b, categorie=%d, where name='%s";
         sql=String.format(sql,
                 p.getName(),
                 p.getPrice(), 
@@ -84,7 +94,7 @@ public class Dao_Dishes {
             p.setId(rs.getInt("id"));
             p.setName(rs.getString("name"));
             p.setPrice(rs.getDouble("price"));
-            p.setDecription(rs.getString("description"));
+            p.setDecription(rs.getString("decription"));
             p.setCategories(Dao_Categories.instance().get(rs.getInt("categorie")));
             return p;
         } catch (Exception ex) {
