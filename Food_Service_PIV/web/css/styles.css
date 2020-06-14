@@ -1,5 +1,5 @@
 :root{
-     --color-principal: #0A641E;
+     olor-principal: #0A641E;
 }
 .alto{
     height: 450px;
@@ -25,4 +25,6 @@ input[type="text"].invalid, input[type="password"].invalid, select.invalid{
 
 .button-Admin-Panel{
     margin-top: -54px;
+}.bg-dark {
+
 }

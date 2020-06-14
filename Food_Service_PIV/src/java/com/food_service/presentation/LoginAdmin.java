@@ -23,7 +23,7 @@ public class LoginAdmin {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)    
     public Administrators login(Administrators admin) {
-         Administrators logged=null;
+        Administrators logged=null;
         try {
             logged = Model.instance().administradorgetByUserName(admin.getUserName());
             if(!logged.getPassword().equals(admin.getPassword())) throw new Exception("Clave incorrecta");
@@ -31,7 +31,7 @@ public class LoginAdmin {
             return logged;
         } catch (Exception ex) {
             throw new NotFoundException();
-        }  
+        }
     }
     
     @DELETE 
@@ -40,5 +40,4 @@ public class LoginAdmin {
         session.removeAttribute("admin");           
         session.invalidate();
     }
-   
 }

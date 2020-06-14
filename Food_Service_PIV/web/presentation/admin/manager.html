@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../../css/styles.css" type="text/css"/>
+        <title>Administración</title>
+    </head>
+    <body style="padding-top: 66px;" class="bg-dark">
+        <nav class="navbar navbar-dark bg-light navbar-expand-sm fixed-top">
+            <div class="container-fluid">
+                <img alt="logo" width="40" height="40" src="../../images/tastyigniter-logo.png">
+                Dashboard
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-dark">
+                                1
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-dark">
+                                <img alt="logo" width="40" height="40" src="../../images/tastyigniter-logo.png">
+                                2
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-dark">opcion3</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row display-4" style="font-size: 30px;">
+                <div class="col-2" style="background-color: rgb(5, 5, 54); padding-top: 30px;">
+                    <div>
+                        <ul id="menu-dashboard" class="navbar-nav pl-3 text-left">
+                            <li class="">
+                                <a href="#" class="text-light" data-toggle="collapse" data-target="#submenu1"
+                                aria-expanded="false">
+                                Cocina
+                                <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu1">
+                                    <li><a class="text-light" >Platillos</a></li>
+                                    <li><a class="text-light" >Categorias</a></li>
+                                </ul>
+                            </li>
+                            <li class="">
+                                <a class="text-light" data-toggle="collapse" data-target="#submenu2">
+                                    Ventas
+                                </a>
+                                <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu2">
+                                    <li><a class="text-light" >Ordenes</a></li>
+                                </ul>
+                            </li>
+                            <li><a><span class="icon-link2"></span> <span
+                                        class="hidden-xs text-light">Usuarios</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-10 pt-4">
+                    <div class="container" id="">
+                        <div class="container-fluid bg-white mb-1 rounded" id="title_option_admin">
+                            <div class="row py-3">
+                                <div class="col-6">
+                                    <h3 class="font-italic">Lista de platillos</h3>
+                                    <div class="text-muted"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-fluid bg-white rounded">
+                            <div class="py-1" id="nombre-de-la-division-2">
+                                <div id="seccion-platillos2" class="collapse">
+                                    <div class="row pt-2 pl-2">
+                                        <div class="col-8">
+                                            <h6 class="text-uppercase">Nombre Categoría</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="nueva-seccion"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer class="page-footer font-small mt-5">
+            <div class="footer-copyright text-center text-white bg-dark py-3">
+                © 2020 Copyright.<br>
+                <h6 class="text-center">Universidad Nacional De Costa Rica</h6>
+            </div>
+        </footer>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script>
+
+            function loadCategories() {
+                $.ajax({
+                    type: "GET",
+                    url: "/Food_Service_PIV/web/api/orders/categories",
+                    contentType: "application/json"
+                }).then(
+                        (categories) => {
+                    showCategories(categories);
+                },
+                        (error) => {
+                    errorMessage(error.status, $("#categories"));
+                }
+                );
+            }
+
+            function showCategories(categories) {
+                var list = $("#categories");
+                list.html("");
+                categories.forEach((c) => {
+                    addCategorie(list, c);
+                });
+            }
+
+            function addCategorie(list, c) {
+                var anchor = $('<a id="' + c.id + '" class="nav-link" href="#"></a>');
+                anchor.html(c.name);
+                list.append(anchor);
+            }
+
+            function errorMessage(status, place) {
+                error = status;
+                switch (status) {
+                    case 401:
+                        error = "Usuario no registrado";
+                        break;
+                    case 403:
+                    case 405:
+                        error = "Usuario no autorizado";
+                        break;
+                    case 404:
+                        error = "Registro no encontrado";
+                        break;
+                }
+                ;
+                place.html('<div class="alert alert-danger fade show">' +
+                        '<button type="button" class="close" data-dismiss="alert">' +
+                        '&times;</button><h4 class="alert-heading">Error!</h4>' + error + '</div>');
+                return;
+            }
+
+        </script>
+    </body>
+
+</html>
