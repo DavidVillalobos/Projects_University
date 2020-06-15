@@ -44,6 +44,26 @@ insert into administrators(user_name, password, name, email, administrator_statu
 insert into locations (name, administrator) values ('The Healthy Grill', 1);
 insert into locations (name, administrator) values ('The Ambrosia', 2);
 
+-- Insert Dishes
+insert into dishes(name,price,decription,categorie)
+values("Sopita de Cangrejo", 15000, "Sopa Pequeña, con fresco incluido y el cangrejo de agua salada.", 4);
+insert into dishes(name,price,decription,categorie) 
+values("Ensalda Fria", 9000, "Contiene: caracoles, mayonesa, atun...con fresco incluido y doble porcion gratis.", 3); 
+insert into dishes(name,price,decription,categorie)
+values("Ensalada Coloria", 15000, "Ensalada Grande, contiene: zanahoria, lechuga, apio, tomate, pepino.", 3); 
+
+-- Insert Additionals
+insert into additionals(name,type,mandatory,dish) values("Salsas",true,true,3);
+insert into additionals(name,type,mandatory,dish) values("Queso",false,false,3);
+
+-- Insert Details
+insert into details(name,price,additional) values("Mayonesa",500,1);
+insert into details(name,price,additional) values("Limon Dulce",600,1);
+insert into details(name,price,additional) values("Rosada",550,1); 
+
+insert into details(name,price,additional) values("Amarillo",200,2);
+insert into details(name,price,additional) values("Parmesano",300,2);
+
 
 -- select * from additionals;
 select * from administrator_status;
