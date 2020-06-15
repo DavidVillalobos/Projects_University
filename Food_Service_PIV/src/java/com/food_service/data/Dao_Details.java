@@ -56,6 +56,16 @@ public class Dao_Details {
         return li;
     }
     
+    public List<Details> getByAdditional(Integer idAdditional) throws SQLException{
+        List<Details> li = new ArrayList<>();
+        String sql = "SELECT * FROM details where additional="+idAdditional;
+        ResultSet rs = db.executeQuery(sql);
+        while(rs.next()){
+            li.add(render_details_2(rs));
+        }
+        return li;
+    }
+    
     public void add(Details p) throws Exception{
         String sql="INSERT INTO order_status (name) "
                 + "VALUES('%s', %f, %d)";
@@ -84,6 +94,19 @@ public class Dao_Details {
             p.setName(rs.getString("name"));
             p.setPrice(rs.getDouble("price"));
             p.setAdditionals(Dao_Additionals.instance().get(rs.getInt("additional")));
+            return p;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+    
+    private Details render_details_2(ResultSet rs){
+        try {
+            Details p = new Details();
+            p.setId(rs.getInt("id"));
+            p.setName(rs.getString("name"));
+            p.setPrice(rs.getDouble("price"));
+            //p.setAdditionals(Dao_Additionals.instance().get(rs.getInt("additional")));
             return p;
         } catch (Exception ex) {
             return null;

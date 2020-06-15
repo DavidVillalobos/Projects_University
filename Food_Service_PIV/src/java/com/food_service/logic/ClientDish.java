@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.food_service.logic;
 
 import java.io.Serializable;
@@ -40,17 +36,18 @@ public class ClientDish implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "quantity")
-    private int quantity;
+    private int quantity;  //Got it
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientDish")
     private List<ClienteAdditionals> clienteAdditionalsList;
     @JoinColumn(name = "dish", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Dishes dishes;
+    private Dishes dishes; // Got it
     @JoinColumn(name = "order", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Orders orders;
+    private Orders orders; // Id needed
 
     public ClientDish() {
+        
     }
 
     public ClientDish(Integer id) {

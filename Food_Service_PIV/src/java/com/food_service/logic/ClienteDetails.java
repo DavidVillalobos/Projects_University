@@ -35,7 +35,7 @@ public class ClienteDetails implements Serializable {
     private Integer id;
     @JoinColumn(name = "cliente_additional", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private ClienteAdditionals clienteAdditionals;
+    private ClienteAdditionals clienteAdditionals; // Id needed
     @JoinColumn(name = "detail", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Details details;

@@ -6,13 +6,18 @@ package com.food_service.presentation;
  */
 import com.food_service.logic.Additionals;
 import com.food_service.logic.Categories;
+import com.food_service.logic.ClientDish;
 import com.food_service.logic.Details;
 import com.food_service.logic.Dishes;
 import com.food_service.logic.Model;
+import com.food_service.logic.Orders;
+import com.google.gson.Gson;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -25,9 +30,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.NotAcceptableException;
 import javax.ws.rs.POST;
+import javax.ws.rs.core.Context;
 
 @Path("/orders")
-public class Orders {
+public class Order {
 
 //    @POST
 //    @Consumes(MediaType.APPLICATION_JSON)
@@ -40,6 +46,8 @@ public class Orders {
 //            throw new NotAcceptableException(); 
 //        }
 //    }
+    @Context
+    HttpServletRequest request;
     
     @GET
     @Path("categories")
@@ -74,16 +82,42 @@ public class Orders {
         }
     }
     
-//    @GET
-//    @Path("details/{idDish}")  
-//    @Produces({MediaType.APPLICATION_JSON})
-//    public List<Details> getDetails(@PathParam("idDish") String idDish){
-//        try {
-//            return Model.instance().adicionalesByDish(idDish);
-//        } catch (SQLException ex) {
-//            throw new NotFoundException();
-//        }
-//    }
+    @GET
+    @Path("details/{idDish}")  
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Additionals> getDetails(@PathParam("idDish") String idDish){
+        try {
+            List<Additionals> result = Model.instance().adicionalesByDish(idDish);
+            for(Additionals a:result){
+                a.setDetailsList(Model.instance().detallesByAdditional(a.getId()));
+            }
+            return result;
+        } catch (SQLException ex) {
+            throw new NotFoundException();
+        }
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON})    
+    public List<Orders> updateOrder(ClientDish dish) {  
+        try {
+            Orders globalOrder = (Orders) request.getSession(true).getAttribute("globalOrder");
+            if(globalOrder==null){  
+                globalOrder = new Orders();
+                request.getSession(true).setAttribute("globalOrder", globalOrder);
+            }
+            List<Orders> list = new ArrayList<>();
+            list.add(globalOrder);
+            request.setAttribute("globalOrder", globalOrder);
+            //Gson g = new Gson();
+            //String x = g.toJson(globalOrder);
+            //com.food_service.logic.Orders o2 = g.fromJson(x, com.food_service.logic.Orders.class);
+            return list;            
+        } catch (Exception ex) {
+            throw new NotAcceptableException(); 
+        }
+    }
 
 //    @DELETE
 //    @Path("{cedula}")
@@ -103,15 +137,4 @@ public class Orders {
 //        return Model.instance().personaSearch(nombre);
 //    } 
 //    
-//    @PUT
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces({MediaType.APPLICATION_JSON})    
-//    public List<Persona> update(Persona p) {  
-//        try {
-//            Model.instance().personaUpdate(p);
-//            return Model.instance().personaListAll();            
-//        } catch (Exception ex) {
-//            throw new NotFoundException(); 
-//        }
-//    }
 }

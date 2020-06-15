@@ -53,6 +53,16 @@ public class Model {
     public Boolean hasAdditionals(String idDish) throws SQLException{
         return !adicionales.getByDish(idDish).isEmpty();
     }
+    
+    public void addDishToOrder(Orders globalOrder, ClientDish dish){
+        Boolean oldDish=false;
+        for(ClientDish d:globalOrder.getClientDishList()){
+            int y = 0;
+            //aca voy a ponerle mañana.
+        }
+    
+    }
+
 
     //----------------------Agregar datos-------------------------//
     
@@ -123,6 +133,9 @@ public class Model {
         return adicionales.getByDish(idDish);
     }
     
+    public List<Details> detallesByAdditional(Integer idAdditional) throws SQLException{
+        return detalles.getByAdditional(idAdditional);
+    }
     
     public AdministratorStatus estadosAdministradorget(int id) throws Exception {
         return estados_administrador.get(id);

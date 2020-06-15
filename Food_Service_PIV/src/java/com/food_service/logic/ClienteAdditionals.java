@@ -38,12 +38,12 @@ public class ClienteAdditionals implements Serializable {
     private Integer id;
     @JoinColumn(name = "additional", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Additionals additionals;
+    private Additionals additionals; //Got it
     @JoinColumn(name = "client_dish", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private ClientDish clientDish;
+    private ClientDish clientDish; // Id needed
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clienteAdditionals")
-    private List<ClienteDetails> clienteDetailsList;
+    private List<ClienteDetails> clienteDetailsList; //got it
 
     public ClienteAdditionals() {
     }

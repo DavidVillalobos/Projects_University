@@ -76,12 +76,84 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <div id="detail_popup_body" class="modal-body">
-                                        ...
+                                    <div class="modal-body">
+                                        <div id="alert_popup"></div>
+                                        <div id="detail_popup_body" class="container-fluid">
+                                            
+                                            <!-- MULTIPLE SELECTION -->
+                                            <div class="row bg-light">
+                                                <div class="col-8">
+                                                    <h6 class="mb-0">Nombre Additional</h6>
+                                                </div>
+                                                <div class="col-4">
+                                                    <p class="text-muted text-right mb-0">requerido</p>
+                                                </div>
+                                            </div>
+                                            <div class="container-fluid bg-white">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                                        <label class="form-check-label" for="defaultCheck1">
+                                                            Detail 1
+                                                        </label>    
+                                                    </div>
+                                                    </div>
+                                                    <div class="col-4"><p class="text-right mb-0">3000</p></div>
+                                                </div>
+                                            </div>
+                                            <!-- UNIQUE SELECTION -->
+                                            <div class="row bg-light">
+                                                <div class="col-8">
+                                                    <h6 class="mb-0">Nombre Additional</h6>
+                                                </div>
+                                                <div class="col-4"><p class="text-right text-muted mb-0">requerido</p></div>
+                                            </div>
+                                            <div class="container-fluid bg-white">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="exampleRadios" 
+                                                        id="exampleRadios1" value="option1" checked>
+                                                        <label class="form-check-label" for="exampleRadios1">
+                                                            Detail radio
+                                                        </label>
+                                                    </div>
+                                                    </div>
+                                                    <div class="col-4"><p class="text-right mb-0">200</p></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="exampleRadios" 
+                                                        id="exampleRadios2" value="option2">
+                                                        <label class="form-check-label" for="exampleRadios2">
+                                                            detail radio 2
+                                                        </label>
+                                                    </div>
+                                                    </div>
+                                                    <div class="col-4"><p class="text-right mb-0">300</p></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div id="detail_popup_footer" class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control  text-center" value="" placeholder="Cant" 
+                                                    id="cant_popup" aria-label="Cant" aria-describedby="basic-addon2">
+                                                    <div class="input-group-append">
+                                                        <button id="plus_order_popup" class="btn btn-outline-secondary" type="button">+</button>
+                                                        <button id="less_order_popup" class="btn btn-outline-secondary" type="button">-</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-7">
+                                                <button id="add_order_popup" type="button" class="btn btn-primary btn-block">
+                                                </button>
+                                            </div>
+                                        </div> 
                                     </div>
                                 </div>
                             </div>
@@ -171,7 +243,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
+        
+        globalOrder=null;
+        
         function init(){
+            $("#plus_order_popup").on("click",()=>{
+               $("#cant_popup").attr("value",parseInt($("#cant_popup").val(),10)+1);
+            });
+            $("#less_order_popup").on("click",()=>{
+                var x = parseInt($("#cant_popup").val(),10);
+                if(x>1){$("#cant_popup").attr("value",parseInt($("#cant_popup").val(),10)-1);}
+                else{errorMessage(222,$("#alert_popup"));}
+            });
             loadCategories();
         }
         
@@ -197,7 +280,6 @@
         function addCategorie(list,c){
             var anchor=$('<a id="'+c.id+'" class="nav-link" href="#"></a>');
             anchor.html(c.name);
-            //tr.find("#edit").on("click",()=>{edit(persona.cedula);});
             anchor.on("click",()=>{verifySelectedCategorie(c.id);});
             list.append(anchor);
         }
@@ -224,20 +306,22 @@
             );
         }
        
-        function hasAdditionals(idDish,mainDiv){
+        function hasAdditionals(Dish,mainDiv){
             $.ajax({
                 type:"GET",
-                url:"/Food_Service_PIV/web/api/orders/hasAdditionals/"+idDish,
+                url:"/Food_Service_PIV/web/api/orders/hasAdditionals/"+Dish.id,
                 contentType:"application/json"
             }).then(
                 (additionals)=>{
                     if(additionals.length>0){
-                        mainDiv.find("#add_button").attr("data-target","#detail_popup");
+                        mainDiv.find("#add_button_"+Dish.id).attr("data-target","#detail_popup");
                     };
+                    var y = mainDiv.find("#add_button_"+Dish.id);
+                    var t = y.attr("data-target");
+                    mainDiv.find("#add_button_"+Dish.id).on("click",()=>{validateDish(Dish, t==="#detail_popup");});
                 },
                 (error)=>{errorMessage(error.status,$("#selected-categories"));}            
             );
-            return mainDiv.find("#add_button").attr("data-target")==="#detail_popup";
         }
         
         function showDishes(dishes){
@@ -245,7 +329,6 @@
                 var mainDiv=$("#new-seccion");
                 mainDiv.attr("id","div-"+dishes[0].categories.id);
                 mainDiv.addClass("py-1");
-                //var mainDiv=$('<div class="py-1" id="div-'+dishes[0].categories.id+'"></div>');
                 var mainButton=$('<button class="btn btn-block btn-outline-dark" type="button" data-toggle="collapse"'+ 
                                  'data-target="#seccion-'+dishes[0].categories.id+'" aria-expanded="false">');
                 mainButton.html("<h5>"+dishes[0].categories.name+"</h5>");
@@ -264,7 +347,7 @@
                                 d.price+
                             '</div>'+
                             '<div class="col-1">'+
-                                '<button id="add_button" type="button" class="btn btn-outline-primary"'+
+                                '<button id="add_button_'+d.id+'" type="button" class="btn btn-outline-primary"'+
                                 ' data-toggle="modal" data-target="#DoNotHave"  style="float:right; padding: 0px 5px;">'+
                                     '<b>+</b>'+
                                 '</button>'+
@@ -273,8 +356,7 @@
                     '</div>'    
                     );
                     mainDiv.append(newDish);
-                    var x = hasAdditionals(d.id,mainDiv);
-                    //mainDiv.find("#add_button").on("click",()=>{validateDish(d,x);});
+                    hasAdditionals(d,mainDiv);
                 });
                 var selected=$("#selected-categories");
                 selected.append(mainDiv);
@@ -289,10 +371,129 @@
                     url:"/Food_Service_PIV/web/api/orders/details/"+dish.id,
                     contentType:"application/json"
                 }).then(
-                   (details)=>{updateDetailPopup(details);},
+                   (details)=>{updateDetailPopup(dish,details);},
                    (error)=>{errorMessage(error.status,("#detail_popup"));}
                 );
+            }else{
+                //addToShoppingCart(dish,false); 
             }
+        }
+        
+        function addToShoppingCart(_dish,additionalsFlag){
+            itsOk=true;
+            var clientDish={quantity:$("#cant_popup").attr("value"),dishes:{id:_dish.id}};
+            if(additionalsFlag){
+                var clientAdditionals=[];
+                _dish.additionalsList.forEach((addi)=>{verifySelectedAdditional(addi,clientAdditionals);});
+                clientDish.clienteAdditionalsList=clientAdditionals;
+                if(parseInt($("#cant_popup").val(),10) < 1){
+                    itsOk=false;
+                errorMessage(333,$("#alert_popup"));
+                }
+            }
+            var xd = JSON.stringify(clientDish);
+            var xd_2= JSON.stringify(_dish);
+            if(itsOk){
+                $.ajax({
+                   type:"POST",
+                   url:"/Food_Service_PIV/web/api/orders",
+                   data:xd,
+                   contentType:"application/json"
+               }).then(
+                   (order)=>{updateOrder(order);},
+                   (error)=>{errorMessage(error.status,("#alert_popup"));}
+                );
+            }
+        }
+        
+        function updateOrder(order){
+            return true;
+        }
+        
+        function verifySelectedAdditional(addi,clientAddi){
+            var oneSelected = false;
+            var newClientAddi = {
+                additionals:{id:addi.id}, //tengo todos los datos en addi
+                clienteDetailsList:[]
+            };
+            var newAddi = {
+                type:addi.type,
+                name:addi.name,
+                mandatory:addi.mandatory,
+                id:addi.id,
+                dishes:addi.dishes,
+                detailsList:[]};
+            if(addi.type){
+                addi.detailsList.forEach((d)=>{
+                    if($("#check_"+d.id).prop("checked")){
+                        //newAddi.detailsList.push(d);
+                        newClientAddi.clienteDetailsList.push({details:d});
+                        oneSelected = true;
+                    }
+                });
+            }
+            else{
+                var idDetail = $('input[name=grupo_'+addi.id+']:checked').val();
+                addi.detailsList.forEach((d)=>{
+                    if(""+d.id===idDetail){
+                        //newAddi.detailsList.push(d);
+                        newClientAddi.clienteDetailsList.push({details:d});
+                        oneSelected=true;
+                    }
+                });  
+            }
+            if(addi.mandatory && !oneSelected){
+                errorMessage(111,$("#alert_popup"));
+                itsOk=false;
+            }
+            //clientAddi.push(newAddi);
+            clientAddi.push(newClientAddi);
+        }
+        
+        function removeItemFromArr ( arr, item ) {
+            var i = arr.indexOf( item );
+            if ( i !== -1 ) {
+                arr.splice( i, 1 );
+            }
+        }
+        function updateDetailPopup(dish,details){
+            dish.additionalsList=details;
+            $("#detail_popup_title").html(dish.name+'<br><small class="text-muted">'+dish.decription+'</small>');
+            var popup_body=$("#detail_popup_body");
+            popup_body.empty();
+            details.forEach((d)=>{
+                var newAdditional=$(
+                '<div class="row bg-light">'+
+                    '<div class="col-8">'+
+                        '<h6 class="mb-0 text-uppercase">'+d.name+'</h6>'+
+                    '</div>'+
+                    '<div class="col-4">'+
+                        '<p class="text-muted text-right mb-0">'+(d.mandatory?'Requerido':'')+'</p>'+
+                    '</div>'+
+                '</div>');
+                d.detailsList.forEach((detail)=>{
+                    var newDetail=$(
+                    '<div class="container-fluid bg-white pt-1">'+
+                        '<div class="row">'+
+                            '<div class="col-8">'+
+                                '<div class="form-check">'+
+                                    '<input class="form-check-input" type="'+(d.type?'checkbox':'radio')+
+                                    '" name="'+(d.type?'':'grupo_'+d.id)+'" value="'+detail.id+'" id="check_'+detail.id+'">'+
+                                    '<label class="form-check-label" for="check_'+detail.id+'">'+
+                                        detail.name+
+                                    '</label>'+   
+                                '</div>'+
+                            '</div>'+
+                            '<div class="col-4"><p class="text-right my-1">'+detail.price+'</p></div>'+
+                        '</div>'+
+                    '</div>');
+                    newAdditional.append(newDetail);
+                });
+                popup_body.append(newAdditional);
+            });
+            $("#cant_popup").attr("value","1");
+            $("#add_order_popup").html('ADD TO ORDER c'+dish.price);
+            $("#add_order_popup").on("click",()=>{addToShoppingCart(dish,true);});
         }
         
         function errorMessage(status,place){
@@ -301,6 +502,9 @@
                 case 401: error= "Usuario no registrado"; break;
                 case 403: case 405: error="Usuario no autorizado"; break;                
                 case 404: error= "Registro no encontrado"; break;
+                case 111: error="Debes Completar los Espacios Requeridos"; break;
+                case 222: error="La cantidad no puede ser menor"; break;
+                case 333: error="La cantidad no puede ser menor a 1"; break;
             };            
             place.html('<div class="alert alert-danger fade show">' +
             '<button type="button" class="close" data-dismiss="alert">' +

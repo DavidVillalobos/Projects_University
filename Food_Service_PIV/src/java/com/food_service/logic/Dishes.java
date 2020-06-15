@@ -59,6 +59,7 @@ public class Dishes implements Serializable {
     private List<Additionals> additionalsList;
 
     public Dishes() {
+        this.id=0;
     }
 
     public Dishes(Integer id) {
