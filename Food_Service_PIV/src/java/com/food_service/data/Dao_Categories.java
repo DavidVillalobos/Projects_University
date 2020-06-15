@@ -66,10 +66,10 @@ public class Dao_Categories {
     }
     
     public void update(Categories p) throws Exception{
-        String sql="UPDATE categories SET name='%s' where name='%s'";
+        String sql="UPDATE categories SET name='%s' where id=%d";
         sql=String.format(sql,
                 p.getName(),
-                p.getName()); 
+                p.getId()); 
         if (db.executeUpdate(sql) == 0){
             throw new Exception("Categoria ya existe");
         }

@@ -11,80 +11,51 @@
         <link rel="stylesheet" href="../../css/styles.css" type="text/css"/>
         <title>Administración</title>
     </head>
-    <body style="padding-top: 66px;" class="bg-dark">
+    <body style="padding-top: 60px;" class="bg-dark">
         <nav class="navbar navbar-dark bg-light navbar-expand-sm fixed-top">
             <div class="container-fluid">
                 <img alt="logo" width="40" height="40" src="../../images/tastyigniter-logo.png">
-                Dashboard
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-dark">
-                                1
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-dark">
-                                <img alt="logo" width="40" height="40" src="../../images/tastyigniter-logo.png">
-                                2
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-dark">opcion3</a>
-                        </li>
-                    </ul>
-                </div>
+                <div style="font-size: 30px;">Administrator Panel </div>
+                <div class="collapse navbar-collapse"></div>
             </div>
         </nav>
-        <div class="container-fluid">
-            <div class="row display-4" style="font-size: 30px;">
-                <div class="col-2" style="background-color: rgb(5, 5, 54); padding-top: 30px;">
+        <div class="container-fluid bg-secondary">
+            <div class="row display-4" style="font-size: 30px; height: 560px;">
+                <div class="col-2 py-5 pl-4" style="background-color: rgb(5, 5, 54);">
                     <div>
                         <ul id="menu-dashboard" class="navbar-nav pl-3 text-left">
-                            <li class="">
-                                <a href="#" class="text-light" data-toggle="collapse" data-target="#submenu1"
+                            <li class="py-3">
+                                <a class="text-light" data-toggle="collapse" data-target="#submenu1"
                                 aria-expanded="false">
-                                Cocina
+                                >Cocina
                                 <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu1">
-                                    <li><a class="text-light" >Platillos</a></li>
-                                    <li><a class="text-light" >Categorias</a></li>
+                                    <li><div class="text-light" id="menudishes">Platillos</div></li>
+                                    <li><div class="text-light" id="menucategories">Categorias</div></li>
                                 </ul>
                             </li>
-                            <li class="">
+                            <li class="py-3">
                                 <a class="text-light" data-toggle="collapse" data-target="#submenu2">
-                                    Ventas
+                                    >Ventas
                                 </a>
                                 <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu2">
-                                    <li><a class="text-light" >Ordenes</a></li>
+                                    <li><div class="text-light" >Ordenes</div></li>
                                 </ul>
                             </li>
-                            <li><a><span class="icon-link2"></span> <span
-                                        class="hidden-xs text-light">Usuarios</span></a></li>
+                            <li class="py-3">
+                                <a class="text-light" data-toggle="collapse" data-target="#submenu3">
+                                    >Usuarios
+                                </a>
+                                <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu3">
+                                    
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-10 pt-4">
-                    <div class="container" id="">
-                        <div class="container-fluid bg-white mb-1 rounded" id="title_option_admin">
-                            <div class="row py-3">
-                                <div class="col-6">
-                                    <h3 class="font-italic">Lista de platillos</h3>
-                                    <div class="text-muted"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container-fluid bg-white rounded">
-                            <div class="py-1" id="nombre-de-la-division-2">
-                                <div id="seccion-platillos2" class="collapse">
-                                    <div class="row pt-2 pl-2">
-                                        <div class="col-8">
-                                            <h6 class="text-uppercase">Nombre Categoría</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="nueva-seccion"></div>
-                        </div>
+                
+                <div class="col-10 pt-4 display-3" >
+                    <div class="container" id="panel">
+
                     </div>
                 </div>
             </div>
@@ -100,36 +71,13 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script>
-
-            function loadCategories() {
-                $.ajax({
-                    type: "GET",
-                    url: "/Food_Service_PIV/web/api/orders/categories",
-                    contentType: "application/json"
-                }).then(
-                        (categories) => {
-                    showCategories(categories);
-                },
-                        (error) => {
-                    errorMessage(error.status, $("#categories"));
-                }
-                );
+            function loaded(){
+              $("#menudishes").click(loadDishes);  
+              $("#menucategories").click(loadCategories);  
             }
 
-            function showCategories(categories) {
-                var list = $("#categories");
-                list.html("");
-                categories.forEach((c) => {
-                    addCategorie(list, c);
-                });
-            }
-
-            function addCategorie(list, c) {
-                var anchor = $('<a id="' + c.id + '" class="nav-link" href="#"></a>');
-                anchor.html(c.name);
-                list.append(anchor);
-            }
-
+            $(loaded);
+              
             function errorMessage(status, place) {
                 error = status;
                 switch (status) {
@@ -150,7 +98,261 @@
                         '&times;</button><h4 class="alert-heading">Error!</h4>' + error + '</div>');
                 return;
             }
+            //-----------------------------SCRIPTS FUNCTION DISHES----------------------------------//
+            function loadDishes() {
+                $.ajax({
+                    type: "GET",
+                    url: "/Food_Service_PIV/web/api/dishes",
+                    contentType: "application/json"
+                }).then(
+                        (dishes) => {
+                    showDishes(dishes);
+                },
+                        (error) => {
+                    errorMessage(error.status, $("#dishes"));
+                }
+                );
+            }
+            
+            function showDishes(dishes){
+                var list = $("#panel");
+                list.html("");
+                list.html('<div class="container-fluid rounded text-white" style="background-color: rgb(5, 5, 54);">' +
+                    '<div class="row py-1  align-items-center justify-content-center">'+
+                        '<div class="col-6 text-center " style="font-size: 60px;"> Menu </div>'+
+                        '<div class="col-2 center-block">'+
+                            '<button type="button" class="btn btn-primary btn-lg btn-block bg-light text-dark">Agregar</button>' +
+                        '</div>'+
+                    '</div>'+
+                '</div>'+
+                '<div class="card bg-light">'+
+                    '<div class="card-body text-center">'+
+                        '<div class="table-responsive " overflow: auto">'+
+                            '<table class="table table-striped table-hover" style="font-size: 22px;">'+
+                                '<thead><tr><th scope="col">Categoria</th>'+
+                                '<th scope="col">Nombre</th><th scope="col">Precio</th>'+
+                                '<th colspan="2" scope="col"></th> '+
+                                '<tbody id="listado">'+
+                                '</tbody>'+
+                            '</table>'+
+                        '</div>'+         
+                    '</div>'+
+                '</div>');
+                var anchor = $('#listado');
+                dishes.forEach((c) => {
+                    rowDish(anchor, c);
+                });
+            }
 
+            function rowDish(anchor, c) {
+                var tr =$("<tr />");
+                tr.html('<td>' + c.categories.name + '</td>' +
+                        '<td>' + c.name + '</td>' +
+                        '<td>' + c.price + '</td>' +
+                        '<td><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#editDialog" onclick="searchDish('+ c.id +')">Ver / Editar</button>' +
+                        '</td>' +
+                        '<td>' +
+                        '<button type="button" class="btn btn-primary btn-lg btn-block" onclick="deleteDish('+ c.id +')">Eliminar</button>' +
+                        '</td>' +  
+                        '</tr>');
+                anchor.append(tr);
+            }
+            
+            function searchDish(id){
+                $.ajax({
+                    type: "GET",
+                    url: "/Food_Service_PIV/web/api/dishes/" + id,
+                    contentType: "application/json"
+                }).then(
+                    (dish) => { editDish(dish);
+                    },(error) => {
+                        errorMessage(error.status, $("#dishes"));
+                    }
+                );
+            }
+            
+            function editDish(dish){
+                var anchor = $('#listado');
+                var html = '<div class="row">'+
+                        '<div class="modal fade" id="editDialog" tabindex="-1" role="dialog" >'+
+                            '<div class="modal-dialog" role="document">'+
+                            '<div class="modal-content">'+
+                                '<form>'+
+                                    '<div class="modal-body text-center">'+
+                                        '<div id="div-login-msg">'+
+                                            '<div id="icon-login-msg" ></div>'+
+                                            '<span class="h1">' + dish.categories.name + '<br>' + dish.name + '</span>'+
+                                        '</div>'+
+                                        '<br>'+
+                                        '<div class = "input-group" style = "margin-bottom: 25px">'+
+                                            '<div class = "input-group-prepend "><span class = "input-group-text"><i>Nombre</i></span></div>'+
+                                                '<input class = "form-control" placeholder = "Nombre" type = "text" id = "name" name="name" value="'+dish.name+'" required>'+
+                                            '<div class = "invalid-feedback">Favor ingrese el nombre del platillo</div>'+
+                                        '</div>'+
+                                        '<div class = "input-group" style = "margin-bottom: 25px">'+
+                                            '<div class = "input-group-prepend "><span class = "input-group-text"><i>Precio</i></span></div>'+
+                                                '<input class = "form-control" placeholder = "Precio" type = "text" id = "price" name="price" value="'+dish.price+'" required>'+
+                                            '<div class = "invalid-feedback">Favor ingrese el precio del platillo</div>'+
+                                        '</div>'+
+                                        '<div class = "input-group" style = "margin-bottom: 25px">'+
+                                            '<div class = "input-group-prepend "><span class = "input-group-text"><i>Descripción</i></span></div>'+
+                                                '<input class = "form-control" placeholder = "Descripción" type = "text" id = "decription" name="decription" value="'+dish.decription+'" required>'+
+                                            '<div class = "invalid-feedback">Favor ingrese el precio del platillo</div>'+
+                                        '</div>'+
+                                        
+                                    '</div>'+
+                                    '<div class="modal-footer d-flex justify-content-center">'+
+                                        '<div>'+
+                                            '<button type="button" id="updateButton" data-dismiss="modal" class="btn btn-primary btn-lg btn-block" onclick="updateDish(' + dish.id + ')">Actualizar</button>'+
+                                            ' <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div id="loginErrorDiv" style="width:80%; margin: auto;"></div> '+    
+                                '</form>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>'+
+                '</div> '
+                anchor.append(html);
+            }
+            
+            function deleteDish(id){
+                $.ajax({
+                    type: "DELETE",
+                    url: "/Food_Service_PIV/web/api/dishes/" + id,
+                    contentType: "application/json"
+                }).then(
+                        (dishes) => {
+                    showDishes(dishes);
+                },
+                        (error) => {
+                    errorMessage(error.status, $("#dishes"));
+                }
+                );
+            }
+            
+            function updateDish(idDish){ 
+              dish = {id:idDish, 
+                name: $("#name").val(),      
+                price: $("#price").val(),
+                decription: $("#decription").val()};
+              $.ajax({type: "PUT", url:"/Food_Service_PIV/web/api/dishes",
+                          data: JSON.stringify(dish),contentType: "application/json"})
+                .then( (dishes)=>{$('#editDialog').modal('hide'); showDishes(dishes); },
+                       (error)=>{errorMessage(error.status,$("#addErrorDiv"));});                          
+            }
+            
+            //-----------------------------SCRIPTS FUNCTION CATEGORIES------------------------------//
+            
+            function loadCategories() {
+                $.ajax({
+                    type: "GET",
+                    url: "/Food_Service_PIV/web/api/categories",
+                    contentType: "application/json"
+                }).then(
+                        (categories) => {
+                    showCategories(categories);
+                },
+                        (error) => {
+                    errorMessage(error.status, $("#categories"));
+                }
+                );
+            }
+            
+            function showCategories(categories){
+                var list = $("#panel");
+                list.html("");
+                list.html('<div class="container-fluid rounded text-white" style="background-color: rgb(5, 5, 54);">' +
+                    '<div class="row py-1  align-items-center justify-content-center">'+
+                        '<div class="col-6 text-center " style="font-size: 60px;"> Categorias </div>'+
+                        '<div class="col-2 center-block">'+
+                            '<button type="button" class="btn btn-primary btn-lg btn-block bg-light text-dark">Agregar</button>' +
+                        '</div>'+
+                    '</div>'+
+                '</div>'+
+                '<div class="card bg-light">'+
+                    '<div class="card-body text-center">'+
+                        '<div class="table-responsive " overflow: auto">'+
+                            '<table class="table table-striped table-hover" style="font-size: 22px;">'+
+                                '<thead><tr>'+
+                                '<th scope="col">Id</th><th scope="col">Nombre</th><th scope="col"></th>'+
+                                '<tbody id="listado">'+
+                                '</tbody>'+
+                            '</table>'+
+                        '</div>'+         
+                    '</div>'+
+                '</div>');
+                var anchor = $('#listado');
+                categories.forEach((c) => {
+                    rowCategorie(anchor, c);
+                });
+            }
+
+            function rowCategorie(anchor, c) {
+                var tr =$("<tr />");
+                tr.html('<td>' + c.id + '</td>' +
+                        '<td>' + c.name + '</td>' +
+                        '<td><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#editDialog" onclick="searchCategorie('+ c.id +')">Ver / Editar</button>' +
+                        '</td>' +
+                        '</tr>');
+                anchor.append(tr);
+            }
+            
+            function searchCategorie(id){
+                $.ajax({
+                    type: "GET",
+                    url: "/Food_Service_PIV/web/api/categories/" + id,
+                    contentType: "application/json"
+                }).then(
+                    (categorie) => { editCategorie(categorie);
+                    },(error) => {
+                        errorMessage(error.status, $("#categories"));
+                    }
+                );
+            }
+            
+            function editCategorie(categorie){
+                var anchor = $('#listado');
+                var html = '<div class="row">'+
+                        '<div class="modal fade" id="editDialog" tabindex="-1" role="dialog" >'+
+                            '<div class="modal-dialog" role="document">'+
+                            '<div class="modal-content">'+
+                                '<form>'+
+                                    '<div class="modal-body text-center">'+
+                                        '<div id="div-login-msg">'+
+                                            '<div id="icon-login-msg" ></div>'+
+                                            '<span class="h1">' + categorie.name + '</span>'+
+                                        '</div>'+
+                                        '<br>'+
+                                        '<div class = "input-group" style = "margin-bottom: 25px">'+
+                                            '<div class = "input-group-prepend "><span class = "input-group-text"><i>Nombre</i></span></div>'+
+                                                '<input class = "form-control" placeholder = "Nombre" type = "text" id = "name" name="name" value="'+ categorie.name +'" required>'+
+                                            '<div class = "invalid-feedback">Favor ingrese el nombre de la categoria</div>'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div class="modal-footer d-flex justify-content-center">'+
+                                        '<div>'+
+                                            '<button type="button" id="updateButton" data-dismiss="modal" class="btn btn-primary btn-lg btn-block" onclick="updateCategorie(' + categorie.id + ')">Actualizar</button>'+
+                                            ' <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div id="loginErrorDiv" style="width:80%; margin: auto;"></div> '+    
+                                '</form>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>'+
+                '</div> '
+                anchor.append(html);
+            }
+            
+            function updateCategorie(idCategorie){ 
+              categorie = { id:idCategorie, 
+                            name: $("#name").val() }
+              $.ajax({type: "PUT", url:"/Food_Service_PIV/web/api/categories",
+                          data: JSON.stringify(categorie),contentType: "application/json"})
+                .then( (categories)=>{$('#editDialog').modal('hide'); showCategories(categories); },
+                       (error)=>{errorMessage(error.status,$("#addErrorDiv"));});                          
+            }
         </script>
     </body>
 

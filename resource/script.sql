@@ -31,6 +31,8 @@ insert into categories(name) values ('Bebidas');
 insert into categories(name) values ('Especiales');
 insert into categories(name) values ('Platos de arroz');
 
+-- Insert Dishes
+
 -- Insert Administrator Status
 insert into administrator_status(name) values ('Vuelvo pronto');
 insert into administrator_status(name) values ('Conectado');

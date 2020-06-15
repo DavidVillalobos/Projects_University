@@ -97,13 +97,6 @@
 		}
 	} 
 	
-	$(document).ready(function () {
-            //CheckBox mostrar contraseña
-            $('#ShowPassword').click(function () {
-		$('#contrasena').attr('type', $(this).is(':checked') ? 'text' : 'password');
-            });
-        });
-
         function login() {
             if (!loginValidar())
                 return;

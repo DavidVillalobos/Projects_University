@@ -42,12 +42,22 @@ public class Platillos {
         }
     }
     
+    @GET 
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Dishes> get() {
+        try {
+            return Model.instance().platillosgetAll();
+        } catch (Exception ex) {
+            throw new NotAcceptableException(); 
+        }
+    }
+    
     @DELETE
     @Path("{id}")
     @Produces({MediaType.APPLICATION_JSON})
     public List<Dishes> delete(@PathParam("id") int id) {
         try {
-            Model.instance().clientedelete(id);
+            Model.instance().platillosdelete(id);
             return Model.instance().platillosgetAll();
         } catch (Exception ex) {
             throw new NotFoundException(); 
