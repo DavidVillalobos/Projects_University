@@ -1,12 +1,18 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
-        <%@ include file="presentation/Head.jsp" %>
-        <title>Food Service</title> 
+	<!-- Required meta tags -->
+	<meta charset ="utf-8">
+	<meta name ="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css">         
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>       
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>     
+	<link rel="Stylesheet" href="css/styles.css">
+    <title>Food Service</title>
     </head>
-    <%@ include file="presentation/Header.jsp" %>   
-    <body> 
+    <body>
         <!-- LOGIN ADMINISTRATORS -->            
         <div class="row">
             <div class="modal fade" id="loginDialog" tabindex="-1" role="dialog">
@@ -16,19 +22,22 @@
                             <div class="modal-body text-center">
                                 <div id="div-login-msg">
                                     <div id="icon-login-msg" ></div>
-                                    <span class="h1">Panel de Administradores</span>
+                                    <span class="h1">Acceso Restringido</span>
                                 </div>
                                 <br>
-                                <div class="input-group" style="margin-bottom: 25px">
-                                    <div class="input-group-prepend "><span class="input-group-text"><i class="fa fa-user"></i></span></div>
-                                    <input class="form-control" placeholder="Usuario" type="text" id="usuario" name="usuario" value="" required>
-                                    <div class="invalid-feedback">Favor ingrese el usuario</div>
+                                <div class = "input-group" style = "margin-bottom: 25px">
+                                    <div class = "input-group-prepend "><span class = "input-group-text"><i class = "fa fa-user"></i></span></div>
+                                    <input class = "form-control" placeholder = "Usuario" type = "text" id = "usuario" name = "usuario" value = "" required>
+                                    <div class = "invalid-feedback">Favor ingrese el usuario</div>
                                 </div>
                                 <div class="input-group" style="margin-bottom: 25px">
                                     <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i></span></div>
                                     <input class="form-control" placeholder="Contraseña" type="password" id="contrasena" name="contrasena" value="" required>
+                                    <div class="input-group-append">
+                                          <button id="show_password" class="btn btn-primary" type="button" onclick="showPassword()"> <span class="fa fa-eye-slash icon"></span> </button>
+                                    </div>
                                     <div class="invalid-feedback">Favor ingrese la contraseña</div>
-                                </div>                     
+                                </div> 
                             </div>
                             <div class="modal-footer d-flex justify-content-center">
                                 <div>
@@ -53,7 +62,7 @@
                         <a class="display-4 text-white" href="/Food_Service_PIV/web/presentation/client/order.html">Storefront</a>
                     </button>
                     <span class="navbar-toggler-icon"> <img id="icono" src="images/icon.png"></span>
-                </div>  
+                </div>
                 <div class="col-4 pt-5">
                     <span class="navbar-toggler-icon"> <img id="icono2" src="images/icon2.png"></span>
                     <button class="navbar-toggler button-Admin-Panel" type="button">
@@ -66,12 +75,34 @@
             </div>
         </div>
     </body>
-    <%@ include file="presentation/Footer.jsp" %> 
+	<footer>
+            <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+	</footer>
     <script>
         function loaded() {
             $("#loginButton").click(login);
         }
         $(loaded);
+        
+        function showPassword(){
+		var cambio = document.getElementById("contrasena");
+		if(cambio.type == "password"){
+                    cambio.type = "text";
+                    $('.icon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+		}else{
+                    cambio.type = "password";
+                    $('.icon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+		}
+	} 
+	
+	$(document).ready(function () {
+            //CheckBox mostrar contraseña
+            $('#ShowPassword').click(function () {
+		$('#contrasena').attr('type', $(this).is(':checked') ? 'text' : 'password');
+            });
+        });
 
         function login() {
             if (!loginValidar())
@@ -81,11 +112,11 @@
                 password: $("#contrasena").val()
             };
             $.ajax({type: "POST",
-                url: "api/loginAdmin",
+                url: "/Food_Service_PIV/web/api/loginAdmin",
                 data: JSON.stringify(admin),
                 contentType: "application/json"
             }).then((admin) => {
-                loginSuccess(admin);
+                loginSuccess();
             },
             (error) => {
                 errorMessage(error.status, $("#loginErrorDiv"));
@@ -97,10 +128,8 @@
             return $("#loginForm").get(0).checkValidity();
         }
 
-        function loginSuccess(admin) {
-            $('#loginDialog').modal('hide');
-            $("#login_div").toggle("hide");
-            $("#logout_div").toggle("hide");
+        function loginSuccess() {
+            location.href="/Food_Service_PIV/web/presentation/admin/manager.html";
         }
 
         function errorMessage(status, place) {
@@ -116,8 +145,7 @@
                 case 404:
                     error = "Registro no encontrado";
                     break;
-            }
-            ;
+            };
             place.html('<div class="alert alert-danger fade show">' +
                     '<button type="button" class="close" data-dismiss="alert">' +
                     '&times;</button><h4 class="alert-heading">Error!</h4>' + error + '</div>');
