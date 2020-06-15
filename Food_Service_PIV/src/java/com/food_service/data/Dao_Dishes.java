@@ -76,13 +76,12 @@ public class Dao_Dishes {
     }
     
     public void update(Dishes p) throws Exception{
-        String sql="UPDATE dishes SET name='%s', price=%b, decription=%b, categorie=%d, where name='%s";
+        String sql="UPDATE dishes SET name='%s', price=%f, decription='%s' where id=%d";
         sql=String.format(sql,
                 p.getName(),
                 p.getPrice(), 
-                p.getDecription(), 
-                p.getCategories().getId(),
-                p.getName()); 
+                p.getDecription(),
+                p.getId()); 
         if (db.executeUpdate(sql) == 0){
             throw new Exception("Platillo no existe");
         }

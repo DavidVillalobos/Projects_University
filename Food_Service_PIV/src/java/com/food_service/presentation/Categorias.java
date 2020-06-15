@@ -30,6 +30,18 @@ public class Categorias {
         }
     }
     
+    
+    @GET 
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Categories> get() {
+        try {
+            return Model.instance().categoriasgetAll();
+        } catch (Exception ex) {
+            throw new NotAcceptableException(); 
+        }
+    }
+    
+    
     // get by id
     @GET
     @Path("{id}")
