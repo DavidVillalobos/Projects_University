@@ -104,15 +104,12 @@ public class Order {
         try {
             Orders globalOrder = (Orders) request.getSession(true).getAttribute("globalOrder");
             if(globalOrder==null){  
-                globalOrder = new Orders();
-                request.getSession(true).setAttribute("globalOrder", globalOrder);
+                globalOrder = new Orders();    
             }
+            Model.instance().addDishToOrder(globalOrder, dish);
             List<Orders> list = new ArrayList<>();
+            request.getSession(true).setAttribute("globalOrder", globalOrder);
             list.add(globalOrder);
-            request.setAttribute("globalOrder", globalOrder);
-            //Gson g = new Gson();
-            //String x = g.toJson(globalOrder);
-            //com.food_service.logic.Orders o2 = g.fromJson(x, com.food_service.logic.Orders.class);
             return list;            
         } catch (Exception ex) {
             throw new NotAcceptableException(); 

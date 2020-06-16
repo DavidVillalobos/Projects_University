@@ -57,10 +57,44 @@ public class Model {
     public void addDishToOrder(Orders globalOrder, ClientDish dish){
         Boolean oldDish=false;
         for(ClientDish d:globalOrder.getClientDishList()){
-            int y = 0;
-            //aca voy a ponerle mañana.
+            if(sameDishes(d,dish)){
+                d.setQuantity(d.getQuantity()+dish.getQuantity());
+                oldDish=true;
+                break;
+            } 
         }
+        if(!oldDish){
+            globalOrder.getClientDishList().add(dish);
+        }
+    }
     
+    public Boolean sameDishes(ClientDish d1, ClientDish d2){
+        
+        //Son del mismo Dish
+        if(!d1.getDishes().getId().equals(d2.getDishes().getId())) return false;
+        
+        //Tiene los mismos detalles
+        Boolean isIn;
+        for(ClienteAdditionals ca1 : d1.getClienteAdditionalsList()){
+            for(ClienteAdditionals ca2 : d2.getClienteAdditionalsList()){
+                if(ca1.getAdditionals().getId().equals(ca2.getAdditionals().getId())){
+                    if(ca2.getClienteDetailsList().size() != ca1.getClienteDetailsList().size())
+                        return false;
+                    for(ClienteDetails cd1 : ca1.getClienteDetailsList()){
+                        isIn=false;
+                        for(ClienteDetails cd2 : ca2.getClienteDetailsList()){
+                            
+                            if(cd1.getDetails().getId().equals(cd2.getDetails().getId())){
+                                isIn=true;
+                                break;
+                            }
+                        }
+                        if(!isIn) return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
 
