@@ -75,74 +75,10 @@
             </div>
         </div>
     </body>
-	<footer>
-            <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-	</footer>
-    <script>
-        function loaded() {
-            $("#loginButton").click(login);
-        }
-        $(loaded);
-        
-        function showPassword(){
-		var cambio = document.getElementById("contrasena");
-		if(cambio.type == "password"){
-                    cambio.type = "text";
-                    $('.icon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
-		}else{
-                    cambio.type = "password";
-                    $('.icon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
-		}
-	} 
-	
-        function login() {
-            if (!loginValidar())
-                return;
-            admin = {
-                userName: $("#usuario").val(),
-                password: $("#contrasena").val()
-            };
-            $.ajax({type: "POST",
-                url: "/Food_Service_PIV/web/api/loginAdmin",
-                data: JSON.stringify(admin),
-                contentType: "application/json"
-            }).then((admin) => {
-                loginSuccess();
-            },
-            (error) => {
-                errorMessage(error.status, $("#loginErrorDiv"));
-            });
-        }
-
-        function loginValidar() {
-            $("#loginForm").addClass("was-validated");
-            return $("#loginForm").get(0).checkValidity();
-        }
-
-        function loginSuccess() {
-            location.href="/Food_Service_PIV/web/presentation/admin/manager.html";
-        }
-
-        function errorMessage(status, place) {
-            error = status;
-            switch (status){
-                case 401:
-                    error = "Administrador no registrado";
-                    break;
-                case 403:
-                case 405:
-                    error = "Administrador no autorizado";
-                    break;
-                case 404:
-                    error = "Registro no encontrado";
-                    break;
-            };
-            place.html('<div class="alert alert-danger fade show">' +
-                    '<button type="button" class="close" data-dismiss="alert">' +
-                    '&times;</button><h4 class="alert-heading">Error!</h4>' + error + '</div>');
-            return;
-        }
-    </script>
+    <footer>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+        <script src="js/login.js"></script>
+    </footer>
 </html>

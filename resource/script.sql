@@ -15,7 +15,7 @@ TRUNCATE TABLE dishes;
 TRUNCATE TABLE locations;
 TRUNCATE TABLE order_status;
 TRUNCATE TABLE orders;
-TRUNCATE TABLE client_additionals;
+TRUNCATE TABLE cliente_additionals;
 -- Activamos las verificaciones de las llaves foraneas
 SET FOREIGN_KEY_CHECKS=1;
 -- Insert Categories
@@ -77,7 +77,7 @@ select * from categories;
 -- select * from cliente_details;
 -- select * from clients;
 -- select * from details;
--- select * from dishes;
+select * from dishes;
 select * from locations;
 -- select * from order_status;
 -- select * from orders;
