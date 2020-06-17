@@ -79,62 +79,7 @@
                                     <div class="modal-body">
                                         <div id="alert_popup"></div>
                                         <div id="detail_popup_body" class="container-fluid">
-                                            
-                                            <!-- MULTIPLE SELECTION -->
-                                            <div class="row bg-light">
-                                                <div class="col-8">
-                                                    <h6 class="mb-0">Nombre Additional</h6>
-                                                </div>
-                                                <div class="col-4">
-                                                    <p class="text-muted text-right mb-0">requerido</p>
-                                                </div>
-                                            </div>
-                                            <div class="container-fluid bg-white">
-                                                <div class="row">
-                                                    <div class="col-8">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                                        <label class="form-check-label" for="defaultCheck1">
-                                                            Detail 1
-                                                        </label>    
-                                                    </div>
-                                                    </div>
-                                                    <div class="col-4"><p class="text-right mb-0">3000</p></div>
-                                                </div>
-                                            </div>
-                                            <!-- UNIQUE SELECTION -->
-                                            <div class="row bg-light">
-                                                <div class="col-8">
-                                                    <h6 class="mb-0">Nombre Additional</h6>
-                                                </div>
-                                                <div class="col-4"><p class="text-right text-muted mb-0">requerido</p></div>
-                                            </div>
-                                            <div class="container-fluid bg-white">
-                                                <div class="row">
-                                                    <div class="col-8">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="exampleRadios" 
-                                                        id="exampleRadios1" value="option1" checked>
-                                                        <label class="form-check-label" for="exampleRadios1">
-                                                            Detail radio
-                                                        </label>
-                                                    </div>
-                                                    </div>
-                                                    <div class="col-4"><p class="text-right mb-0">200</p></div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-8">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="exampleRadios" 
-                                                        id="exampleRadios2" value="option2">
-                                                        <label class="form-check-label" for="exampleRadios2">
-                                                            detail radio 2
-                                                        </label>
-                                                    </div>
-                                                    </div>
-                                                    <div class="col-4"><p class="text-right mb-0">300</p></div>
-                                                </div>
-                                            </div>
+                                             
                                         </div>
                                     </div>
                                     <div id="detail_popup_footer" class="modal-footer">
@@ -167,54 +112,31 @@
 			<!-- BOTONES DE DELIVERY Y PICKUP -->
 			<div class="btn-block btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-outline-primary active">
-                                <input type="radio" name="options" id="option1" autocomplete="off" checked>
+                                <input type="radio" name="options" id="delivery" autocomplete="off">
     				<b>Delivery</b>
                             </label>
                             <label class="btn btn-outline-primary">
-    				<input type="radio" name="options" id="option2" autocomplete="off">
+    				<input type="radio" name="options" id="pickup" autocomplete="off" checked>
     				<b>Pickup</b>
                             </label>
 			</div>
                     </div>
                     <br>
-                    <div class="container-fluid pb-1">	
-			<div class="row">
-                            <div class="col-2">
-				<button type="button" class="btn btn-outline-primary" style="padding: 0px 5px;">
-                                    <b>-</b>
-				</button>
-                            </div>
-                            <div class="col-7">
-				<small class="text-uppercase">Nombre del Platillo</small>
-                            </div>
-                            <div class="col-3">
-				c10.00000
-                            </div>
-			</div>
-			<div class="row">
-                            <div class="col-2"></div>
-                            <div class="col-10">
-				<small class="text-muted">
-                                    <div>texto que tenga</div>
-                                    <div>que ver con el </div>
-                                    <div>platillo jejeps </div>
-                                    <div>no tengo idea de que poner.</div>
-				</small>
-							</div>
-			</div>
-					</div>
+                    <div id="dishes-container" class="container-fluid pb-1">
+                        
+                    </div>
 		</div>
 		<div class="container-fluid bg-white rounded mb-1 pb-2">
                     <div class="row py-2">
 			<div class="col-4">
-                            <div class="text-muted">Sub-Total:</div>
-                            <div class="text-muted">Delivery:</div>
+                           <!-- <div class="text-muted">Sub-Total:</div>
+                            <div class="text-muted">Delivery:</div> -->
                             <div class="text-muted">Order-Total:</div>
 			</div>	
                         <div class="col-8 text-right">
-                            <div>c13023.324</div>
-                            <div>c0</div>
-                            <div>c13023.324</div>
+                            <!-- <div>c13023.324</div>
+                            <div>c0</div> -->
+                            <div id="order-total"></div>
 			</div>	
                     </div>
                     <button class="btn btn-danger btn-block">Checkout</button>
@@ -244,7 +166,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
         
-        globalOrder=null;
+        globalOrder=[];
         
         function init(){
             $("#plus_order_popup").on("click",()=>{
@@ -343,7 +265,7 @@
                                     d.decription+
                                 '</small></div>'+	
                             '</div>'+
-                            '<div class="col-3 font-weight-bold text-right">'+
+                            '<div class="col-3 font-weight-bold text-right">₡'+
                                 d.price+
                             '</div>'+
                             '<div class="col-1">'+
@@ -375,13 +297,16 @@
                    (error)=>{errorMessage(error.status,("#detail_popup"));}
                 );
             }else{
-                //addToShoppingCart(dish,false); 
+                addToShoppingCart(dish,false); 
             }
         }
         
         function addToShoppingCart(_dish,additionalsFlag){
+            var clientDish={quantity:$("#cant_popup").attr("value"),dishes:_dish};
+            if(!additionalsFlag){
+                clientDish.quantity=1;
+            }
             itsOk=true;
-            var clientDish={quantity:$("#cant_popup").attr("value"),dishes:{id:_dish.id}};
             if(additionalsFlag){
                 var clientAdditionals=[];
                 _dish.additionalsList.forEach((addi)=>{verifySelectedAdditional(addi,clientAdditionals);});
@@ -390,14 +315,12 @@
                     itsOk=false;
                 errorMessage(333,$("#alert_popup"));
                 }
-            }
-            var xd = JSON.stringify(clientDish);
-            var xd_2= JSON.stringify(_dish);
+            }else{clientDish.clienteAdditionalsList=null;}
             if(itsOk){
                 $.ajax({
                    type:"POST",
                    url:"/Food_Service_PIV/web/api/orders",
-                   data:xd,
+                   data:JSON.stringify(clientDish),
                    contentType:"application/json"
                }).then(
                    (order)=>{updateOrder(order);},
@@ -407,7 +330,68 @@
         }
         
         function updateOrder(order){
+            globalOrder = order.pop();
+            //clienteAdditionalsList
+                //clienteDetailsList
+            showOrder(globalOrder.clientDishList);
+            $("#order-total").html("₡"+globalOrder.total);
             return true;
+        }
+        
+        function showOrder(dishList){
+            var count = 0;
+            var container = $("#dishes-container");
+            container.html("");
+            dishList.forEach((d)=>{
+                var dish = $(
+                    '<div class="row mb-2">'+
+                        '<div class="col-2">'+
+                            '<button type="button" id="delete-'+count+'" class="btn btn-outline-primary" style="padding: 0px 13px;">'+
+                                '<b>-</b>'+
+                            '</button><br>'+
+                            '<button type="button" id="edit-'+count+'"class="btn btn-outline-primary" style="padding: 0px 5px;">'+
+                                '<small>edit</small>'+
+                            '</button>'+
+                        '</div>'+
+                        '<div class="col-7">'+
+                            '<small class="text-uppercase">'+d.quantity+' x '+d.dishes.name+'</small>'+
+                            '<div>'+
+				'<small class="text-muted">'+
+                                '<div>'+detailsString(d)+'</div>'+
+				'</small>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="col-3"> ₡'+d.total+'</div>'+
+                    '</div>'  
+                    );
+                var x = count;
+                dish.find("#delete-"+x).on("click",()=>deleteDish(x));
+                container.append(dish);
+                count++;
+            });
+        }
+        
+        function deleteDish(index){
+            $.ajax({
+                type:"DELETE",
+                url:"/Food_Service_PIV/web/api/orders/delete/"+index,
+                data:index,
+                contentType:"application/json"
+            }).then(
+               (order)=>{updateOrder(order);},
+               (error)=>{errorMessage(error.status,("#dishes-container"));}
+            );
+        }
+        
+        function detailsString(dish){
+            if(dish.clienteAdditionalsList === undefined){return dish.dishes.decription;}
+            var string = "";
+            dish.clienteAdditionalsList.forEach((addi)=>{
+                addi.clienteDetailsList.forEach((detail)=>{
+                    string+=detail.details.name+" (₡"+detail.details.price+").<br>";
+                });
+            });
+            return string;
         }
         
         function verifySelectedAdditional(addi,clientAddi){
@@ -484,7 +468,7 @@
                                     '</label>'+   
                                 '</div>'+
                             '</div>'+
-                            '<div class="col-4"><p class="text-right my-1">'+detail.price+'</p></div>'+
+                            '<div class="col-4"><p class="text-right my-1">₡'+detail.price+'</p></div>'+
                         '</div>'+
                     '</div>');
                     newAdditional.append(newDetail);

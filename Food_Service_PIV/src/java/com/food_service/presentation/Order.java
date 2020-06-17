@@ -106,8 +106,13 @@ public class Order {
             if(globalOrder==null){  
                 globalOrder = new Orders();    
             }
-            Model.instance().addDishToOrder(globalOrder, dish);
+            if(dish.getClienteAdditionalsList() == null){
+                Model.instance().addDishToOrder(globalOrder, dish, false);
+            }else{
+                Model.instance().addDishToOrder(globalOrder, dish, true);
+            }
             List<Orders> list = new ArrayList<>();
+            globalOrder.setTotal(Model.instance().calculateTotalOrder(globalOrder));
             request.getSession(true).setAttribute("globalOrder", globalOrder);
             list.add(globalOrder);
             return list;            
@@ -116,17 +121,25 @@ public class Order {
         }
     }
 
-//    @DELETE
-//    @Path("{cedula}")
-//    @Produces({MediaType.APPLICATION_JSON})
-//    public List<Persona> del(@PathParam("cedula") String cedula) {
-//        try {
-//            Model.instance().personaDelete(cedula);
-//            return Model.instance().personaListAll();
-//        } catch (Exception ex) {
-//            throw new NotFoundException(); 
-//        }
-//    }
+    @DELETE
+    @Path("delete/{index}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Orders> del(@PathParam("index") String index) {
+        try {
+            Orders globalOrder = (Orders) request.getSession(true).getAttribute("globalOrder");
+            if(globalOrder==null){  
+                globalOrder = new Orders();    
+            }
+            Model.instance().deleteFromOrder(index, globalOrder);
+            List<Orders> list = new ArrayList<>();
+            globalOrder.setTotal(Model.instance().calculateTotalOrder(globalOrder));
+            request.getSession(true).setAttribute("globalOrder", globalOrder);
+            list.add(globalOrder);
+            return list;         
+        } catch (Exception ex) {
+            throw new NotFoundException(); 
+        }
+    }
 //    
 //    @GET
 //    @Produces({MediaType.APPLICATION_JSON})

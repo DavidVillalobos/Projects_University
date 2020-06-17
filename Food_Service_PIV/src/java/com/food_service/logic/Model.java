@@ -1,6 +1,7 @@
 package com.food_service.logic;
 import com.food_service.data.*;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -54,16 +55,61 @@ public class Model {
         return !adicionales.getByDish(idDish).isEmpty();
     }
     
-    public void addDishToOrder(Orders globalOrder, ClientDish dish){
+    public Double calculateTotalOrder(Orders or){
+        Double total = 0.0;
+        for(ClientDish d:or.getClientDishList()){
+            total+=d.getTotal();
+        }
+        return total;
+    }
+    
+    public void deleteFromOrder(String index, Orders order){
+        int index_ = Integer.parseInt(index);
+        if(index_<order.getClientDishList().size()){
+            order.getClientDishList().remove(index_);
+        }
+    }
+    
+    public Double calculateTotalDish(ClientDish d){
+        Double t=d.getDishes().getPrice();
+        if(d.getClienteAdditionalsList() != null){
+        for(ClienteAdditionals cd:d.getClienteAdditionalsList()){
+            for(ClienteDetails cdetails:cd.getClienteDetailsList()){
+                t+=cdetails.getDetails().getPrice();
+            }
+        }
+        }
+        t*=d.getQuantity();
+        return t;
+    }
+    
+    public void addDishToOrder(Orders globalOrder, ClientDish dish, Boolean addi){
         Boolean oldDish=false;
+        if(!addi){
+            for(ClientDish d:globalOrder.getClientDishList()){
+                if(d.getDishes().getId().equals(dish.getDishes().getId())){
+                    d.setQuantity(d.getQuantity()+dish.getQuantity());
+                    d.setTotal(this.calculateTotalDish(d));
+                    oldDish=true; break;
+                }
+            }
+            if(!oldDish){
+                dish.setTotal(this.calculateTotalDish(dish));
+                globalOrder.getClientDishList().add(dish);
+                return; 
+            }
+            return;
+        }   
         for(ClientDish d:globalOrder.getClientDishList()){
             if(sameDishes(d,dish)){
                 d.setQuantity(d.getQuantity()+dish.getQuantity());
+                d.setTotal(this.calculateTotalDish(d));
                 oldDish=true;
                 break;
             } 
         }
         if(!oldDish){
+            dish.setTotal(this.calculateTotalDish(dish));
             globalOrder.getClientDishList().add(dish);
         }
     }

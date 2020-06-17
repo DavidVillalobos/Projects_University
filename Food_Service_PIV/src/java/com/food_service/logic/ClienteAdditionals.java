@@ -6,6 +6,7 @@
 package com.food_service.logic;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -46,6 +47,7 @@ public class ClienteAdditionals implements Serializable {
     private List<ClienteDetails> clienteDetailsList; //got it
 
     public ClienteAdditionals() {
+        this.clienteDetailsList = new ArrayList<>();
     }
 
     public ClienteAdditionals(Integer id) {

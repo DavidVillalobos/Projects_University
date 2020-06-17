@@ -2,6 +2,7 @@
 package com.food_service.logic;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -45,10 +46,22 @@ public class ClientDish implements Serializable {
     @JoinColumn(name = "order", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Orders orders; // Id needed
+    
+    private Double total;
 
     public ClientDish() {
-        
+        this.clienteAdditionalsList = new ArrayList<>();
     }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
+    }
+    
+    
 
     public ClientDish(Integer id) {
         this.id = id;
