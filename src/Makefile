@@ -4,7 +4,7 @@ HEADER = simulation.h
 OUT	= program
 CC = gcc
 FLAGS = -g -c -Wall
-LFLAGS =  -lm
+LFLAGS = -pthread -lm
 
 all: clean $(OBJS)
 	$(CC) -g $(OBJS) -o $(OUT) $(LFLAGS)
