@@ -12,6 +12,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import com.food_service.logic.Model;
+import java.util.List;
+import javax.ws.rs.GET;
+import javax.ws.rs.NotAcceptableException;
 
 @Path("/loginAdmin")
 public class LoginAdmin {
@@ -31,6 +34,17 @@ public class LoginAdmin {
             return logged;
         } catch (Exception ex) {
             throw new NotFoundException();
+        }
+    }
+    
+    @GET 
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Administrators get() {
+        try {
+            Administrators admin = (Administrators) request.getSession(true).getAttribute("admin");
+            return admin;
+        } catch (Exception ex) {
+            throw new NotAcceptableException(); 
         }
     }
     

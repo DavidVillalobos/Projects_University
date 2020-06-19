@@ -56,6 +56,19 @@ public class Dao_Dishes {
         return li;
     }
     
+    public List<Dishes> getLike(String filter) throws SQLException {
+        List<Dishes> li = new ArrayList<>();
+        String sql = "select d.id, d.name, d.price, d.decription from dishes d," +
+                "categories c where (d.name like '%%%s%%' or c.name like '%%%s%%')" +
+                "and d.categorie=c.id";
+        sql = String.format(sql, filter, filter);
+        ResultSet rs = db.executeQuery(sql);
+        while(rs.next()){
+            li.add(render_dishes(rs));
+        }
+        return li;
+    }
+    
     public List<Dishes> getAll() throws SQLException{
         List<Dishes> li = new ArrayList<>();
         String sql = "SELECT * FROM dishes";
@@ -102,4 +115,5 @@ public class Dao_Dishes {
     }
     
     public void close(){}
+
 }

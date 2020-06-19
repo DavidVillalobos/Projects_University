@@ -42,6 +42,10 @@ insert into administrator_status(name) values ('Desconectado');
 insert into administrators(user_name, password, name, email, administrator_status) values ('admin1', 'admin1', 'Juan', 'juan@gmail.com', 2);
 insert into administrators(user_name, password, name, email, administrator_status) values ('admin2', 'admin2', 'Maria', 'maria@gmail.com', 1);
 
+-- Insert Clients
+insert into clients(name, last_name, telephone, email, password) values ('Juan', 'Perez', '1111-1111', 'juanP@gmail.com', 'juan');
+insert into clients(name, last_name, telephone, email, password) values ('Maria', 'Rodriguez', '2222-2222', 'mariaR@gmail.com','maria');
+
 -- Insert Locations
 insert into locations (name, administrator) values ('The Healthy Grill', 1);
 insert into locations (name, administrator) values ('The Ambrosia', 2);
@@ -75,7 +79,7 @@ select * from categories;
 -- select * from client_dish;
 -- select * from cliente_additionals;
 -- select * from cliente_details;
--- select * from clients;
+select * from clients;
 -- select * from details;
 select * from dishes;
 select * from locations;

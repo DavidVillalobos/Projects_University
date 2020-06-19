@@ -21,7 +21,7 @@ function showDishes(dishes){
         '<div class="row py-1  align-items-center justify-content-center">'+
             '<div class="col-6 text-center " style="font-size: 60px;"> Menu </div>'+
             '<div class="col-2 center-block">'+
-                '<button type="button" class="btn btn-primary btn-lg btn-block bg-success rounded-3 border-success" data-toggle="modal" data-target="#addDialog" onclick="aggregateDish()">Agregar</button>' +
+                '<button type="button" class="btn btn-primary rounded-3" data-toggle="modal" data-target="#addDialog" onclick="aggregateDish()">Agregar platillo</button>' +
             '</div>'+
         '</div>'+
     '</div>'+
@@ -31,7 +31,18 @@ function showDishes(dishes){
                 '<table class="table table-striped table-hover" style="font-size: 22px;">'+
                     '<thead><tr><th scope="col">Categoria</th>'+
                     '<th scope="col">Nombre</th><th scope="col">Precio</th>'+
-                    '<th colspan="2" scope="col"></th> '+
+                    '<th colspan="2" scope="col">'+
+                    '<div class="form-inline">'+
+                        '<div class="input-group flex-fill">'+
+                            '<input id="filterByText" type="text" class="form-control" placeholder="Buscar por nombre o categoria">'+
+                            '<span class="input-group-prepend">'+
+                            '<button class="btn btn-primary" onclick="searchDishByFilter()">'+
+                            '<i class="fa fa-search"></i>'+
+                            '</button>'+
+                            '</span>'+
+                        '</div>'+
+                    '</div>'+
+                    '</th> '+
                     '<tbody id="listado">'+
                     '</tbody>'+
                 '</table>'+
@@ -49,10 +60,10 @@ function rowDish(anchor, c) {
     tr.html('<td>' + c.categories.name + '</td>' +
             '<td>' + c.name + '</td>' +
             '<td>' + c.price + '</td>' +
-            '<td><button type="button" class="btn btn-primary btn-lg btn-block" style="width: 150px;" data-toggle="modal" data-target="#editDialog" onclick="searchDish('+ c.id +')">Ver / Editar</button>' +
+            '<td style="width: 160px;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editDialog" onclick="searchDish('+ c.id +')">Ver / Editar</button>' +
             '</td>' +
-            '<td>' +
-            '<button type="button" class="btn btn-primary btn-lg btn-block bg-danger border-danger" style="width: 150px;" onclick="deleteDish('+ c.id +')">Eliminar</button>' +
+            '<td style="width: 160px;">' +
+            '<button type="button" class="btn btn-danger" onclick="deleteDish('+ c.id +')">Eliminar</button>' +
             '</td>' +  
             '</tr>');
     anchor.append(tr);
@@ -80,7 +91,7 @@ function editDish(dish){
                     '<form>'+
                         '<div class="modal-body text-center">'+
                                 '<div></div>'+
-                                '<span class="display-4">' + dish.categories.name + '<br>' + dish.name + '</span>'+
+                                '<span class="display-4">Editar Platillo<br>' + dish.name + '</span>'+
                             '<br><br>'+
                             '<div class = "input-group" style = "margin-bottom: 25px">'+
                                 '<div class = "input-group-prepend "><span class = "input-group-text"><i>Nombre</i></span></div>'+
@@ -155,6 +166,31 @@ function aggregateDish(){
         '</div>'+
     '</div> '
     anchor.append(html);
+}
+
+function searchDishByFilter(){
+    $.ajax({
+        type: "GET",
+        url: "/Food_Service_PIV/web/api/dishes",
+        contentType: "application/json"
+    }).then(
+            (dishes) => {
+        showDishes( dishes.filter(dish => filtrar(dish)));
+    },
+            (error) => {
+        errorMessage(error.status, $("#dishes"));
+    }
+    );
+}
+
+function filtrar(dish){
+    text = String($("#filterByText").val()).toUpperCase();
+    n1 = String(dish.name).toUpperCase();
+    n2 = String(dish.categories.name).toUpperCase();
+    if(n1.includes(text) || n2.includes(text)){
+        return true;
+    }
+    return false;
 }
 
 function deleteDish(id){

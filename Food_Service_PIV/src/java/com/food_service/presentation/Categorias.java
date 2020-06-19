@@ -59,7 +59,7 @@ public class Categorias {
     @Produces({MediaType.APPLICATION_JSON})
     public List<Categories> delete(@PathParam("id") int id) {
         try {
-            Model.instance().clientedelete(id);
+            Model.instance().categoriasdelete(id);
             return Model.instance().categoriasgetAll();
         } catch (Exception ex) {
             throw new NotFoundException(); 

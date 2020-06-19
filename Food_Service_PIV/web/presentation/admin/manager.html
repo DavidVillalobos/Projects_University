@@ -15,9 +15,9 @@
         <nav class="navbar navbar-dark bg-light navbar-expand-sm fixed-top">
             <div class="container-fluid">
                 <img alt="logo" width="40" height="40" src="../../images/tastyigniter-logo.png">
-                <div style="font-size: 30px;">Administrator Panel </div>
+                <div style="font-size: 30px; margin-left: -800px">Administrator Panel </div>
                 <div class="nav-item">
-                    <button class="nav-link btn btn-primary btn-lg btn-block bg-danger border-dark" onclick="logout()">Cerrar Sesion</button>
+                    <button class="nav-link btn btn-outline-danger" style=" width: 130px;" onclick="logout()">Cerrar Sesion</button>
                 </div>
             </div>
         </nav>
@@ -29,15 +29,15 @@
                             <li class="py-3">
                                 <a class="text-light" data-toggle="collapse" data-target="#submenu1"
                                 aria-expanded="false">
-                                >Cocina
+                                - Cocina
                                 <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu1">
-                                    <li><div class="text-light" onclick="loadDishes()">Platillos</div></li>
+                                    <li><div class="text-light " onclick="loadDishes()">Platillos</div></li>
                                     <li><div class="text-light" onclick="loadCategories()">Categorias</div></li>
                                 </ul>
                             </li>
                             <li class="py-3">
                                 <a class="text-light" data-toggle="collapse" data-target="#submenu2">
-                                    >Ventas
+                                - Ventas
                                 </a>
                                 <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu2">
                                     <li><div class="text-light" >Ordenes</div></li>
@@ -45,10 +45,11 @@
                             </li>
                             <li class="py-3">
                                 <a class="text-light" data-toggle="collapse" data-target="#submenu3">
-                                    >Usuarios
+                                - Usuarios
                                 </a>
-                                <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu3">
-                                    
+                                 <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu3">
+                                    <li><div class="text-light" onclick="loadClients()">Clientes</div></li>
+                                    <li><div class="text-light" onclick="loadAdministrators()">Administradores</div></li>
                                 </ul>
                             </li>
                         </ul>
@@ -73,9 +74,10 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="../../js/managerDishes.js"></script>
-        <script src="../../js/managerCategories"></script>
-        <script src="../../js/managerUsers"></script>
-        <script src="../../js/managerOrders"></script>
+        <script src="../../js/managerCategories.js"></script>
+        <script src="../../js/managerClients.js"></script>
+        <script src="../../js/managerAdministrators.js"></script>
+        <script src="../../js/managerOrders.js"></script>
         <script src="../../js/login.js"></script>
     </body>
 

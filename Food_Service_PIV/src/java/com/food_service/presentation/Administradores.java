@@ -30,6 +30,16 @@ public class Administradores {
         }
     }
     
+    @GET 
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Administrators> get() {
+        try {
+            return Model.instance().administradorgetAll();
+        } catch (Exception ex) {
+            throw new NotAcceptableException(); 
+        }
+    }
+    
     // get by id
     @GET
     @Path("{id}")

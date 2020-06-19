@@ -30,6 +30,16 @@ public class Clientes {
         }
     }
     
+    @GET 
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Clients> get() {
+        try {
+            return Model.instance().clientegetAll();
+        } catch (Exception ex) {
+            throw new NotAcceptableException(); 
+        }
+    }
+    
     // get by id
     @GET
     @Path("{id}")

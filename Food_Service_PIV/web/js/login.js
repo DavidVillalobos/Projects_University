@@ -40,7 +40,7 @@ function loginValidar() {
 
 
 
-function loginSuccess() {
+function loginSuccess(){
     location.href="/Food_Service_PIV/web/presentation/admin/manager.html";
 }
 
