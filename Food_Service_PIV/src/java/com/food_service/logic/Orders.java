@@ -80,16 +80,16 @@ public class Orders implements Serializable {
     private OrderStatus orderStatus;
 
     public Orders() {
-        //this.id = null;
+        this.id = null;
         this.type = 0;
-        //this.orderDate = null;
+        this.orderDate = null;
         this.asap = 0;
         this.total = 0.0;
         this.direction = "";
         this.clientDishList = new ArrayList<>();
-        //this.clients = null;
-        //this.orderStatus = null;
-        //this.locations = null;
+        this.clients = null;
+        this.orderStatus = null;
+        this.locations = null;
     }
 
     public Orders(Integer id) {

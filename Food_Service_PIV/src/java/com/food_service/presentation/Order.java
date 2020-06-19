@@ -35,17 +35,6 @@ import javax.ws.rs.core.Context;
 @Path("/orders")
 public class Order {
 
-//    @POST
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces({MediaType.APPLICATION_JSON})    
-//    public List<Persona> add(Persona p) {  
-//        try {
-//            Model.instance().personaAdd(p);
-//            return Model.instance().personaListAll();
-//        } catch (Exception ex) {
-//            throw new NotAcceptableException(); 
-//        }
-//    }
     @Context
     HttpServletRequest request;
     
@@ -140,11 +129,24 @@ public class Order {
             throw new NotFoundException(); 
         }
     }
-//    
-//    @GET
-//    @Produces({MediaType.APPLICATION_JSON})
-//    public List<Persona> list(@QueryParam("nombre") String nombre) { 
-//        return Model.instance().personaSearch(nombre);
-//    } 
-//    
+    
+    @PUT
+    @Path("receive/{wayToOrder}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Orders> changeWay(@PathParam("wayToOrder") String way) {
+        try {
+            Orders globalOrder = (Orders) request.getSession(true).getAttribute("globalOrder");
+            if(globalOrder==null){  
+                globalOrder = new Orders();    
+            }
+            List<Orders> list = new ArrayList<>();
+            globalOrder.setType(Short.parseShort(way));           
+            request.getSession(true).setAttribute("globalOrder", globalOrder);
+            list.add(globalOrder);
+            return list;         
+        } catch (Exception ex) {
+            throw new NotFoundException(); 
+        }
+    }
+
 }

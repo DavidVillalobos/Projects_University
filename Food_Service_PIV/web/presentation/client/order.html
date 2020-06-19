@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <title>Pedido</title>
 </head>
@@ -42,9 +43,13 @@
 				<b>ASAP</b>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="OrderTimePicker">
-                                <button class="dropdown-item py-2">ASAP</button>
+                                <button id="asap" class="dropdown-item py-2">
+                                    ASAP
+                                </button>
                                 <div class="dropdown-divider"></div>
-				<button class="dropdown-item py-2">Schedule Order</button>
+				<button id="datePicker" class="dropdown-item py-2">
+                                    Schedule Order
+                                </button>
                             </div>
 			</div>
                     </div>
@@ -110,13 +115,13 @@
 		<div class="container-fluid bg-white rounded mb-1">
                     <div class="container py-2">
 			<!-- BOTONES DE DELIVERY Y PICKUP -->
-			<div class="btn-block btn-group btn-group-toggle" data-toggle="buttons">
+			<div id="way"  class="btn-block btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-outline-primary active">
-                                <input type="radio" name="options" id="delivery" autocomplete="off">
+                                <input type="radio" id="delivery" name="options" autocomplete="off" checked>
     				<b>Delivery</b>
                             </label>
                             <label class="btn btn-outline-primary">
-    				<input type="radio" name="options" id="pickup" autocomplete="off" checked>
+    				<input type="radio" id="pickup" name="options" id="pickup" autocomplete="off">
     				<b>Pickup</b>
                             </label>
 			</div>
@@ -161,12 +166,16 @@
             © 2020 Copyright.<br><h6 class="text-center">Universidad Nacional De Costa Rica</h6>
  	 </div>
     </footer>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
         
         globalOrder=[];
+        _dish_=null;
+        _update_=false;
+        _selected_=0;
         
         function init(){
             $("#plus_order_popup").on("click",()=>{
@@ -177,10 +186,34 @@
                 if(x>1){$("#cant_popup").attr("value",parseInt($("#cant_popup").val(),10)-1);}
                 else{errorMessage(222,$("#alert_popup"));}
             });
+            $("#way").on("click",()=>{changeWayToReceive();});
+            //$("#asap")
+            //$("#datePicker").on("click",()=>{showDatePicker();});
             loadCategories();
+            $("#add_order_popup").on("click",()=>{addToShoppingCart(_dish_,true);});
         }
         
         $(init);
+        
+        function showDatePicker(){
+                 
+        }
+        
+        function changeWayToReceive(){
+            // 0 es delivery y 1 es pickup;
+            var true_false  = 1;
+            if(!$("#delivery").prop("checked") === true){
+                true_false = 0;
+            }
+            $.ajax({
+                type:"PUT",
+                url:"/Food_Service_PIV/web/api/orders/receive/"+true_false,
+                contentType:"application/json"
+            }).then(
+                (order)=>{globalOrder=order.pop();},
+                (error)=>{errorMessage(error.status,$("#dishes-container"));} 
+            );
+        }
         
         function loadCategories(){
             $.ajax({
@@ -297,7 +330,7 @@
                    (error)=>{errorMessage(error.status,("#detail_popup"));}
                 );
             }else{
-                addToShoppingCart(dish,false); 
+                addToShoppingCart(dish,false);
             }
         }
         
@@ -313,20 +346,37 @@
                 clientDish.clienteAdditionalsList=clientAdditionals;
                 if(parseInt($("#cant_popup").val(),10) < 1){
                     itsOk=false;
-                errorMessage(333,$("#alert_popup"));
+                    errorMessage(333,$("#alert_popup"));
                 }
             }else{clientDish.clienteAdditionalsList=null;}
             if(itsOk){
-                $.ajax({
-                   type:"POST",
-                   url:"/Food_Service_PIV/web/api/orders",
-                   data:JSON.stringify(clientDish),
-                   contentType:"application/json"
-               }).then(
-                   (order)=>{updateOrder(order);},
-                   (error)=>{errorMessage(error.status,("#alert_popup"));}
-                );
+                if(_update_){
+                    $.ajax({
+                        type:"DELETE",
+                        url:"/Food_Service_PIV/web/api/orders/delete/"+_selected_,
+                        data:_selected_,
+                        contentType:"application/json"
+                    }).then(
+                        (order)=>{
+                            _update_=false; 
+                            addToShoppingCart(_dish,additionalsFlag);
+                        },
+                        (error)=>{errorMessage(error.status,("#dishes-container"));}
+                    );
+                    
+                }else{
+                    $.ajax({
+                       type:"POST",
+                       url:"/Food_Service_PIV/web/api/orders",
+                       data:JSON.stringify(clientDish),
+                       contentType:"application/json"
+                    }).then(
+                       (order)=>{updateOrder(order);},
+                       (error)=>{errorMessage(error.status,("#alert_popup"));}
+                    );
+                }
             }
+            
         }
         
         function updateOrder(order){
@@ -366,9 +416,14 @@
                     );
                 var x = count;
                 dish.find("#delete-"+x).on("click",()=>deleteDish(x));
+                dish.find("#edit-"+x).on("click",()=>{
+                    _update_=true; _selected_=x;
+                    validateDish(globalOrder.clientDishList[x].dishes,true);
+                });
                 container.append(dish);
                 count++;
             });
+            $("#detail_popup").modal("hide");
         }
         
         function deleteDish(index){
@@ -400,17 +455,9 @@
                 additionals:{id:addi.id}, //tengo todos los datos en addi
                 clienteDetailsList:[]
             };
-            var newAddi = {
-                type:addi.type,
-                name:addi.name,
-                mandatory:addi.mandatory,
-                id:addi.id,
-                dishes:addi.dishes,
-                detailsList:[]};
             if(addi.type){
                 addi.detailsList.forEach((d)=>{
                     if($("#check_"+d.id).prop("checked")){
-                        //newAddi.detailsList.push(d);
                         newClientAddi.clienteDetailsList.push({details:d});
                         oneSelected = true;
                     }
@@ -420,7 +467,6 @@
                 var idDetail = $('input[name=grupo_'+addi.id+']:checked').val();
                 addi.detailsList.forEach((d)=>{
                     if(""+d.id===idDetail){
-                        //newAddi.detailsList.push(d);
                         newClientAddi.clienteDetailsList.push({details:d});
                         oneSelected=true;
                     }
@@ -430,17 +476,11 @@
                 errorMessage(111,$("#alert_popup"));
                 itsOk=false;
             }
-            //clientAddi.push(newAddi);
             clientAddi.push(newClientAddi);
         }
         
-        function removeItemFromArr ( arr, item ) {
-            var i = arr.indexOf( item );
-            if ( i !== -1 ) {
-                arr.splice( i, 1 );
-            }
-        }
         function updateDetailPopup(dish,details){
+            _dish_=dish;
             dish.additionalsList=details;
             $("#detail_popup_title").html(dish.name+'<br><small class="text-muted">'+dish.decription+'</small>');
             var popup_body=$("#detail_popup_body");
@@ -475,9 +515,21 @@
                 });
                 popup_body.append(newAdditional);
             });
-            $("#cant_popup").attr("value","1");
-            $("#add_order_popup").html('ADD TO ORDER c'+dish.price);
-            $("#add_order_popup").on("click",()=>{addToShoppingCart(dish,true);});
+            if(_update_){
+                var list = globalOrder.clientDishList[_selected_].clienteAdditionalsList;
+                list.forEach((addi)=>{
+                    addi.clienteDetailsList.forEach((d)=>{
+                       $("#check_"+d.details.id).prop("checked",true);
+                    });
+                });
+                $("#add_order_popup").html('ACTUALIZAR');
+                $("#cant_popup").attr("value",""+globalOrder.clientDishList[_selected_].quantity); 
+            }else{
+                $("#add_order_popup").html('AÑADIR A LA ORDEN ₡'+dish.price);
+                $("#cant_popup").attr("value","1"); 
+            }
+            
+            $("#detail_popup").modal("show");
         }
         
         function errorMessage(status,place){
