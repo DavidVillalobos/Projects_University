@@ -75,3 +75,7 @@ function errorMessage(status, place) {
             '&times;</button><h4 class="alert-heading">Error!</h4>' + error + '</div>');
     return;
 }
+
+function startOrder(){
+    location.href="/Food_Service_PIV/web/presentation/client/order.html"
+}

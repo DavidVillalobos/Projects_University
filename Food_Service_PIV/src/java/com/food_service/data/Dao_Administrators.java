@@ -102,7 +102,7 @@ public class Dao_Administrators {
             p.setPassword(rs.getString("password"));
             p.setName(rs.getString("name"));
             p.setEmail(rs.getString("email"));
-            p.setAdministratorStatus(Dao_Administrator_Status.instance().get(p.getId()));
+            p.setAdministratorStatus(Dao_Administrator_Status.instance().get(rs.getInt("administrator_status")));
             return p;
         } catch (Exception ex ) {
             return null;
