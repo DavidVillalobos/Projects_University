@@ -2,8 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no"> 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <title>Pedido</title>
 </head>
@@ -42,12 +41,13 @@
                             type="button" id="OrderTimePicker" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<b>ASAP</b>
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="OrderTimePicker">
-                                <button id="asap" class="dropdown-item py-2">
+                            <div class="dropdown-menu text-center" aria-labelledby="OrderTimePicker">
+                                <button id="asap" class="btn btn-outline-primary btn-block py-2">
                                     ASAP
                                 </button>
                                 <div class="dropdown-divider"></div>
-				<button id="datePicker" class="dropdown-item py-2">
+                                <input type="datetime-local" id="daytime">  
+                                <button id="schedule_order" type="button" class="btn btn-outline-primary btn-sm py-2">
                                     Schedule Order
                                 </button>
                             </div>
@@ -166,7 +166,6 @@
             © 2020 Copyright.<br><h6 class="text-center">Universidad Nacional De Costa Rica</h6>
  	 </div>
     </footer>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -187,16 +186,70 @@
                 else{errorMessage(222,$("#alert_popup"));}
             });
             $("#way").on("click",()=>{changeWayToReceive();});
-            //$("#asap")
-            //$("#datePicker").on("click",()=>{showDatePicker();});
+            $("#asap").on("click",()=>{changeAsapDate(false);});
+            $("#schedule_order").on("click",()=>{changeAsapDate(true);});
+            limitDatePicker();
             loadCategories();
             $("#add_order_popup").on("click",()=>{addToShoppingCart(_dish_,true);});
         }
         
         $(init);
         
-        function showDatePicker(){
-                 
+        function changeAsapDate(x){
+            if(x){
+                $.ajax({
+                    type:"PUT",
+                    url:"/Food_Service_PIV/web/api/orders/schedule/"+document.getElementById("daytime").value,
+                    contentType:"application/json"
+                }).then(
+                    (order)=>{globalOrder=order.pop(); updateAsapDate();},
+                    (error)=>{errorMessage(error.status,$("#dishes-container"));} 
+                ); 
+            }else{
+                $.ajax({
+                    type:"PUT",
+                    url:"/Food_Service_PIV/web/api/orders/schedule/asap",
+                    contentType:"application/json"
+                }).then(
+                    (order)=>{globalOrder=order.pop(); updateAsapDate();},
+                    (error)=>{errorMessage(error.status,$("#dishes-container"));} 
+                ); 
+            }
+        }
+        
+        function updateAsapDate(){
+            if(globalOrder.deliveryDate === undefined){
+                $("#OrderTimePicker").html("<b>ASAP</b>");
+            }else{
+                var split = globalOrder.deliveryDate.split("T");
+                var date = split[0];
+                var time = split[1].split("-");
+                var time_ = time[0].split(":");
+                $("#OrderTimePicker").html("<b>"+date+" "+time_[0]+":"+time_[1]+"</b>");
+            }
+        }
+        
+        function limitDatePicker(){
+            var now = new Date();
+            var last = new Date();
+            last.setDate(now.getDate()+5);
+            
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth())).slice(-2);
+            var hour = ("0" + (now.getHours())).slice(-2);
+            var min = ("0" + (now.getMinutes())).slice(-2);
+            
+            var _day = ("0" + last.getDate()).slice(-2);
+            var _month = ("0" + (last.getMonth())).slice(-2);
+            var _hour = ("0" + (last.getHours())).slice(-2);
+            var _min = ("0" + (last.getMinutes())).slice(-2);
+            
+            var today_now = now.getFullYear()+"-"+(month)+"-"+(day)+"T"+hour+":"+min;
+            var today_last = last.getFullYear()+"-"+(_month)+"-"+(_day)+"T"+_hour+":"+_min;
+            
+            document.getElementById("daytime").min = today_now;
+            document.getElementById("daytime").value = today_now;
+            document.getElementById("daytime").max = today_last;   
         }
         
         function changeWayToReceive(){
@@ -416,6 +469,9 @@
                     );
                 var x = count;
                 dish.find("#delete-"+x).on("click",()=>deleteDish(x));
+                if(d.dishes.additionalsList === undefined){
+                    dish.find("#edit-"+x).hide(0);
+                }
                 dish.find("#edit-"+x).on("click",()=>{
                     _update_=true; _selected_=x;
                     validateDish(globalOrder.clientDishList[x].dishes,true);

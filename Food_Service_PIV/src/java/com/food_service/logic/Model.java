@@ -1,6 +1,9 @@
 package com.food_service.logic;
 import com.food_service.data.*;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,6 +54,20 @@ public class Model {
     }
     
     //----------------------Utiles--------------------------------//
+    public void setSchedule(String date, Orders globalOrder) throws ParseException{
+        if(date.equals("asap")){
+            globalOrder.setAsap(Short.parseShort("1"));
+            globalOrder.setDeliveryDate(null);
+        }
+        else{
+            String date_ = date.replace('T',' ');
+            SimpleDateFormat formatter =new SimpleDateFormat("yyyy-mm-dd HH:mm");
+            Date nueva = formatter.parse(date_);
+            globalOrder.setAsap(Short.parseShort("0"));
+            globalOrder.setDeliveryDate(nueva);
+        }
+    }
+    
     public Boolean hasAdditionals(String idDish) throws SQLException{
         return !adicionales.getByDish(idDish).isEmpty();
     }

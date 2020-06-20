@@ -148,5 +148,24 @@ public class Order {
             throw new NotFoundException(); 
         }
     }
+    
+    @PUT
+    @Path("schedule/{date}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Orders> changeSchedule(@PathParam("date") String date) {
+        try {
+            Orders globalOrder = (Orders) request.getSession(true).getAttribute("globalOrder");
+            if(globalOrder==null){  
+                globalOrder = new Orders();    
+            }
+            List<Orders> list = new ArrayList<>();
+            Model.instance().setSchedule(date,globalOrder);
+            request.getSession(true).setAttribute("globalOrder", globalOrder);
+            list.add(globalOrder);
+            return list;         
+        } catch (Exception ex) {
+            throw new NotFoundException(); 
+        }
+    }
 
 }
