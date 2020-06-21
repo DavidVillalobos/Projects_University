@@ -21,7 +21,7 @@ function showDishes(dishes){
         '<div class="row py-1  align-items-center justify-content-center">'+
             '<div class="col-6 text-center " style="font-size: 60px;"> Menu </div>'+
             '<div class="col-2 center-block">'+
-                '<button type="button" class="btn btn-primary rounded-3" data-toggle="modal" data-target="#addDialog" onclick="aggregateDish()">Agregar platillo</button>' +
+                '<button type="button" class="btn btn-primary rounded-3" onclick="agregateDish()">Agregar platillo</button>' +
             '</div>'+
         '</div>'+
     '</div>'+
@@ -53,6 +53,153 @@ function showDishes(dishes){
     dishes.forEach((c) => {
         rowDish(anchor, c);
     });
+}
+
+function agregateDish(){
+    var list = $("#panel");
+    list.html("");
+    list.html('<div class="display-3" style="margin-left: 60px;">'+
+        '<div class="form-row">'+
+            '<div class="modal" id="addDialog">'+
+                '<div class="modal-dialog">'+
+                    '<div class="modal-content">'+
+                        '<form>'+
+                            '<div class="modal-body text-center" style="width: 510px;">'+
+                                '<span class="display-4" style="font-size: 60px;">Agregar Platillo</span>'+
+                                '<br><br>'+
+                                '<div class = "input-group" style = "margin-bottom: 10px; margin-top: -70px;">'+
+                                    '<div class = "input-group-prepend "><span class = "input-group-text" style="width: 105px;"><i>Nombre</i></span></div>'+
+                                    '<input class = "form-control" placeholder = "Nombre" type = "text" id = "name" name="name" value="" required>'+
+                                    '<div class = "invalid-feedback">Favor ingrese el nombre del platillo</div>'+
+                                '</div>'+
+                                '<div class = "input-group" style = "margin-bottom: 10px">'+
+                                    '<div class = "input-group-prepend "><span class = "input-group-text" style="width: 105px;"><i>Precio</i></span></div>'+
+                                    '<input class = "form-control" placeholder = "Precio" type = "number" id = "price" name="price" value="" required>'+
+                                    '<div class = "invalid-feedback">Favor ingrese el precio del platillo</div>'+
+                                '</div>'+
+                                '<div class = "input-group" style = "margin-bottom: 10px">'+
+                                    '<div class = "input-group-prepend "><span class = "input-group-text"><i>Descripción</i></span></div>'+
+                                    '<textarea class = "form-control" placeholder = "Descripción" type = "text" id = "decription" name="decription" required></textarea>'+
+                                    '<div class = "invalid-feedback">Favor ingrese el precio del platillo</div>'+
+                                '</div>'+
+                                '<div class = "input-group-prepend display-4" style="font-size:17px; margin: 10px;">'+
+                                    '<div class="btn-group dropright">'+
+                                        '<a class="btn btn-secondary dropdown-toggle" style="color:white" role="button" '+
+                                        'id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Elige una Categoria</a>'+
+                                        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="categoriesList">'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
+                                '<button class="btn btn-primary" style="width:150px; margin-left: -295px; margin-top: -80px;" onclick="agregarAdicional()">Agregar Adicional</button>'+
+                            '</div>'+
+                            '<div class="modal-footer d-flex justify-content-center" style="margin-top: -100px;">'+
+                                '<div>'+
+                                    '<button type="button" class="btn btn-secondary" style="margin-right: 30px;" data-dismiss="modal">Cancelar</button>'+
+                                    '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="addDish()">Agregar</button>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div id="loginErrorDiv" style="width:80%; margin: auto;"></div>     '+
+                        '</form>'+
+                    '</div>'+
+                '</div>'+
+            '</div>'+
+        '</div> '+
+    '</div>'+
+    '<div style="margin-top: -550px; margin-left: 650px;">'+
+        '<div class="form-row">'+
+            '<div id="addAdditionalDialog" class="modal" role="dialog">'+
+                '<div class="modal-dialog" role="document">'+
+                    '<div class="modal-content" style="width: 350px;">'+
+                        '<div class="modal-body"> '+
+                            '<div class="display-4" style="font-size:30px;"><b>Agregar Adicional<b></div>'+
+                            '<div style="margin-top: 30px; margin-left: 1px;">'+
+                                '<div class = "input-group" id="name">'+
+                                    '<input class = "form-control" placeholder = "Nombre" type = "text" id = "name" name = "name" value = "" required>'+
+                                    '<div class = "invalid-feedback">Favor ingrese el nombre del adicional</div>'+
+                                '</div>'+
+                                '<div class = "input-group-prepend display-4" style="font-size:22px;">'+
+                                    '<label class="radio-inline" style="margin-left: 15px;">Tipo: <input type="radio" name="optradio" style="margin-right: 15px;" checked>Unico</label>'+
+                                    '<label class="radio-inline" style="margin-left: 15px;"><input type="radio" name="optradio" style="margin-right: 15px;">Multiple</label>'+
+                                    '<div class = "invalid-feedback">Favor ingrese una opcion</div>'+
+                                '</div>'+
+                                '<div class = "input-group-prepend display-4" style="font-size:22px;">'+
+                                    '<div class = "input-group-prepend" id="mandatory">Obligatorio: </div>'+
+                                    '<label class="checkbox-inline" ><input type="checkbox" style="margin-left:22px;" value=""></label>'+
+                                '</div>'+
+                                '<div class = "input-group-prepend display-4" style="font-size:17px;">'+
+                                    '<div class="btn-group dropright">'+
+                                        '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:130px;">'+
+                                            'Adicionales'+
+                                        '</button>'+
+                                        '<div class="dropdown-menu text-center" id="_detailList">'+
+                                        '</div>'+
+                                        '<button class="btn btn-primary" style="width:130px; margin-left: 20px;" onclick="agregarOpcion()">Agregar Detalle</button>'+
+                                   '</div>'+
+                                '</div>'+
+                                '<button class="btn btn-danger" style="width:80px; margin-right: 20px;" data-dismiss="modal">Cancelar</button>'+
+                                '<button class="btn btn-primary" style="width:150px;" onclick="agregarOpcion()">Agregar Adicional</button>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>'+
+           '</div>'+
+        '</div>'+
+        '<!-- Agregar Opcion del adicional-->'+
+        '<div class="form-row">'+
+            '<div id="panelOptionDialog">'+
+                '<div class="modal" id="addOptionDialog" role="dialog" aria-hidden="true">'+
+                    '<div class="modal-dialog" role="document">'+
+                        '<div class="modal-content" style="width: 300px; height: 230px; margin-top: -45px;">'+
+                            '<div class="modal-body">'+
+                                '<div class="display-4" style="font-size:22px;">Agregar Opcion</div>'+
+                                '<div style="margin-top: 20px;">'+
+                                    '<div class = "input-group" style = "margin-bottom: 10px;" id="name">'+
+                                        '<input class = "form-control" placeholder = "Nombre" type = "text" id = "nameDetail" name = "nameDetail" value = "" required>'+
+                                        '<div class = "invalid-feedback">Favor ingrese el nombre del adicional</div>'+
+                                    '</div>'+
+                                    '<div class = "input-group" id="name">'+
+                                        '<input class = "form-control" placeholder = "Precio" type = "number" id = "priceDetail" name = "priceDetail" value = "" required>'+
+                                        '<div class = "invalid-feedback">Favor ingrese el precio de la opcion</div>'+
+                                    '</div>'+
+                                    '<button type="button" class="btn btn-secondary" style="width:80px; margin-left: 40px; margin-top: 20px;">Cancelar</button>'+
+                                    '<button type="button" class="btn btn-primary" onclick="addDetail()" style="width:80px; margin-left: 30px; margin-top: 20px;">Agregar</button>'+
+                                 '</div>'+
+                            '</div>'+ 
+                        '</div>'+
+                    '</div>'+
+               '</div>'+
+            '</div>'+
+        '</div>'+
+    '</div>');
+    $("#addDialog").removeAttr("class");
+    loadCategoriesForDish();
+}
+
+function loadCategoriesForDish() {
+    $.ajax({
+        type: "GET",
+        url: "/Food_Service_PIV/web/api/categories",
+        contentType: "application/json"
+    }).then(
+            (categories) => {
+        var list = $("#categoriesList");
+        categories.forEach( categorie => list.append('<a class="dropdown-item">' + categorie.name + '</a>'));   // '<a class="class=dropdown-item">aja</a>'+
+        $('#dropdownMenuButton + [aria-labelledby="dropdownMenuButton"] a').on('click', function () {
+                $("#dropdownMenuButton").html(this.textContent);
+        });
+    },
+        (error) => {
+    errorMessage(error.status, $("#categories"));
+    }
+    );
+}
+
+function agregarAdicional(){
+    $("#addAdditionalDialog").removeAttr("class");
+}
+
+function agregarOpcion(){
+    $("#addOptionDialog").removeAttr("class");
 }
 
 function rowDish(anchor, c) {
@@ -108,7 +255,6 @@ function editDish(dish){
                                     '<textarea class = "form-control" placeholder = "Descripción" type = "text" id = "decription" name="decription" required>'+dish.decription+'</textarea>'+
                                 '<div class = "invalid-feedback">Favor ingrese el precio del platillo</div>'+
                             '</div>'+
-
                         '</div>'+
                         '<div class="modal-footer d-flex justify-content-center">'+
                             '<div>'+
@@ -121,50 +267,7 @@ function editDish(dish){
                 '</div>'+
             '</div>'+
         '</div>'+
-    '</div> '
-    anchor.append(html);
-}
-
-function aggregateDish(){
-    var anchor = $('#listado');
-    var html = '<div class="form-row">'+
-            '<div class="modal" id="addDialog">'+
-                '<div class="modal-dialog">'+
-                '<div class="modal-content">'+
-                    '<form>'+
-                        '<div class="modal-body text-center">'+
-                                '<div></div>'+
-                                '<span class="display-4">Agregar un<br>Platillo</span>'+
-                            '<br><br>'+
-                            '<div class = "input-group" style = "margin-bottom: 25px">'+
-                                '<div class = "input-group-prepend "><span class = "input-group-text"><i>Nombre</i></span></div>'+
-                                    '<input class = "form-control" placeholder = "Nombre" type = "text" id = "name" name="name" value="" required>'+
-                                '<div class = "invalid-feedback">Favor ingrese el nombre del platillo</div>'+
-                            '</div>'+
-                            '<div class = "input-group" style = "margin-bottom: 25px">'+
-                                '<div class = "input-group-prepend "><span class = "input-group-text"><i>Precio</i></span></div>'+
-                                    '<input class = "form-control" placeholder = "Precio" type = "text" id = "price" name="price" value="" required>'+
-                                '<div class = "invalid-feedback">Favor ingrese el precio del platillo</div>'+
-                            '</div>'+
-                            '<div class = "input-group" style = "margin-bottom: 25px">'+
-                                '<div class = "input-group-prepend "><span class = "input-group-text"><i>Descripción</i></span></div>'+
-                                    '<textarea class = "form-control" placeholder = "Descripción" type = "text" id = "decription" name="decription" required></textarea>'+
-                                '<div class = "invalid-feedback">Favor ingrese el precio del platillo</div>'+
-                            '</div>'+
-
-                        '</div>'+
-                        '<div class="modal-footer d-flex justify-content-center">'+
-                            '<div>'+
-                             ' <button type="button" class="btn btn-secondary" style="margin-right: 30px;" data-dismiss="modal">Cancelar</button>'+
-                                '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="addDish()">Agregar</button>'+
-                            '</div>'+
-                        '</div>'+
-                        '<div id="loginErrorDiv" style="width:80%; margin: auto;"></div> '+    
-                    '</form>'+
-                '</div>'+
-            '</div>'+
-        '</div>'+
-    '</div> '
+    '</div> ';
     anchor.append(html);
 }
 
@@ -229,4 +332,21 @@ function addDish(){
         data: JSON.stringify(dish),contentType: "application/json"})
     .then( (dishes)=>{$('#addDialog').modal('hide'); showDishes(dishes); },
         (error)=>{errorMessage(error.status,$("#addErrorDiv"));});                          
+}
+
+_detailList = [];
+_dish = undefined;
+
+function addDetail(){
+        var nameDetail = $("#nameDetail").val();
+        var priceDetail = $("#priceDetail").val();
+        var option = { 
+                name: nameDetail,
+                price: priceDetail
+        }
+        _detailList.push(option);
+        var list = $("#_detailList");
+        var html = $("<a class='dropdown-item'/>");
+        html.html(option.name +' &nbsp;&nbsp;&nbsp;&nbsp;₡'+ option.price + '</a>');	
+        list.append(html);
 }

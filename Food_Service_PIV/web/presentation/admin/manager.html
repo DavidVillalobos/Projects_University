@@ -28,26 +28,26 @@
                         <ul id="menu-dashboard" class="navbar-nav pl-3 text-left">
                             <li class="py-3">
                                 <a class="text-light" data-toggle="collapse" data-target="#submenu1"
-                                aria-expanded="false">
-                                - Cocina
-                                <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu1">
-                                    <li><div class="text-light " onclick="loadDishes()">Platillos</div></li>
-                                    <li><div class="text-light" onclick="loadCategories()">Categorias</div></li>
-                                </ul>
+                                   aria-expanded="false">
+                                    - Cocina
+                                    <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu1">
+                                        <li><div class="text-light " onclick="loadDishes()">Platillos</div></li>
+                                        <li><div class="text-light" onclick="loadCategories()">Categorias</div></li>
+                                    </ul>
                             </li>
                             <li class="py-3">
                                 <a class="text-light" data-toggle="collapse" data-target="#submenu2">
-                                - Ventas
+                                    - Ventas
                                 </a>
                                 <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu2">
-                                    <li><div class="text-light" >Ordenes</div></li>
+                                    <li><div class="text-light" onclick="loadOrders()">Ordenes</div></li>
                                 </ul>
                             </li>
                             <li class="py-3">
                                 <a class="text-light" data-toggle="collapse" data-target="#submenu3">
-                                - Usuarios
+                                    - Usuarios
                                 </a>
-                                 <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu3">
+                                <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu3">
                                     <li><div class="text-light" onclick="loadClients()">Clientes</div></li>
                                     <li><div class="text-light" onclick="loadAdministrators()">Administradores</div></li>
                                 </ul>
@@ -55,30 +55,26 @@
                         </ul>
                     </div>
                 </div>
-                
-                <div class="col-10 pt-4 display-3" >
-                    <div class="container" id="panel">
-
-                    </div>
+                <div class="col-10 pt-4" id="panel">
+                    
                 </div>
             </div>
         </div>
-        <!-- Footer -->
-        <footer class="page-footer font-small mt-5">
-            <div class="footer-copyright text-center text-white bg-dark py-3">
-                © 2020 Copyright.<br>
-                <h6 class="text-center">Universidad Nacional De Costa Rica</h6>
-            </div>
-        </footer>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-        <script src="../../js/managerDishes.js"></script>
-        <script src="../../js/managerCategories.js"></script>
-        <script src="../../js/managerClients.js"></script>
-        <script src="../../js/managerAdministrators.js"></script>
-        <script src="../../js/managerOrders.js"></script>
-        <script src="../../js/login.js"></script>
     </body>
-
+    <!-- Footer -->
+    <footer class="page-footer font-small mt-5">
+        <div class="footer-copyright text-center text-white bg-dark py-3">
+            © 2020 Copyright.<br>
+            <h6 class="text-center">Universidad Nacional De Costa Rica</h6>
+        </div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="../../js/managerDishes.js"></script>
+    <script src="../../js/managerCategories.js"></script>
+    <script src="../../js/managerClients.js"></script>
+    <script src="../../js/managerAdministrators.js"></script>
+    <script src="../../js/managerOrders.js"></script>
+    <script src="../../js/login.js"></script>
 </html>

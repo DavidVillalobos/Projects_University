@@ -242,16 +242,34 @@ function filtrarAdministrador(administrator){
     return n1.includes(text) || n2.includes(text);
 }
 
-function updateAdministrator(administratorId){ 
-  administrator = {id: administratorId, 
-    userName: $("#userName").val(),
-    name: $("#name").val(),
-    email: $("#email").val()
-  };
-  $.ajax({type: "PUT", url:"/Food_Service_PIV/web/api/administradores",
-              data: JSON.stringify(administrator),contentType: "application/json"})
-    .then( (administrators)=>{$('#editDialog').modal('hide'); showAdministrators(administrators); },
-           (error)=>{errorMessage(error.status,$("#addErrorDiv"));});                          
+function updateAdministrator(administratorId){
+  $.ajax({
+        type: "GET",
+        url: "/Food_Service_PIV/web/api/statusadministrators",
+        contentType: "application/json"
+    }).then(
+        (status) => {
+            var stateAdmin = undefined;
+            status.forEach((state) => {
+                if(state.name === $("#dropdownMenuButton").html()){
+                    stateAdmin = state; 
+                }
+            });
+            administrator = {id: administratorId, 
+              userName: $("#userName").val(),
+              name: $("#name").val(),
+              email: $("#email").val(),
+              administratorStatus: stateAdmin
+            };
+            $.ajax({type: "PUT", url:"/Food_Service_PIV/web/api/administradores",
+                        data: JSON.stringify(administrator),contentType: "application/json"})
+              .then( (administrators)=>{$('#editDialog').modal('hide'); showAdministrators(administrators); },
+                     (error)=>{errorMessage(error.status,$("#addErrorDiv"));});   
+                },
+        (error) => {
+            errorMessage(error.status, $("#statusadministrators"));
+        }
+    );   
 }
 
 function addAdministrator(){ 

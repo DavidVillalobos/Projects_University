@@ -81,14 +81,13 @@ public class Dao_Administrators {
     }
     
     public void update(Administrators p) throws Exception{
-        String sql="UPDATE administrators SET user_name='%s',  password='%s', name='%s', "+
-                "email='%s', administrator_status='%s', client where name='%s";
-        sql=String.format(sql, p.getUserName(), 
-                                        p.getPassword(),
+        String sql="UPDATE administrators SET user_name='%s', name='%s', "+
+                "email='%s', administrator_status=%d where id=%d";
+        sql=String.format(sql, p.getUserName(),
                                         p.getName(),
                                         p.getEmail(),
                                         p.getAdministratorStatus().getId(),
-                                        p.getName());
+                                        p.getId());
         if (db.executeUpdate(sql) == 0){
             throw new Exception("Administrador no existe");
         }
