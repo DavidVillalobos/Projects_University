@@ -5,15 +5,21 @@ package com.food_service.presentation;
  * @author Kevin Flores
  */
 import com.food_service.logic.Additionals;
+import com.food_service.logic.Adresses;
 import com.food_service.logic.Categories;
 import com.food_service.logic.ClientDish;
+import com.food_service.logic.Clients;
 import com.food_service.logic.Details;
 import com.food_service.logic.Dishes;
+import com.food_service.logic.Locations;
 import com.food_service.logic.Model;
+import com.food_service.logic.OrderStatus;
 import com.food_service.logic.Orders;
 import com.google.gson.Gson;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,6 +92,20 @@ public class Order {
         }
     }
     
+    @GET
+    @Path("globalOrder")  
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Orders> getGlobalOrder(){
+        Orders globalOrder = (Orders) request.getSession(true).getAttribute("globalOrder");
+        if(globalOrder==null){  
+            globalOrder = new Orders();    
+        }
+        List<Orders> list = new ArrayList<>();
+        request.getSession(true).setAttribute("globalOrder", globalOrder);
+        list.add(globalOrder);
+        return list;   
+    }
+    
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON})    
@@ -102,6 +122,77 @@ public class Order {
             }
             List<Orders> list = new ArrayList<>();
             globalOrder.setTotal(Model.instance().calculateTotalOrder(globalOrder));
+            request.getSession(true).setAttribute("globalOrder", globalOrder);
+            list.add(globalOrder);
+            return list;            
+        } catch (Exception ex) {
+            throw new NotAcceptableException(); 
+        }
+    }
+    
+    @POST
+    @Path("address/{adrs}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON})    
+    public List<Orders> address(@PathParam("adrs") String address) {  
+        try {
+            Orders globalOrder = (Orders) request.getSession(true).getAttribute("globalOrder");
+            if(globalOrder==null){  
+                globalOrder = new Orders();    
+            }
+            globalOrder.setDirection(address);
+            List<Orders> list = new ArrayList<>();
+            request.getSession(true).setAttribute("globalOrder", globalOrder);
+            list.add(globalOrder);
+            return list;            
+        } catch (Exception ex) {
+            throw new NotAcceptableException(); 
+        }
+    }
+    
+    @POST
+    @Path("dateOrder/{date}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON})    
+    public List<Orders> orderDate(@PathParam("date") String date) {  
+        try {
+            Orders globalOrder = (Orders) request.getSession(true).getAttribute("globalOrder");
+            if(globalOrder==null){  
+                globalOrder = new Orders();    
+            }
+            String date_ = date.replace('T',' ');
+            SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            globalOrder.setOrderDate(formatter.parse(date_));
+            List<Orders> list = new ArrayList<>();
+            request.getSession(true).setAttribute("globalOrder", globalOrder);
+            list.add(globalOrder);
+            return list;            
+        } catch (Exception ex) {
+            throw new NotAcceptableException(); 
+        }
+    }
+    
+    @POST
+    @Path("client")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON})    
+    public List<Orders> orderClient(Clients c) {  
+        try {
+            Orders globalOrder = (Orders) request.getSession(true).getAttribute("globalOrder");
+            if(globalOrder==null){  
+                globalOrder = new Orders();
+            }
+            if(c.getId() == null){
+                c.setEmail(Model.instance().getRandomString());
+                Model.instance().clienteAdd(c);
+                c = Model.instance().getLast();
+            }
+            globalOrder.setLocations(new Locations(1));
+            globalOrder.setClients(c);
+            globalOrder.setOrderStatus(new OrderStatus(1));
+            Model.instance().ordenesAdd(globalOrder);
+            globalOrder.setId(Model.instance().getLastOrder().getId());
+            List<Orders> list = new ArrayList<>();
             request.getSession(true).setAttribute("globalOrder", globalOrder);
             list.add(globalOrder);
             return list;            

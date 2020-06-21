@@ -6,6 +6,7 @@
 package com.food_service.logic;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -108,6 +109,17 @@ public class Orders implements Serializable {
     public Integer getId() {
         return id;
     }
+    
+    public String getDeliveryString(){
+        if(this.deliveryDate == null){return "2020-01-01";}
+        SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return formatter.format(this.deliveryDate);
+    }
+    
+    public String getOrderString(){
+        SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return formatter.format(this.orderDate);
+    }
 
     public void setId(Integer id) {
         this.id = id;
@@ -158,6 +170,9 @@ public class Orders implements Serializable {
     }
 
     public void setDirection(String direction) {
+        if(direction.length() > 45){
+            direction = direction.substring(0, 44);
+        }
         this.direction = direction;
     }
 

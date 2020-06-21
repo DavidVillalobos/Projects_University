@@ -61,7 +61,7 @@ public class Model {
         }
         else{
             String date_ = date.replace('T',' ');
-            SimpleDateFormat formatter =new SimpleDateFormat("yyyy-mm-dd HH:mm");
+            SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd HH:mm");
             Date nueva = formatter.parse(date_);
             globalOrder.setAsap(Short.parseShort("0"));
             globalOrder.setDeliveryDate(nueva);
@@ -78,6 +78,24 @@ public class Model {
             total+=d.getTotal();
         }
         return total;
+    }
+    
+    public Clients getLast() throws Exception{
+        return clientes.getLast();
+    }
+    
+    public Orders getLastOrder() throws Exception{
+        return ordenes.getLast();
+    }
+    
+    public String getRandomString() {
+        String key = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        int length = 10;
+        String pswd = "";
+        for (int i = 0; i < length; i++) {
+            pswd+=(key.charAt((int)(Math.random() * key.length())));
+        }
+        return pswd;
     }
     
     public void deleteFromOrder(String index, Orders order){

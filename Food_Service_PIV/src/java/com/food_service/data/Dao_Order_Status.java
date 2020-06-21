@@ -36,7 +36,7 @@ public class Dao_Order_Status {
     }
     
     public OrderStatus get(int id) throws Exception{
-        String sql = "SELECT * FROM order_status WHERE name='%s'";
+        String sql = "SELECT * FROM order_status WHERE id=%s";
         sql = String.format(sql, id);
         ResultSet rs = db.executeQuery(sql);
         if(rs.next()){

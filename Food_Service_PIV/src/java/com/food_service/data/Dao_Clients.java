@@ -68,8 +68,8 @@ public class Dao_Clients {
     }
     
     public void add(Clients p) throws Exception{
-        String sql="INSERT INTO cliente (name, telephone, last_name, password, email) "
-                + "VALUES('%s',%s,'%s','%s','%s')";
+        String sql="INSERT INTO clients (name, telephone, last_name, password, email) "
+                + "VALUES('%s','%s','%s','%s','%s')";
         sql=String.format(sql,
                 p.getName(),
                 p.getTelephone(),
@@ -81,8 +81,19 @@ public class Dao_Clients {
         }
     }
     
+    public Clients getLast() throws SQLException, Exception{
+        String sql = "SELECT * FROM clients WHERE id=( SELECT MAX(id) FROM clients )";
+        
+        ResultSet rs = db.executeQuery(sql);
+        if(rs.next()){
+            return render_clients(rs);
+        }else{
+            throw new Exception("Cliente no existe.");
+        }
+    }
+    
     public void update(Clients p) throws Exception{
-        String sql="UPDATE clients SET name='%s', telephone=%s, last_name='%s'"
+        String sql="UPDATE clients SET name='%s', telephone='%s', last_name='%s'"
                 + " password='%s', email='%s' where email='%s'";
         sql=String.format(sql,
                 p.getName(),

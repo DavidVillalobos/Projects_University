@@ -57,12 +57,12 @@ public class Dao_Orders {
     }
     
     public void add(Orders p) throws Exception{
-        String sql="INSERT INTO orders (type, orderDate, deleveryDate, asap, total, direction, client, order_status, locations_id) "
-                + "VALUES(%b, %dt, %dt, %b, %f, '%s', %d, %d, %d)";
+        String sql="INSERT INTO orders (type, orderDate, deliveryDate, asap, total, direction, client, order_status, locations_id) "
+                + "VALUES(%b, '%s', '%s', %b, %f, '%s', %d, %d, %d)";
         sql=String.format(sql,
                 p.getType(),
-                p.getOrderDate(),
-                p.getDeliveryDate(),
+                p.getOrderString(),
+                p.getDeliveryString(),
                 p.getAsap(),
                 p.getTotal(),
                 p.getDirection(),
@@ -71,6 +71,17 @@ public class Dao_Orders {
                 p.getLocations().getId()); 
         if (db.executeUpdate(sql) == 0){
             throw new Exception("Orden ya existe");
+        }
+    }
+    
+    public Orders getLast() throws SQLException, Exception{
+        String sql = "SELECT * FROM orders WHERE id=( SELECT MAX(id) FROM orders )";
+        
+        ResultSet rs = db.executeQuery(sql);
+        if(rs.next()){
+            return render_orders(rs);
+        }else{
+            throw new Exception("Cliente no existe.");
         }
     }
     
@@ -106,7 +117,7 @@ public class Dao_Orders {
             p.setClients(Dao_Clients.instance().getById(rs.getInt("client")));
             p.setOrderStatus(Dao_Order_Status.instance().get(rs.getInt("order_status")));
             p.setLocations(Dao_Locations.instance().get(rs.getInt("Locations_id")));   
-            p.setClientDishList(Dao_Client_Dish.instance().getDishesByOrder(rs.getInt("client")));
+            p.setClientDishList(Dao_Client_Dish.instance().getDishesByOrder(rs.getInt("id")));
             return p; 
           } catch (Exception ex) {
             return null;

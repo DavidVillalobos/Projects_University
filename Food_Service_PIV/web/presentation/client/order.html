@@ -13,20 +13,122 @@
 		<img alt="logo" width="40" height="40" src="https://demo.tastyigniter.com/assets/media/uploads/tastyigniter-logo.png">
             </a>
             <div class="collapse navbar-collapse">
-		<ul class="navbar-nav ml-auto">
+		<ul id="opciones" class="navbar-nav ml-auto">
                     <li class="nav-item">
-			<a href="#" class="nav-link">View Menu</a>
+			<a href="" class="nav-link">View Menu</a>
                     </li>
                     <li class="nav-item">
-			<a href="#" class="nav-link">Login</a>
+                        <a href="" id="login" class="nav-link" data-toggle="modal" data-target="#loginDialog">Login</a>
                     </li>
                     <li class="nav-item">
-			<a href="#" class="nav-link">Register</a>
+			<a id="register" href="" class="nav-link" data-toggle="modal" data-target="#registerDialog">Register</a>
                     </li>
 		</ul>
             </div>
 	</div>
     </nav>
+    <!-- POPUP -->
+         <div class="row">
+            <div class="modal fate" tabindex="-1" id="registerDialog" role="dialog"
+                data-dismiss="modal">
+                <div class="modal-dialog" style="width: 400px">
+                    <div class="modal-content">
+                        <form id="registerForm" class="needs-validation" novalidate>
+                            <div class="modal-body text-center">
+                                 <div class="form-row">
+                      <div class="col-6">
+                        <label for="first-name">First name</label>
+                        <input type="text" class="form-control" id="first-name" placeholder="First name" value="" required>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <label for="validationCustom02">Last name</label>
+                        <input type="text" class="form-control" id="validationCustom02" placeholder="Last name" value="Otto" required>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-6"> 
+                        <label for="email">Email</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupPrepend">@</span>
+                          </div>
+                          <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+                          <div class="invalid-feedback">
+                            Please choose a Email.
+                          </div>
+                      </div>
+                      </div>
+                      <div class="col-6">
+                        <label for="example-tel-input">Telephone</label>
+                        <input class="form-control" type="tel" value="" id="telefono" required>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                      </div>   
+                    </div>
+                    <div class="form-row">
+                      <div class="col-12">
+                        <label for="new-pass">Password</label>
+                        <input type="password" class="form-control" id="new-pass" placeholder="Password" value="" required>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                      </div>
+                    </div></div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <div>
+                                    <button type="submit" id="registerButton" class="btn btn-primary btn-lg btn-block">Registrar</button>
+                                </div>
+                            </div>
+                            <div id="loginErrorDiv" style="width:80%; margin: auto;"></div>     
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="modal fate" tabindex="-1" id="loginDialog" role="dialog"
+                data-dismiss="modal">
+                <div class="modal-dialog" style="width: 400px">
+                    <div class="modal-content">
+                        <form id="loginForm">
+                            <div class="modal-body text-center">
+                                <div id="div-login-msg">
+                                    <div id="icon-login-msg" ></div>
+                                    <span class="h2">Bienvenido</span>
+                                </div>
+                                <br>
+                                <div class = "input-group" style = "margin-bottom: 25px">
+                                    <div class = "input-group-prepend "><span class = "input-group-text"><i class = "fa fa-user"></i></span></div>
+                                    <input class = "form-control" placeholder = "Usuario" type = "text" id = "usuario" name = "usuario" value = "" required>
+                                    <div class = "invalid-feedback">Favor ingrese el usuario</div>
+                                </div>
+                                <div class="input-group" style="margin-bottom: 25px">
+                                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i></span></div>
+                                    <input class="form-control" placeholder="Contraseña" type="password" id="contrasena" name="contrasena" value="" required>
+                                    <div class="input-group-append">
+                                          <button id="show_password" class="btn btn-primary" type="button" onclick="showPassword()"> <span class="fa fa-eye-slash icon"></span> </button>
+                                    </div>
+                                    <div class="invalid-feedback">Favor ingrese la contraseña</div>
+                                </div> 
+                            </div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <div>
+                                    <button type="button" id="loginButton" class="btn btn-primary btn-lg btn-block">Ingresar</button>
+                                </div>
+                            </div>
+                            <div id="loginErrorDiv" style="width:80%; margin: auto;"></div>     
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> 
     <div class="container">
         <div class="row">
             <div class="col-2">
@@ -144,7 +246,7 @@
                             <div id="order-total"></div>
 			</div>	
                     </div>
-                    <button class="btn btn-danger btn-block">Checkout</button>
+                    <button id="checkout" class="btn btn-danger btn-block">Checkout</button>
 		</div>
             </div>
 	</div>
@@ -175,8 +277,15 @@
         _dish_=null;
         _update_=false;
         _selected_=0;
+        _confirm_=false;
+        _hecho_=false;
+        _client_=null;
         
         function init(){
+            $("#registerForm").submit(function(event){verifyInputs(event);});
+            $("#loginButton").click(login);
+            loadOrderInit();
+            $("#checkout").on("click",()=>{moveToConfirm();});
             $("#plus_order_popup").on("click",()=>{
                $("#cant_popup").attr("value",parseInt($("#cant_popup").val(),10)+1);
             });
@@ -188,12 +297,140 @@
             $("#way").on("click",()=>{changeWayToReceive();});
             $("#asap").on("click",()=>{changeAsapDate(false);});
             $("#schedule_order").on("click",()=>{changeAsapDate(true);});
-            limitDatePicker();
+            //limitDatePicker();
             loadCategories();
             $("#add_order_popup").on("click",()=>{addToShoppingCart(_dish_,true);});
         }
         
         $(init);
+        
+        function verifyInputs(event) {
+            var forms = document.getElementsByClassName('needs-validation');
+            if (forms[0].checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }else{
+                  event.preventDefault();
+                  $("#registerDialog").modal("hide");
+                }
+            forms[0].classList.add('was-validated');
+        }
+        
+        //==========================================================================
+        function showPassword(){
+            var cambio = document.getElementById("contrasena");
+            if(cambio.type == "password"){
+                cambio.type = "text";
+                $('.icon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+            }else{
+                cambio.type = "password";
+                $('.icon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+            }
+        } 
+
+        function login() {
+            if (!loginValidar())
+                return;
+            admin = {
+                email: $("#usuario").val(),
+                password: $("#contrasena").val()
+            };
+            $.ajax({type: "POST",
+                url: "/Food_Service_PIV/web/api/loginClient",
+                data: JSON.stringify(admin),
+                contentType: "application/json"
+            }).then((admin) => {_client_=admin;
+                loginSuccess();
+            },
+            (error) => {
+                errorMessage2(error.status, $("#loginErrorDiv"));
+            });
+        }
+
+        function loginValidar() {
+            $("#loginForm").addClass("was-validated");
+            return $("#loginForm").get(0).checkValidity();
+        }
+
+        function loginSuccess(){
+            $("#opciones").append($(
+                '<li class="nav-item">'+
+                    '<a id="perfil" href="#" class="nav-link">'+_client_.name+' '+
+                    _client_.lastName+'</a>'+
+                '</li>'+
+                '<li class="nav-item">'+
+                    '<a id="logoutButton" href="#" class="nav-link">Logout</a>'+
+                '</li>')
+            );
+            $("#logoutButton").click(logout);
+            $("#login").hide(0);
+            $("#register").hide(0);
+            $("#perfil").click(goToPerfil);
+            $("#loginDialog").modal("hide");
+            
+        }
+        
+        function goToPerfil(){
+            location.href="/Food_Service_PIV/web/Index.html";
+        }
+
+        function logout(){
+            $.ajax({type: "DELETE", 
+                url:"/Food_Service_PIV/web/api/loginClient"               
+            })
+            .then( ()=>{logoutSuccess();},
+                (error)=>{ errorMessage2(error.status,$("#loginErrorDiv"));});                
+        }
+
+        function logoutSuccess() {
+            _client_=null;
+            $("#login").show(0);
+            $("#register").show(0);
+            $("#perfil").hide(0);
+            $("#logoutButton").hide(0);
+        }
+
+        function errorMessage2(status, place) {
+            error = status;
+            switch (status){
+                case 401:
+                    error = "Cliente no registrado";
+                    break;
+                case 403:
+                case 405:
+                    error = "Cliente no autorizado";
+                    break;
+                case 404:
+                    error = "Usuario o Contraseña Incorrecta";
+                    break;
+            };
+            place.html('<div class="alert alert-danger fade show">' +
+                '<button type="button" class="close" data-dismiss="alert">' +
+                '&times;</button><h4 class="alert-heading">Error!</h4>' + error + '</div>');
+            return;
+        }
+
+        //========================================================================
+        
+        function loadOrderInit(){
+            $.ajax({
+                type:"GET",
+                url:"/Food_Service_PIV/web/api/orders/globalOrder",
+                contentType:"application/json"
+            }).then(
+                (order)=>{updateOrder(order);},
+                (error)=>{errorMessage(error.status,$("#dishes-container"));} 
+            ); 
+        }
+        
+        function moveToConfirm(){
+            if(_confirm_){
+                window.location="/Food_Service_PIV/web/presentation/client/checkout.html";
+            }else{
+                errorMessage(555,$("#dishes-container"));
+                $("#dishes-container").append($('<div class="text-center"><i>Add menu items to your cart.</i></div>'));
+            }
+        }
         
         function changeAsapDate(x){
             if(x){
@@ -235,12 +472,12 @@
             last.setDate(now.getDate()+5);
             
             var day = ("0" + now.getDate()).slice(-2);
-            var month = ("0" + (now.getMonth())).slice(-2);
+            var month = ("0" + (now.getMonth()+1)).slice(-2);
             var hour = ("0" + (now.getHours())).slice(-2);
             var min = ("0" + (now.getMinutes())).slice(-2);
             
             var _day = ("0" + last.getDate()).slice(-2);
-            var _month = ("0" + (last.getMonth())).slice(-2);
+            var _month = ("0" + (last.getMonth()+1)).slice(-2);
             var _hour = ("0" + (last.getHours())).slice(-2);
             var _min = ("0" + (last.getMinutes())).slice(-2);
             
@@ -248,7 +485,9 @@
             var today_last = last.getFullYear()+"-"+(_month)+"-"+(_day)+"T"+_hour+":"+_min;
             
             document.getElementById("daytime").min = today_now;
-            document.getElementById("daytime").value = today_now;
+            if(_hecho_){
+                document.getElementById("daytime").value = today_now;
+            }
             document.getElementById("daytime").max = today_last;   
         }
         
@@ -434,8 +673,17 @@
         
         function updateOrder(order){
             globalOrder = order.pop();
-            //clienteAdditionalsList
-                //clienteDetailsList
+            if(!_hecho_){
+            if(globalOrder.deliveryDate === undefined){
+                _hecho_=true;
+                limitDatePicker();
+            }else{
+                var x = globalOrder.deliveryDate.substr(0,16);
+                document.getElementById("daytime").value = x;
+                changeAsapDate(true);
+                limitDatePicker();
+            }_hecho_=true;
+            }
             showOrder(globalOrder.clientDishList);
             $("#order-total").html("₡"+globalOrder.total);
             return true;
@@ -445,6 +693,11 @@
             var count = 0;
             var container = $("#dishes-container");
             container.html("");
+            if(dishList.length === 0){
+                container.html('<div class="text-center"><i>Add menu items to your cart.</i></div>');
+                _confirm_=false;
+                return;
+            }else{_confirm_=true;}
             dishList.forEach((d)=>{
                 var dish = $(
                     '<div class="row mb-2">'+
@@ -597,6 +850,7 @@
                 case 111: error="Debes Completar los Espacios Requeridos"; break;
                 case 222: error="La cantidad no puede ser menor"; break;
                 case 333: error="La cantidad no puede ser menor a 1"; break;
+                case 555: error="Debes añadir elementos al carrito."; break;
             };            
             place.html('<div class="alert alert-danger fade show">' +
             '<button type="button" class="close" data-dismiss="alert">' +

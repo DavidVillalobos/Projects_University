@@ -58,9 +58,10 @@ public class Dao_Client_Dish {
     
      List<ClientDish> getDishesByOrder(int id_order) throws Exception {
             List<ClientDish> li = new ArrayList<>();
-            String sql = "SELECT * FROM client_dish where order=%d";
-            ResultSet rs = db.executeQuery(sql);
+            String sql = "SELECT * FROM client_dish d where d.order=%d";
             sql=String.format(sql, id_order);
+            ResultSet rs = db.executeQuery(sql);
+            
             while(rs.next()){
                 li.add(render_client_dish(rs));
             }
