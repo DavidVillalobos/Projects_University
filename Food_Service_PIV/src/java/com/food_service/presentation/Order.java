@@ -55,6 +55,16 @@ public class Order {
         }
     }
     
+    @GET 
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Orders> get() {
+        try {
+            return Model.instance().ordenesgetAll();
+        } catch (Exception ex) {
+            throw new NotAcceptableException(); 
+        }
+    }
+    
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<Dishes> getDishes(@QueryParam("categorie") String idCategoria){

@@ -38,6 +38,14 @@ insert into administrator_status(name) values ('Vuelvo pronto');
 insert into administrator_status(name) values ('Conectado');
 insert into administrator_status(name) values ('Desconectado');
 
+-- Insert Order Status
+insert into order_status(name) values ('Recibida');
+insert into order_status(name) values ('En preparacion');
+insert into order_status(name) values ('Pendiente');
+insert into order_status(name) values ('Entregada');
+insert into order_status(name) values ('Completada');
+insert into order_status(name) values ('Cancelada');
+
 -- Insert Administrator
 insert into administrators(user_name, password, name, email, administrator_status) values ('admin1', 'admin1', 'Juan', 'juan@gmail.com', 2);
 insert into administrators(user_name, password, name, email, administrator_status) values ('admin2', 'admin2', 'Maria', 'maria@gmail.com', 1);
@@ -70,20 +78,24 @@ insert into details(name,price,additional) values("Rosada",550,1);
 insert into details(name,price,additional) values("Amarillo",200,2);
 insert into details(name,price,additional) values("Parmesano",300,2);
 
+insert into orders(type, orderDate, deliveryDate, asap, total, direction, client, order_status, Locations_id) 
+values (true, '2020-6-21 10:00:00', '2020-6-22 15:30:00', false, 20500, 'Alajuela,Costa Rica', 1, 2, 1);
+
+insert into orders(type, orderDate, deliveryDate, asap, total, direction, client, order_status, Locations_id) 
+values (false, '2020-6-21 13:00:00', '2020-6-13 13:30:00', true, 15500, 'Heredia,Costa Rica', 2, 5, 2);
 
 -- select * from additionals;
-select * from administrator_status;
-select * from administrators;
+-- select * from administrator_status;
+-- select * from administrators;
 -- select * from adresses;
-select * from categories;
+-- select * from categories;
 -- select * from client_dish;
 -- select * from cliente_additionals;
 -- select * from cliente_details;
-select * from clients;
+-- select * from clients;
 -- select * from details;
-select * from dishes;
-select * from locations;
+-- select * from dishes;
+-- select * from locations;
 -- select * from order_status;
 -- select * from orders;
 -- select * from client_additionals
-

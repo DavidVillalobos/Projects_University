@@ -1,5 +1,7 @@
 package com.food_service.presentation;
 
+import com.food_service.logic.Additionals;
+import com.food_service.logic.Details;
 import com.food_service.logic.Dishes;
 import com.food_service.logic.Model;
 import java.util.List;
@@ -24,6 +26,17 @@ public class Platillos {
     public List<Dishes> add(Dishes p) {  
         try {
             Model.instance().platillosAdd(p);
+            Dishes dish = Model.instance().getDishByName(p.getName());
+            for(Additionals a : p.getAdditionalsList()){
+                a.setDishes(dish);
+                Model.instance().adicionalesAdd(a);
+                Additionals d = Model.instance().getAdditionalByName(a.getName());
+                for (Details e: a.getDetailsList()) {
+                    e.setAdditionals(d);
+                    Model.instance().detallesAdd(e);
+                }
+            }
+            
             return Model.instance().platillosgetAll();
         } catch (Exception ex) {
             throw new NotAcceptableException(); 

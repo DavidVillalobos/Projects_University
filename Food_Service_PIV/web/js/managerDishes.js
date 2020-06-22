@@ -56,6 +56,9 @@ function showDishes(dishes){
 }
 
 function agregateDish(){
+    _additionalList = [];
+    _optionList = [];
+    _dish = {};
     var list = $("#panel");
     list.html("");
     list.html('<div class="display-3" style="margin-left: 60px;">'+
@@ -63,23 +66,23 @@ function agregateDish(){
             '<div class="modal" id="addDialog">'+
                 '<div class="modal-dialog">'+
                     '<div class="modal-content">'+
-                        '<form>'+
-                            '<div class="modal-body text-center" style="width: 510px;">'+
-                                '<span class="display-4" style="font-size: 60px;">Agregar Platillo</span>'+
+                        '<div>'+
+                            '<div class="modal-body text-center" style="width: 510px;  height: 370px;">'+
+                                '<span class="display-4" style="font-size: 60px;">Nuevo Platillo</span>'+
                                 '<br><br>'+
                                 '<div class = "input-group" style = "margin-bottom: 10px; margin-top: -70px;">'+
                                     '<div class = "input-group-prepend "><span class = "input-group-text" style="width: 105px;"><i>Nombre</i></span></div>'+
-                                    '<input class = "form-control" placeholder = "Nombre" type = "text" id = "name" name="name" value="" required>'+
+                                    '<input class = "form-control" placeholder = "Nombre" type = "text" id = "nameDish" name="nameDish" value="" required>'+
                                     '<div class = "invalid-feedback">Favor ingrese el nombre del platillo</div>'+
                                 '</div>'+
                                 '<div class = "input-group" style = "margin-bottom: 10px">'+
                                     '<div class = "input-group-prepend "><span class = "input-group-text" style="width: 105px;"><i>Precio</i></span></div>'+
-                                    '<input class = "form-control" placeholder = "Precio" type = "number" id = "price" name="price" value="" required>'+
+                                    '<input class = "form-control" placeholder = "Precio" type = "number" id = "priceDish" name="priceDish" value="" required>'+
                                     '<div class = "invalid-feedback">Favor ingrese el precio del platillo</div>'+
                                 '</div>'+
                                 '<div class = "input-group" style = "margin-bottom: 10px">'+
                                     '<div class = "input-group-prepend "><span class = "input-group-text"><i>Descripción</i></span></div>'+
-                                    '<textarea class = "form-control" placeholder = "Descripción" type = "text" id = "decription" name="decription" required></textarea>'+
+                                    '<textarea class = "form-control" placeholder = "Descripción" type = "text" id = "decriptionDish" name="decriptionDish" required></textarea>'+
                                     '<div class = "invalid-feedback">Favor ingrese el precio del platillo</div>'+
                                 '</div>'+
                                 '<div class = "input-group-prepend display-4" style="font-size:17px; margin: 10px;">'+
@@ -89,22 +92,25 @@ function agregateDish(){
                                         '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="categoriesList">'+
                                         '</div>'+
                                     '</div>'+
+                                    '<div class="btn-group dropright" style="margin-left: 50px;">'+
+                                        '<a class="btn btn-secondary dropdown-toggle" style="color:white" role="button" '+
+                                        'id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Adicionales</a>'+
+                                        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="additionalList">'+
+                                        '</div>'+
+                                    '</div>'+
                                 '</div>'+
-                                '<button class="btn btn-primary" style="width:150px; margin-left: -295px; margin-top: -80px;" onclick="agregarAdicional()">Agregar Adicional</button>'+
+                                '<button class="btn btn-primary" style="width:150px; margin-left: -295px; margin-top: -60px;" onclick="agregarAdicional()">Agregar Adicional</button>'+
                             '</div>'+
-                            '<div class="modal-footer d-flex justify-content-center" style="margin-top: -100px;">'+
-                                '<div>'+
-                                    '<button type="button" class="btn btn-secondary" style="margin-right: 30px;" data-dismiss="modal">Cancelar</button>'+
-                                    '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="addDish()">Agregar</button>'+
-                                '</div>'+
-                            '</div>'+
+                            '<button type="button" class="btn btn-secondary" style="margin-left: 30px;" onclick="cancelAddDish()">Cancelar</button>'+
+                            '<button type="button" class="btn btn-primary"   style="margin-left: 30px;" onclick="addDish()">Agregar</button>'+
                             '<div id="loginErrorDiv" style="width:80%; margin: auto;"></div>     '+
-                        '</form>'+
+                        '</div>'+
                     '</div>'+
                 '</div>'+
             '</div>'+
         '</div> '+
     '</div>'+
+    '<!-- Agregar Adicional-->'+
     '<div style="margin-top: -550px; margin-left: 650px;">'+
         '<div class="form-row">'+
             '<div id="addAdditionalDialog" class="modal" role="dialog">'+
@@ -114,30 +120,31 @@ function agregateDish(){
                             '<div class="display-4" style="font-size:30px;"><b>Agregar Adicional<b></div>'+
                             '<div style="margin-top: 30px; margin-left: 1px;">'+
                                 '<div class = "input-group" id="name">'+
-                                    '<input class = "form-control" placeholder = "Nombre" type = "text" id = "name" name = "name" value = "" required>'+
+                                    '<input class = "form-control" placeholder = "Nombre" type = "text" id = "nameAdditional" name = "nameAdditional" value = "" required>'+
                                     '<div class = "invalid-feedback">Favor ingrese el nombre del adicional</div>'+
                                 '</div>'+
-                                '<div class = "input-group-prepend display-4" style="font-size:22px;">'+
-                                    '<label class="radio-inline" style="margin-left: 15px;">Tipo: <input type="radio" name="optradio" style="margin-right: 15px;" checked>Unico</label>'+
-                                    '<label class="radio-inline" style="margin-left: 15px;"><input type="radio" name="optradio" style="margin-right: 15px;">Multiple</label>'+
+                                '<div class = "input-group-prepend display-4" style="font-size:16px;">'+
+                                    'Opcion: '+
+                                    '<div class="radio-inline" style="margin-left: 15px;"><input type="radio" name="optradio" value="false" style="margin-right: 15px;" checked>Unica</div>'+
+                                    '<div class="radio-inline" style="margin-left: 15px;"><input type="radio" name="optradio" value="true" style="margin-right: 15px;">Multiple</div>'+
                                     '<div class = "invalid-feedback">Favor ingrese una opcion</div>'+
                                 '</div>'+
-                                '<div class = "input-group-prepend display-4" style="font-size:22px;">'+
-                                    '<div class = "input-group-prepend" id="mandatory">Obligatorio: </div>'+
-                                    '<label class="checkbox-inline" ><input type="checkbox" style="margin-left:22px;" value=""></label>'+
+                                '<div class = "input-group-prepend display-4" style="font-size:16px;">'+
+                                    '<div class = "input-group-prepend">Obligatorio: </div>'+
+                                    '<div class="checkbox-inline" ><input id="mandatoryAditional" type="checkbox" style="margin-left:22px;"></div>'+
                                 '</div>'+
                                 '<div class = "input-group-prepend display-4" style="font-size:17px;">'+
                                     '<div class="btn-group dropright">'+
                                         '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:130px;">'+
-                                            'Adicionales'+
+                                            'Opciones'+
                                         '</button>'+
-                                        '<div class="dropdown-menu text-center" id="_detailList">'+
+                                        '<div class="dropdown-menu text-center" id="optionList">'+
                                         '</div>'+
-                                        '<button class="btn btn-primary" style="width:130px; margin-left: 20px;" onclick="agregarOpcion()">Agregar Detalle</button>'+
+                                        '<button class="btn btn-primary" style="width:130px; margin-left: 20px;" onclick="agregarOpcion()">Agregar Opcion</button>'+
                                    '</div>'+
                                 '</div>'+
-                                '<button class="btn btn-danger" style="width:80px; margin-right: 20px;" data-dismiss="modal">Cancelar</button>'+
-                                '<button class="btn btn-primary" style="width:150px;" onclick="agregarOpcion()">Agregar Adicional</button>'+
+                                '<button class="btn btn-danger" style="width:80px; margin-right: 20px;" data-dismiss="modal" onclick="cancelAddAdditional()">Cancelar</button>'+
+                                '<button class="btn btn-primary" style="width:150px;" onclick="addAdicional()">Agregar</button>'+
                             '</div>'+
                         '</div>'+
                     '</div>'+
@@ -154,15 +161,15 @@ function agregateDish(){
                                 '<div class="display-4" style="font-size:22px;">Agregar Opcion</div>'+
                                 '<div style="margin-top: 20px;">'+
                                     '<div class = "input-group" style = "margin-bottom: 10px;" id="name">'+
-                                        '<input class = "form-control" placeholder = "Nombre" type = "text" id = "nameDetail" name = "nameDetail" value = "" required>'+
+                                        '<input class = "form-control" placeholder = "Nombre" type = "text" id = "nameOption" name = "nameOption" value = "" required>'+
                                         '<div class = "invalid-feedback">Favor ingrese el nombre del adicional</div>'+
                                     '</div>'+
                                     '<div class = "input-group" id="name">'+
-                                        '<input class = "form-control" placeholder = "Precio" type = "number" id = "priceDetail" name = "priceDetail" value = "" required>'+
+                                        '<input class = "form-control" placeholder = "Precio" type = "number" id = "priceOption" name = "priceOption" value = "" required>'+
                                         '<div class = "invalid-feedback">Favor ingrese el precio de la opcion</div>'+
                                     '</div>'+
-                                    '<button type="button" class="btn btn-secondary" style="width:80px; margin-left: 40px; margin-top: 20px;">Cancelar</button>'+
-                                    '<button type="button" class="btn btn-primary" onclick="addDetail()" style="width:80px; margin-left: 30px; margin-top: 20px;">Agregar</button>'+
+                                    '<button type="button" class="btn btn-secondary" onclick="cancelAddOption()" style="width:80px; margin-left: 40px; margin-top: 20px;">Cancelar</button>'+
+                                    '<button type="button" class="btn btn-primary" onclick="addOpcion()" style="width:80px; margin-left: 30px; margin-top: 20px;">Agregar</button>'+
                                  '</div>'+
                             '</div>'+ 
                         '</div>'+
@@ -192,14 +199,6 @@ function loadCategoriesForDish() {
     errorMessage(error.status, $("#categories"));
     }
     );
-}
-
-function agregarAdicional(){
-    $("#addAdditionalDialog").removeAttr("class");
-}
-
-function agregarOpcion(){
-    $("#addOptionDialog").removeAttr("class");
 }
 
 function rowDish(anchor, c) {
@@ -322,31 +321,111 @@ function updateDish(dishId){
            (error)=>{errorMessage(error.status,$("#addErrorDiv"));});                          
 }
 
-function addDish(){ 
-    dish = {"name": $("#name").val(),      
-    "price": $("#price").val(),
-    "decription": $("#decription").val(),
-    "categories": { id : "1" }
-    };
-    $.ajax({type: "POST", url:"/Food_Service_PIV/web/api/dishes",
-        data: JSON.stringify(dish),contentType: "application/json"})
-    .then( (dishes)=>{$('#addDialog').modal('hide'); showDishes(dishes); },
-        (error)=>{errorMessage(error.status,$("#addErrorDiv"));});                          
+// - - - - - - - - - - - - - - -  AÑADIR UN PLATILLO - - - - - - - - - - - - - -
+
+_additionalList = [];
+_optionList = [];
+_dish = {};
+
+
+function agregarAdicional(){
+    $("#addAdditionalDialog").removeClass("modal");
 }
 
-_detailList = [];
-_dish = undefined;
+function agregarOpcion(){
+    $("#addOptionDialog").removeClass("modal");
+}
 
-function addDetail(){
-        var nameDetail = $("#nameDetail").val();
-        var priceDetail = $("#priceDetail").val();
+function addOpcion(){
+        var nameOption = $("#nameOption").val();
+        var priceOption = $("#priceOption").val();
         var option = { 
-                name: nameDetail,
-                price: priceDetail
+            name: nameOption,
+            price: priceOption
         }
-        _detailList.push(option);
-        var list = $("#_detailList");
+        _optionList.push(option);
+        var list = $("#optionList");
         var html = $("<a class='dropdown-item'/>");
         html.html(option.name +' &nbsp;&nbsp;&nbsp;&nbsp;₡'+ option.price + '</a>');	
         list.append(html);
+        $("#priceOption").val("");
+        $("#nameOption").val("");
+         $("#addOptionDialog").addClass("modal");
+}
+
+function addAdicional(){
+    var nameAdditional = $("#nameAdditional").val();
+    var typeAdditional = $('input:radio[name=optradio]:checked').val() == "true";
+    var mandatoryAdditional = $('#mandatoryAditional').is(":checked");
+    var additional = { 
+           name: nameAdditional, 
+           type: typeAdditional,
+           mandatory: mandatoryAdditional,
+           detailsList: _optionList
+    };
+    _optionList = [];
+    _additionalList.push(additional);
+    var list = $("#additionalList");
+    var html = $("<a class='dropdown-item'/>");
+    html.html(additional.name + '</a>');	
+    list.append(html);
+    $("#nameAdditional").val("");
+    $("#addAdditionalDialog").addClass("modal");
+}
+
+function addDish(){
+     $.ajax({
+        type: "GET",
+        url: "/Food_Service_PIV/web/api/categories",
+        contentType: "application/json"
+    }).then(
+        (categories) => {
+            var categorieDish = undefined;
+            categories.forEach((categorie) => {
+                if(categorie.name === $("#dropdownMenuButton").html()){
+                    categorieDish = categorie; 
+                }
+            });
+            if(categorieDish != undefined){
+                var nameDish = $("#nameDish").val();
+                var priceDish = $("#priceDish").val();
+                var decriptionDish = $("#decriptionDish").val();
+                $("#nameDish").val("");
+                $("#priceDish").val("");
+                $("#decriptionDish").val("");
+                dish = {
+                    name: nameDish,      
+                    price: priceDish,
+                    decription: decriptionDish,
+                    categories: categorieDish,
+                    additionalsList: _additionalList
+                };
+                $.ajax({type: "POST", url:"/Food_Service_PIV/web/api/dishes",
+                    data: JSON.stringify(dish),contentType: "application/json"})
+                .then( (dishes)=>{$('#addDialog').modal('hide'); showDishes(dishes); },
+                    (error)=>{errorMessage(error.status,$("#addErrorDiv"));});  
+                }
+        },
+        (error) => {
+            errorMessage(error.status, $("#categories"));
+        }
+    );   
+}
+
+function cancelAddOption(){
+    $("#priceOption").val("");
+    $("#nameOption").val("");
+    $("#addOptionDialog").addClass("modal");
+}
+
+function cancelAddAdditional(){
+    $("#nameAdditional").val("");
+    $("#addAdditionalDialog").addClass("modal");
+}
+
+function cancelAddDish(){
+    $("#nameDish").val("");
+    $("#priceDish").val("");
+    $("#decriptionDish").val("");
+    $("#addDialog").addClass("modal");
 }

@@ -67,7 +67,7 @@ public class Dao_Details {
     }
     
     public void add(Details p) throws Exception{
-        String sql="INSERT INTO order_status (name) "
+        String sql="INSERT INTO details (name, price, additional) "
                 + "VALUES('%s', %f, %d)";
         sql=String.format(sql, p.getName(), p.getPrice(), p.getAdditionals().getId()); 
         if (db.executeUpdate(sql) == 0){

@@ -1,6 +1,7 @@
 package com.food_service.data;
 
 import com.food_service.logic.Additionals;
+import com.food_service.logic.Details;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,8 +37,19 @@ public class Dao_Additionals {
     }
     
     public Additionals get(int id) throws Exception{
-        String sql = "SELECT * FROM additionals WHERE name=%d";
+        String sql = "SELECT * FROM additionals WHERE id=%d";
         sql = String.format(sql, id);
+        ResultSet rs = db.executeQuery(sql);
+        if(rs.next()){
+            return render_additionals(rs);
+        }else{
+            throw new Exception("Adicional no existe.");
+        }
+    }
+    
+    public Additionals getByName(String name) throws Exception{
+        String sql = "SELECT * FROM additionals WHERE name='%s'";
+        sql = String.format(sql, name);
         ResultSet rs = db.executeQuery(sql);
         if(rs.next()){
             return render_additionals(rs);

@@ -44,6 +44,17 @@ public class Dao_Dishes {
         }else{
             throw new Exception("Platillo no existe.");
         }
+    }   
+    
+    public Dishes getByName(String name) throws Exception{
+        String sql = "SELECT * FROM dishes WHERE name='%s'";
+        sql = String.format(sql, name);
+        ResultSet rs = db.executeQuery(sql);
+        if(rs.next()){
+            return render_dishes(rs);
+        }else{
+            throw new Exception("Platillo no existe.");
+        }
     }
     
     public List<Dishes> getByCategorie(String idCategorie) throws SQLException{

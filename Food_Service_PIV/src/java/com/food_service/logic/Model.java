@@ -300,6 +300,10 @@ public class Model {
         return platillos.get(id);
     }
     
+    public Dishes getDishByName(String name) throws Exception  {
+        return platillos.getByName(name);
+    }
+    
     public List<Dishes> platilloByCategoria(String idCategoria) throws SQLException{
         return platillos.getByCategorie(idCategoria);
     }
@@ -320,6 +324,10 @@ public class Model {
     
     public List<Additionals> adicionalesgetAll() throws Exception {
         return adicionales.getAll();
+    }
+    
+    public Additionals getAdditionalByName(String name) throws Exception {
+        return adicionales.getByName(name);
     }
     
     public List<AdministratorStatus> estadosAdministradorgetAll() throws Exception {
