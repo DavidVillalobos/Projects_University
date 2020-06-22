@@ -202,6 +202,20 @@ public class Order {
     }
 
     @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Orders> deleteOrder() {
+        try {
+            Orders globalOrder = new Orders();
+            List<Orders> list = new ArrayList<>();
+            request.getSession(true).setAttribute("globalOrder", globalOrder);
+            list.add(globalOrder);
+            return list;         
+        } catch (Exception ex) {
+            throw new NotFoundException(); 
+        }
+    }
+    
+    @DELETE
     @Path("delete/{index}")
     @Produces({MediaType.APPLICATION_JSON})
     public List<Orders> del(@PathParam("index") String index) {

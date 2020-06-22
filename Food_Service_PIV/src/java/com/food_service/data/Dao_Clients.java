@@ -94,7 +94,7 @@ public class Dao_Clients {
     
     public void update(Clients p) throws Exception{
         String sql="UPDATE clients SET name='%s', telephone='%s', last_name='%s'"
-                + " password='%s', email='%s' where email='%s'";
+                + ", password='%s', email='%s' where email='%s'";
         sql=String.format(sql,
                 p.getName(),
                 p.getTelephone(),
