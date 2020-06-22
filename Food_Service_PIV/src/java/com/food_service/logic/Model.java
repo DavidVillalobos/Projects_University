@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -288,8 +290,12 @@ public class Model {
        return clientes.getById(id);
     }
      
-    public Clients clientegetByEmail(String email) throws Exception {
-        return clientes.get(email);
+    public Clients clientegetByEmail(String email) {
+        try {
+            return clientes.get(email);
+        } catch (Exception ex) {
+            return null;
+        }
     }
     
     public Details detallesget(int id) throws Exception {

@@ -13,20 +13,123 @@
 		<img alt="logo" width="40" height="40" src="https://demo.tastyigniter.com/assets/media/uploads/tastyigniter-logo.png">
             </a>
             <div class="collapse navbar-collapse">
-		<ul class="navbar-nav ml-auto">
+		<ul id="opciones" class="navbar-nav ml-auto">
                     <li class="nav-item">
-			<a id="view_menu" class="nav-link">View Menu</a>
+			<a href="/Food_Service_PIV/web/presentation/client/order.html" id="view_menu" class="nav-link">View Menu</a>
                     </li>
                     <li class="nav-item">
-			<a id="login" class="nav-link">Login</a>
+                        <a href="" id="login" class="nav-link" data-toggle="modal" data-target="#loginDialog">Login</a>
                     </li>
                     <li class="nav-item">
-			<a id="register" class="nav-link">Register</a>
+			<a id="register" href="" class="nav-link" data-toggle="modal" data-target="#registerDialog">Register</a>
                     </li>
 		</ul>
             </div>
 	</div>
     </nav>
+    <!-- POPUPS -->
+    <div class="row">
+            <div class="modal fate" tabindex="-1" id="registerDialog" role="dialog"
+                data-dismiss="modal">
+                <div class="modal-dialog" style="width: 400px">
+                    <div class="modal-content">
+                        <form id="registerForm" class="needs-validation" novalidate>
+                            <div class="modal-body text-center">
+                                 <div class="form-row">
+                      <div class="col-6">
+                        <label for="first-name-1">First name</label>
+                        <input type="text" class="form-control" id="first-name-1" placeholder="First name" value="" required>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <label for="validationCustom02-1">Last name</label>
+                        <input type="text" class="form-control" id="validationCustom02-1" placeholder="Last name" value="Otto" required>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-6"> 
+                        <label for="email-1">Email</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupPrepend">@</span>
+                          </div>
+                          <input type="email" class="form-control" id="email-1" aria-describedby="emailHelp" placeholder="Enter email" required>
+                          <div id="feed-back" class="invalid-feedback">
+                            Please choose a Email.
+                          </div>
+                      </div>
+                      </div>
+                      <div class="col-6">
+                        <label for="example-tel-input">Telephone</label>
+                        <input class="form-control" type="tel" value="" id="telefono-1" required>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                      </div>   
+                    </div>
+                    <div class="form-row">
+                      <div class="col-12">
+                        <label for="new-pass">Password</label>
+                        <input type="password" class="form-control" id="new-pass-1" placeholder="Password" value="" required>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                      </div>
+                    </div></div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <div>
+                                    <button type="submit" id="registerButton" class="btn btn-primary btn-lg btn-block">Registrar</button>
+                                </div>
+                            </div>
+                            <div id="loginErrorDiv" style="width:80%; margin: auto;"></div>     
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="modal fate" tabindex="-1" id="loginDialog" role="dialog"
+                data-dismiss="modal">
+                <div class="modal-dialog" style="width: 400px">
+                    <div class="modal-content">
+                        <form id="loginForm">
+                            <div class="modal-body text-center">
+                                <div id="div-login-msg">
+                                    <div id="icon-login-msg" ></div>
+                                    <span class="h2">Bienvenido</span>
+                                </div>
+                                <br>
+                                <div class = "input-group" style = "margin-bottom: 25px">
+                                    <div class = "input-group-prepend "><span class = "input-group-text"><i class = "fa fa-user"></i></span></div>
+                                    <input class = "form-control" placeholder = "Usuario" type = "text" id = "usuario" name = "usuario" value = "" required>
+                                    <div class = "invalid-feedback">Favor ingrese el usuario</div>
+                                </div>
+                                <div class="input-group" style="margin-bottom: 25px">
+                                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i></span></div>
+                                    <input class="form-control" placeholder="Contraseña" type="password" id="contrasena" name="contrasena" value="" required>
+                                    <div class="input-group-append">
+                                          <button id="show_password" class="btn btn-primary" type="button" onclick="showPassword()"> <span class="fa fa-eye-slash icon"></span> </button>
+                                    </div>
+                                    <div class="invalid-feedback">Favor ingrese la contraseña</div>
+                                </div> 
+                            </div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <div>
+                                    <button type="button" id="loginButton" class="btn btn-primary btn-lg btn-block">Ingresar</button>
+                                </div>
+                            </div>
+                            <div id="loginErrorDiv" style="width:80%; margin: auto;"></div>     
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- POPUPS END -->
     <div id="central" class="container">
         <form id="data-form" class="needs-validation" novalidate>
         <div class="row">
@@ -194,11 +297,12 @@
         _selected_=0;
         _hecho_=false;
         _confirm_=true;
+        _client_=null;
         
         function init(){
-            $("#view_menu").on("click",()=>{navbar(1);});
-            $("#register").on("click",()=>{navbar(2);});
-            $("#login").on("click",()=>{navbar(3);});
+            $("#registerForm").submit(function(event){verifyInputs2(event);});
+            $("#loginButton").click(login);
+            loadLogin();
             
             $("#way").on("click",()=>{changeWayToReceive();});
             $("#asap").on("click",()=>{changeAsapDate(false);});
@@ -209,20 +313,183 @@
         
         $(init);
         
-        function navbar(numero){
-            switch(numero){
-                case 1:{
-                  window.location="/Food_Service_PIV/web/presentation/client/order.html";      
-                }
-                case 2:{
-                        
-                }
-                case 3:{
-                    
-                }
-            }
+        //=========================================================================================== 
+        function loadLogin(){
+            $.ajax({type: "GET",
+                url: "/Food_Service_PIV/web/api/loginClient",
+                contentType: "application/json"
+            }).then((admin) => {_client_=admin;
+                loginSuccess(); llenarCampos();
+            },
+            (error) => {
+                errorMessage2(error.status, $("#dishes-container"));
+            });
         }
         
+        function verifyInputs2(event) {
+            var forms = document.getElementById('registerForm');
+            if (forms.checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }else{
+                  event.preventDefault();
+                  var client = {
+                    name:$("#first-name-1").val(),
+                    password:$("#new-pass-1").val(),
+                    telephone:$("#telefono-1").val(),
+                    lastName:$("#validationCustom02-1").val(),
+                    email:$("#email-1").val()
+                  };
+                   $.ajax({type:"POST",
+                        url:"/Food_Service_PIV/web/api/loginClient/register",
+                        data:JSON.stringify(client),
+                        contentType: "application/json"
+                    }).then((admin) => {
+                        _client_=admin;
+                        if(_client_!==undefined){
+                            login2(); 
+                            $("#registerDialog").modal("hide");
+                            $("#feed-back").html("Choose an email");
+                        }
+                        else{
+                            $("#email").addClass("is-invalid");
+                            $("#feed-back").html("Already used");
+                        }
+                    },
+                    (error) => {
+                        errorMessage2(error.status, $("#dishes-container"));
+                    });
+                }
+            forms.classList.add('was-validated');
+        }
+        
+        function llenarCampos(){
+            $("#first-name").val(_client_.name);
+            $("#email").val(_client_.email);
+            $("#telefono").val(_client_.telephone);
+            $("#validationCustom02").val(_client_.lastName);   
+        }
+        
+        function vaciaCampos(){
+            $("#first-name").val('');
+            $("#email").val('');
+            $("#telefono").val('');
+            $("#validationCustom02").val('');   
+        }
+        
+        function showPassword(){
+            var cambio = document.getElementById("contrasena");
+            if(cambio.type == "password"){
+                cambio.type = "text";
+                $('.icon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+            }else{
+                cambio.type = "password";
+                $('.icon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+            }
+        } 
+
+        function login() {
+            if (!loginValidar())
+                return;
+            admin = {
+                email: $("#usuario").val(),
+                password: $("#contrasena").val()
+            };
+            $.ajax({type: "POST",
+                url: "/Food_Service_PIV/web/api/loginClient",
+                data: JSON.stringify(admin),
+                contentType: "application/json"
+            }).then((admin) => {_client_=admin;
+                loginSuccess();
+                
+            },
+            (error) => {
+                errorMessage2(error.status, $("#loginErrorDiv"));
+            });
+        }
+        
+        function login2() {
+            var ad = {
+                email: _client_.email,
+                password: _client_.password
+            };
+            $.ajax({type: "POST",
+                url: "/Food_Service_PIV/web/api/loginClient",
+                data: JSON.stringify(ad),
+                contentType: "application/json"
+            }).then((ad) => {_client_=ad;
+                loginSuccess(); //llenarCampos();
+            },
+            (error) => {
+                errorMessage2(error.status, $("#loginErrorDiv"));
+            });
+        }
+
+        function loginValidar() {
+            $("#loginForm").addClass("was-validated");
+            return $("#loginForm").get(0).checkValidity();
+        }
+
+        function loginSuccess(){
+            if(_client_!==undefined){
+            $("#opciones").append($(
+                '<li class="nav-item">'+
+                    '<a id="perfil" href="/Food_Service_PIV/web/presentation/client/perfil.html" class="nav-link">'+_client_.name+' '+
+                    _client_.lastName+'</a>'+
+                '</li>'+
+                '<li class="nav-item">'+
+                    '<a id="logoutButton" href="#" class="nav-link">Logout</a>'+
+                '</li>')
+            );
+            $("#logoutButton").click(logout);
+            $("#login").hide(0);
+            $("#register").hide(0);
+            $("#loginDialog").modal("hide");
+            llenarCampos();
+            }            
+        }
+        
+        function goToPerfil(){
+            location.href="/Food_Service_PIV/web/Index.html";
+        }
+
+        function logout(){
+            $.ajax({type: "DELETE", 
+                url:"/Food_Service_PIV/web/api/loginClient"               
+            })
+            .then( ()=>{vaciaCampos();logoutSuccess();},
+                (error)=>{ errorMessage2(error.status,$("#loginErrorDiv"));});                
+        }
+
+        function logoutSuccess() {
+            _client_=null;
+            $("#login").show(0);
+            $("#register").show(0);
+            $("#perfil").hide(0);
+            $("#logoutButton").hide(0);
+        }
+
+        function errorMessage2(status, place) {
+            error = status;
+            switch (status){
+                case 401:
+                    error = "Cliente no registrado";
+                    break;
+                case 403:
+                case 405:
+                    error = "Cliente no autorizado";
+                    break;
+                case 404:
+                    error = "Usuario o Contraseña Incorrecta";
+                    break;
+            };
+            place.html('<div class="alert alert-danger fade show">' +
+                '<button type="button" class="close" data-dismiss="alert">' +
+                '&times;</button><h4 class="alert-heading">Error!</h4>' + error + '</div>');
+            return;
+        }
+
+        //======================================================================================
         function finishOrder(){
             $.ajax({
                 type:"POST",
@@ -286,6 +553,11 @@
                 '</div>'
             );
             $("#footer").addClass("fixed-bottom");
+            $.ajax({
+                type:"DELETE",
+                url:"/Food_Service_PIV/web/api/orders",
+                contentType:"application/json"
+            });
         }
         
         function orderDate(){
@@ -462,8 +734,8 @@
         }
         
         function verifyInputs(event) {
-            var forms = document.getElementsByClassName('needs-validation');
-            if (forms[0].checkValidity() === false) {
+            var forms = document.getElementById('data-form');
+            if (forms.checkValidity() === false) {
                   event.preventDefault();
                   event.stopPropagation();
                 }else{
@@ -472,7 +744,7 @@
                         finishOrder();
                     }
                 }
-            forms[0].classList.add('was-validated');
+            forms.classList.add('was-validated');
             if(!_confirm_){
                 errorMessage(555,$("#dishes-container"));
                 $("#dishes-container").append($('<div class="text-center"><i>Add menu items to your cart.</i></div>'));
