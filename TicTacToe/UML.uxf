@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>11</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>220</x>
+      <y>231</y>
+      <w>110</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>Main
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>132</x>
+      <y>352</y>
+      <w>187</w>
+      <h>143</h>
+    </coordinates>
+    <panel_attributes>Player
+--
+- name : string
+--
++ Player()
++ Player(string)
++ getName() : string
++ setName(string) : void
++ ~Player()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>396</x>
+      <y>352</y>
+      <w>121</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>Game
+--
+- tablero : Board 
+- j1 : Player 
+- j2 : Player 
+--
++ Game()
++ start() : void
++ play() : void
++ ~Game()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>429</x>
+      <y>99</y>
+      <w>253</w>
+      <h>198</h>
+    </coordinates>
+    <panel_attributes>ViewConsole
+--
++ printString(string): void 
++ getInt() : int
++ getString() : string
++ setColor(int) : void 
++ setCursorPosition(int, int) void 
++ void setConsoleSize(int, int) void 
++ wherey() : int 
++ wherex() : int 
++ stringToInt(string) int </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>605</x>
+      <y>352</y>
+      <w>198</w>
+      <h>187</h>
+    </coordinates>
+    <panel_attributes>Board
+--
+- matriz[3][3] : char 
+- spaceAvailable : 	int
+--
++ Board();
++ setSimb(int, int, char) : bool
++ getSimb(int, int) : char
++ haveWinner() : bool
++ haveTie() : bool
++ toString() : string
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>451</x>
+      <y>286</y>
+      <w>33</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>308</x>
+      <y>385</y>
+      <w>110</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=2</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>506</x>
+      <y>385</y>
+      <w>121</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>90.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>264</x>
+      <y>253</y>
+      <w>176</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0;140.0;50.0;140.0;90.0</additional_attributes>
+  </element>
+</diagram>
