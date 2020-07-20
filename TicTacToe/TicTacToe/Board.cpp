@@ -6,6 +6,7 @@ Board::Board() {
 			matriz[i][j] = ' ';
 		}
 	}
+	// AJA ME PARECE
 	spaceAvailable = 9;
 }
 
