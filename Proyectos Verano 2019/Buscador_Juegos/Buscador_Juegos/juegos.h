@@ -1,9 +1,8 @@
 #ifndef JUEGOS_H
 #define JUEGOS_H
-#include <sstream>
-using namespace std;
-#include "etiquetas.h"
-#include "juego.h"
+#include"juego.h"
+#include"etiquetas.h"
+
 class juegos {
 private:
 	juego *primero;

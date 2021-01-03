@@ -1,4 +1,5 @@
 #include "juego.h"
+
 juego::juego(string nombre, string disponibilidad, etiquetas *listEtiquetas, string descripcion, juego *sig) {
 	this->nombre = nombre;
 	this->disponibilidad = disponibilidad;
@@ -6,12 +7,19 @@ juego::juego(string nombre, string disponibilidad, etiquetas *listEtiquetas, str
 	this->descripcion = descripcion;
 	this->sig = sig;
 }
+
 string juego::getNombre() { return nombre; }
+
 etiquetas* juego::getListEtiquetas() { return listEtiquetas; }
+
 string juego::getDescripcion() { return descripcion; }
+
 string juego::getDisponibilidad() { return disponibilidad; }
+
 void juego::setSig(juego *sig) { this->sig = sig; }
+
 juego* juego::getSig() { return sig; }
+
 string juego::toStringCompatibles(etiquetas *listBusc) {
 	stringstream s;
 	s << "\t\t\tEl Juego --> | " << nombre << " | "<<endl;
@@ -22,6 +30,7 @@ string juego::toStringCompatibles(etiquetas *listBusc) {
 	s << "\t\t\t"+descripcion << endl;
 	return s.str();
 }
+
 string juego::toString(){
 	stringstream s;
 	s << "\t\t\tEl Juego --> | " << nombre << " | " << endl;
@@ -31,4 +40,5 @@ string juego::toString(){
 	s <<"\t\t\t"+descripcion << endl;
 	return s.str();
 }
+
 juego::~juego() {}

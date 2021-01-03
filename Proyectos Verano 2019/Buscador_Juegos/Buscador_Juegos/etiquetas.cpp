@@ -1,7 +1,9 @@
 #include "etiquetas.h"
-using namespace std;
+
 etiquetas::etiquetas(){primero = actual = NULL;}
+
 void etiquetas::insertarEtiqueta(string info) {primero = new etiqueta(info, primero);}
+
 int etiquetas::porcentajeCompatibles(etiquetas *listBusc) {
 		int sum = 0, can = 0;
 		actual = primero;
@@ -21,6 +23,7 @@ int etiquetas::porcentajeCompatibles(etiquetas *listBusc) {
 		}
 		return sum * 100 / can;
 }
+
 string etiquetas::toString() {
 	stringstream s;
 	actual = primero;
@@ -31,6 +34,7 @@ string etiquetas::toString() {
 	}
 	return s.str();
 }
+
 bool etiquetas::buscarEtiqueta(string info) {
 	actual = primero;
 	while (actual != NULL) {

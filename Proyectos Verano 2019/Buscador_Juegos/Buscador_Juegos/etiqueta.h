@@ -1,7 +1,8 @@
 #ifndef ETIQUETA_H
 #define ETIQUETA_H
-#include <string>
+#include <sstream>
 using namespace std;
+
 class etiqueta {
 private:
 	string info;

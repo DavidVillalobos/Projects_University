@@ -1,5 +1,4 @@
 #include "in_out.h"
-#include <sstream>
 
 void imprimeInt(int entero) {
 	cout << entero;

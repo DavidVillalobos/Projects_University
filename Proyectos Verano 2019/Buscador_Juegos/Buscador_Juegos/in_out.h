@@ -1,10 +1,9 @@
 #ifndef IN_OUT_H
 #define IN_OUT_H
-
-#include <string>
 #include <iostream>
+#include <sstream>
+#include <fstream>
 #include <Windows.h>
-
 using namespace std;
 
 void imprimeInt(int);

@@ -1,9 +1,6 @@
 #ifndef ETIQUETAS_H
 #define ETIQUETAS_H
-#include <string>
-#include <sstream>
-using namespace std;
-#include "etiqueta.h"
+#include"etiqueta.h"
 class etiquetas {
 private:
 	etiqueta* primero;

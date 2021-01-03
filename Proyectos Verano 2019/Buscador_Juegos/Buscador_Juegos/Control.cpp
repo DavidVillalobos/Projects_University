@@ -188,5 +188,6 @@ void Control::saliendo() {
 }
 
 Control::~Control(){
-
+	setColor(15);
+	system("cls");
 }

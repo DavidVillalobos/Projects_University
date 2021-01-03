@@ -1,8 +1,5 @@
 #ifndef JUEGO_H
 #define JUEGO_H
-#include <string>
-#include <sstream>
-using namespace std;
 #include "etiquetas.h"
 class juego {
 private:

@@ -22,7 +22,7 @@ void imprimeMatriz() {
 	}
 }
 
-void main() {
+int main() {
 	system("cls");
 	setCursor(0, 8);
 	imprimeMatriz();
@@ -37,7 +37,8 @@ void main() {
 	Regalo(78, 23, 8, 14);
 	Regalo(23, 0, 14, 9);
 	system("pause");
-	//Control *app = new Control();
-	//delete app;
-
+	Control *app = new Control();
+	delete app;
+	setColor(15);
+	system("cls");
 }
