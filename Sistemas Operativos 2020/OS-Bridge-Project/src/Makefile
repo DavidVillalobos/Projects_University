@@ -18,5 +18,8 @@ Sector.o: Sector.c
 Simulation.o: Simulation.c
 	$(CC) $(FLAGS) Simulation.c
 
+run: $(OUT)
+	./$(OUT)
+	
 clean:
 	rm -f $(OBJS) $(OUT)
