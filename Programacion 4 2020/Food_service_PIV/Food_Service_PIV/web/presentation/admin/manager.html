@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../../css/styles.css" type="text/css"/>
+        <title>Administración</title>
+    </head>
+    <body style="padding-top: 60px;" class="bg-dark">
+        <nav class="navbar navbar-dark bg-light navbar-expand-sm fixed-top">
+            <div class="container-fluid">
+                <img alt="logo" width="40" height="40" src="../../images/tastyigniter-logo.png">
+                <div style="font-size: 30px; margin-left: -800px">Administrator Panel </div>
+                <div class="nav-item">
+                    <button class="nav-link btn btn-outline-danger" style=" width: 130px;" onclick="logout()">Cerrar Sesion</button>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid bg-secondary">
+            <div class="row display-4" style="font-size: 30px; height: 560px;">
+                <div class="col-2 py-5 pl-4" style="background-color: rgb(5, 5, 54);">
+                    <div>
+                        <ul id="menu-dashboard" class="navbar-nav pl-3 text-left">
+                            <li class="py-3">
+                                <a class="text-light" data-toggle="collapse" data-target="#submenu1"
+                                   aria-expanded="false">
+                                    - Cocina
+                                    <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu1">
+                                        <li><div class="text-light " onclick="loadDishes()">Platillos</div></li>
+                                        <li><div class="text-light" onclick="loadCategories()">Categorias</div></li>
+                                    </ul>
+                            </li>
+                            <li class="py-3">
+                                <a class="text-light" data-toggle="collapse" data-target="#submenu2">
+                                    - Ventas
+                                </a>
+                                <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu2">
+                                    <li><div class="text-light" onclick="loadOrders()">Ordenes</div></li>
+                                </ul>
+                            </li>
+                            <li class="py-3">
+                                <a class="text-light" data-toggle="collapse" data-target="#submenu3">
+                                    - Usuarios
+                                </a>
+                                <ul class="navbar-nav pl-3 text-left collapse h5" id="submenu3">
+                                    <li><div class="text-light" onclick="loadClients()">Clientes</div></li>
+                                    <li><div class="text-light" onclick="loadAdministrators()">Administradores</div></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-10 pt-4" id="panel">
+                    
+                </div>
+            </div>
+        </div>
+    </body>
+    <!-- Footer -->
+    <footer class="page-footer font-small mt-5">
+        <div class="footer-copyright text-center text-white bg-dark py-3">
+            © 2020 Copyright.<br>
+            <h6 class="text-center">Universidad Nacional De Costa Rica</h6>
+        </div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="../../js/managerDishes.js"></script>
+    <script src="../../js/managerCategories.js"></script>
+    <script src="../../js/managerClients.js"></script>
+    <script src="../../js/managerAdministrators.js"></script>
+    <script src="../../js/managerOrders.js"></script>
+    <script src="../../js/login.js"></script>
+</html>
