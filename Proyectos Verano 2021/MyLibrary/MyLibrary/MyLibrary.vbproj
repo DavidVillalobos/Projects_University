@@ -85,6 +85,18 @@
     <Compile Include="Add_Book.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Add_Countries.Designer.vb">
+      <DependentUpon>Add_Countries.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Add_Countries.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Add_Editorial.Designer.vb">
+      <DependentUpon>Add_Editorial.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Add_Editorial.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Add_Gender.Designer.vb">
       <DependentUpon>Add_Gender.vb</DependentUpon>
     </Compile>
@@ -101,6 +113,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MyLibraryDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="MyLibraryDataSet1.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MyLibraryDataSet1.xsd</DependentUpon>
     </Compile>
     <Compile Include="Title.vb">
       <SubType>Form</SubType>
@@ -131,6 +148,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Add_Book.resx">
       <DependentUpon>Add_Book.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Add_Countries.resx">
+      <DependentUpon>Add_Countries.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Add_Editorial.resx">
+      <DependentUpon>Add_Editorial.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Add_Gender.resx">
       <DependentUpon>Add_Gender.vb</DependentUpon>
@@ -171,6 +194,17 @@
     </None>
     <None Include="MyLibraryDataSet.xss">
       <DependentUpon>MyLibraryDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="MyLibraryDataSet1.xsc">
+      <DependentUpon>MyLibraryDataSet1.xsd</DependentUpon>
+    </None>
+    <None Include="MyLibraryDataSet1.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MyLibraryDataSet1.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="MyLibraryDataSet1.xss">
+      <DependentUpon>MyLibraryDataSet1.xsd</DependentUpon>
     </None>
     <None Include="Resources\Background_Title.png" />
   </ItemGroup>
