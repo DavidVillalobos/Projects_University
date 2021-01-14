@@ -29,7 +29,7 @@ Integer::Integer(double num) {
 
 Integer::Integer(std::string num) {
 	if (num.empty()) { throw new Exception(3); }
-	for (int i = 0; i < num.size(); i++) {
+	for (int i = 0; i < int(num.size()); i++) {
 		if (num[i] != '+' && num[i] != '-') {
 			if (!isdigit(num[i])) { 
 				throw new Exception(2);
@@ -420,7 +420,7 @@ Integer Integer::factorial(int n) {
 	if (n == 0 || n == 1) { return one; }
 	Integer sol = Integer(n);
 	Integer anterior(sol - one);
-	for (anterior; anterior > zero; anterior -= one) {
+	for (; anterior > zero; anterior -= one) {
 		sol *= anterior;
 	}
 	return sol;

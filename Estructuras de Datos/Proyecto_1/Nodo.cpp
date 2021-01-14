@@ -220,14 +220,12 @@ Nodo& Nodo::operator+(int num){
 }
 
 Nodo& Nodo::operator-(int num){
-	int acarreoNegativo = num;
 	for (int i = Tam - 1; 0 <= i; i--) {
 		if (num < n[i]) {
 			n[i] -= num;
 			break;
 		}
 		n[i] = n[i] + 10000 - num;
-		acarreoNegativo = 1;
 	}
 	return *this;
 }
@@ -235,7 +233,6 @@ Nodo& Nodo::operator-(int num){
 //toString
 std::string Nodo::to_string(bool last) {
 	std::stringstream s;
-	bool flag = true;
 	for (int i = 0; i < Tam; i++) {
 		if (last && n[i] != 0) {
 			last = false;

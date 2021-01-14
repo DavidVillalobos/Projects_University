@@ -5,12 +5,13 @@
 
 #ifndef NODO_H
 #define NODO_H
+#include <sstream>
+#include <math.h>
 
 int const Tam = 9;//Tamaño del arreglo en el Nodo
 int const Can = 4;//Cantidad de Digitos por espacio en el vector 
 int const Base = 10;//Base Numerica
 
-#include <sstream>
 
 class Nodo {
 	int n[Tam];

@@ -10,6 +10,7 @@
 #include"Exception.h"
 #include"Nodo.h"
 #include<math.h>
+
 class Integer {
 public:
 	// Atributos
