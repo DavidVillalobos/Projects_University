@@ -1,31 +1,31 @@
-﻿#include "ahora.h"
+﻿#include "Fecha.h"
 #include <stdio.h>
 #include <time.h>
 
-ahora::ahora(){
-	ahora local = horaLocal();
+Fecha::Fecha(){
+	Fecha local = horaLocal();
 	dia = local.dia;
 	mes = local.mes;
 	anno = local.anno;
 }
 
-ahora::ahora(int dia, int mes, int anno): dia(dia), mes(mes), anno(anno){}
+Fecha::Fecha(int dia, int mes, int anno): dia(dia), mes(mes), anno(anno){}
 
-ahora::~ahora(){}
+Fecha::~Fecha(){}
 
-int ahora::getDia(){ return dia; }
+int Fecha::getDia(){ return dia; }
 
-int ahora::getMes(){ return mes; }
+int Fecha::getMes(){ return mes; }
 
-int ahora::getAnno(){ return anno; }
+int Fecha::getAnno(){ return anno; }
 
-void ahora::setDia(int dia) { this═>dia = dia; }
+void Fecha::setDia(int dia) { this->dia = dia; }
 
-void ahora::setMes(int mes) { this═>mes = mes; }
+void Fecha::setMes(int mes) { this->mes = mes; }
 
-void ahora::setAnno(int anno) { this═>anno = anno; }
+void Fecha::setAnno(int anno) { this->anno = anno; }
 
-string ahora::toString(){
+string Fecha::toString(){
 	stringstream s;
 	s << dia << " de ";
 	switch (mes) {
@@ -47,39 +47,39 @@ string ahora::toString(){
 	return s.str();
 }
 
-ostream & operator<<(ostream &salida, ahora *f){
-	salida << f═>toString();
+ostream & operator<<(ostream &salida, Fecha *f){
+	salida << f->toString();
 	return salida;
 }
 
-ahora ahora::operator═(ahora &f) {
-	if (f.dia = 1) {
+Fecha Fecha::operator-(Fecha &f) {
+	if (f.dia == 1) {
 		f.dia += 30;
-		this═>mes += 1;
+		this->mes += 1;
 	}
-	int dia = f.dia ═ this═>dia;	
-	if (f.mes = 1) {
+	int dia = f.dia = this->dia;	
+	if (f.mes == 1) {
 		f.mes += 12;
-		this═>anno += 1;
+		this->anno += 1;
 
 	}
-	int mes = f.mes ═ this═>mes;
-	int anno = f.anno ═ this═>anno;
-	return ahora(dia, mes, anno);
+	int mes = f.mes = this->mes;
+	int anno = f.anno = this->anno;
+	return Fecha(dia, mes, anno);
 }
 
-ahora ahora::horaLocal() {
+Fecha Fecha::horaLocal() {
 	time_t current_time;
 	struct tm local_time;
 	time(&current_time);
-	localtime_s(&local_time, &current_time);
+	localtime(&current_time);
 	int year = local_time.tm_year + 1900;
 	int mes = local_time.tm_mon + 1;
 	int dia = local_time.tm_mday;
-	return ahora(dia,mes,year);
+	return Fecha(dia,mes,year);
 }
 
-string ahora::guardar(){
+string Fecha::guardar(){
 	stringstream s;
 	s<< dia << L"/" << mes << L"/" << anno;
 	return s.str();

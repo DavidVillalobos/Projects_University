@@ -52,7 +52,7 @@ string leerString() {
 	getline(cin, cad);
 	return cad;
 }
-void main() {
+int main() {
 	int cantidad, opcion, edad;
 	string id, nombre, numeroTel, NomEncargado, ApeEncargado, NomTelefono, ocupacion, patrono;
 	bool incapacidad;

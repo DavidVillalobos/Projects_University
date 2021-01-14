@@ -1,7 +1,7 @@
 ﻿#include "In_Out.h"
 
    //conversion de texto normal a texto unicode
-void setTextUnicode(){ _setmode(_fileno(stdout), _O_U16TEXT); }
+void setTextUnicode(){ _setmode(_fileno(stdout), 0x00020000); }
 
    //conversion de texto unicode a texto normal
 void setTextNormal(){ _setmode(_fileno(stdout), _O_TEXT); }
@@ -260,7 +260,7 @@ wstring ahora() {
 	time_t current_time;
 	struct tm local_time;
 	time(&current_time);
-	localtime_s(&local_time, &current_time);
+	localtime(&current_time);
 	int anno = local_time.tm_year + 1900;
 	int mes = local_time.tm_mon + 1;
 	int dia = local_time.tm_mday;
