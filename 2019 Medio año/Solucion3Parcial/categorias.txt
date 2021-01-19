@@ -1,0 +1,8 @@
+10	Cajero	1200
+11	Asistente administrativo	1500
+12	Encargado de mantenimiento (diurno)	1800
+21	Reclutador (selector de personal)	2000
+23	Encargado de mantenimiento (nocturno)	2100
+25	Oficial administrativo	2500
+35	Jefe Departamento	3000
+38	Gerente	5000

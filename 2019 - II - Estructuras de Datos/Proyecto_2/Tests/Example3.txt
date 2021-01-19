@@ -1,0 +1,18 @@
+int num = 23;
+int metodoA(){
+    string a = "0";
+    int x = 0
+    if(a != "23"){
+        while(a < 23){
+            a = a + "23";
+        }
+    }
+   return a;
+}
+void metodoB(int a){
+    a = num;
+    string a = "45"; 
+    while(a < 23){
+         a = 23 - 1;
+    }
+}

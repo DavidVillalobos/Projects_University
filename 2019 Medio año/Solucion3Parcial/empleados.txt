@@ -1,0 +1,14 @@
+723719	Jose	Gerencia	38
+687324	Sofia	RRHH	35
+614953	Teresa	RRHH	21
+823398	Esteban	Administracion	35
+630621	Teresa	Administracion	25
+175265	Roberto	Administracion	11
+484879	Ana	Cajas	10
+396733	Juan	Cajas	10
+255664	Adriana	Cajas	10
+497945	Rodrigo	Mantenimiento	35
+807165	Julio	Mantenimiento (turno diurno)	12
+521885	Javier	Mantenimiento (turno diurno)	12
+832419	Ricardo	Mantenimiento (turno nocturno)	23
+755231	Maria	Mantenimiento (turno nocturno)	23

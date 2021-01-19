@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Pedido</title>
+</head>
+<body style="padding-top: 85px; background-color: #D5D5E0;">
+    <nav class="navbar navbar-dark bg-dark navbar-expand-sm fixed-top">
+	<div class="container">
+            <a class="navbar-brand">
+		<img alt="logo" width="40" height="40" src="https://demo.tastyigniter.com/assets/media/uploads/tastyigniter-logo.png">
+            </a>
+            <div class="collapse navbar-collapse">
+		<ul id="opciones" class="navbar-nav ml-auto">
+                    <li class="nav-item">
+			<a href="" class="nav-link">View Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="" id="login" class="nav-link" data-toggle="modal" data-target="#loginDialog">Login</a>
+                    </li>
+                    <li class="nav-item">
+			<a id="register" href="" class="nav-link" data-toggle="modal" data-target="#registerDialog">Register</a>
+                    </li>
+		</ul>
+            </div>
+	</div>
+    </nav>
+    <!-- POPUP -->
+         <div class="row">
+            <div class="modal fate" tabindex="-1" id="registerDialog" role="dialog"
+                data-dismiss="modal">
+                <div class="modal-dialog" style="width: 400px">
+                    <div class="modal-content">
+                        <form id="registerForm" class="needs-validation" novalidate>
+                            <div class="modal-body text-center">
+                                 <div class="form-row">
+                      <div class="col-6">
+                        <label for="first-name">First name</label>
+                        <input type="text" class="form-control" id="first-name" placeholder="First name" value="" required>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <label for="validationCustom02">Last name</label>
+                        <input type="text" class="form-control" id="validationCustom02" placeholder="Last name" value="Otto" required>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-6"> 
+                        <label for="email">Email</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupPrepend">@</span>
+                          </div>
+                          <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+                          <div id="feed-back" class="invalid-feedback">
+                            Please choose a Email.
+                          </div>
+                      </div>
+                      </div>
+                      <div class="col-6">
+                        <label for="example-tel-input">Telephone</label>
+                        <input class="form-control" type="tel" value="" id="telefono" required>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                      </div>   
+                    </div>
+                    <div class="form-row">
+                      <div class="col-12">
+                        <label for="new-pass">Password</label>
+                        <input type="password" class="form-control" id="new-pass" placeholder="Password" value="" required>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                      </div>
+                    </div></div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <div>
+                                    <button type="submit" id="registerButton" class="btn btn-primary btn-lg btn-block">Registrar</button>
+                                </div>
+                            </div>
+                            <div id="loginErrorDiv" style="width:80%; margin: auto;"></div>     
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="modal fate" tabindex="-1" id="loginDialog" role="dialog"
+                data-dismiss="modal">
+                <div class="modal-dialog" style="width: 400px">
+                    <div class="modal-content">
+                        <form id="loginForm">
+                            <div class="modal-body text-center">
+                                <div id="div-login-msg">
+                                    <div id="icon-login-msg" ></div>
+                                    <span class="h2">Bienvenido</span>
+                                </div>
+                                <br>
+                                <div class = "input-group" style = "margin-bottom: 25px">
+                                    <div class = "input-group-prepend "><span class = "input-group-text"><i class = "fa fa-user"></i></span></div>
+                                    <input class = "form-control" placeholder = "Usuario" type = "text" id = "usuario" name = "usuario" value = "" required>
+                                    <div class = "invalid-feedback">Favor ingrese el usuario</div>
+                                </div>
+                                <div class="input-group" style="margin-bottom: 25px">
+                                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i></span></div>
+                                    <input class="form-control" placeholder="Contraseña" type="password" id="contrasena" name="contrasena" value="" required>
+                                    <div class="input-group-append">
+                                          <button id="show_password" class="btn btn-primary" type="button" onclick="showPassword()"> <span class="fa fa-eye-slash icon"></span> </button>
+                                    </div>
+                                    <div class="invalid-feedback">Favor ingrese la contraseña</div>
+                                </div> 
+                            </div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <div>
+                                    <button type="button" id="loginButton" class="btn btn-primary btn-lg btn-block">Ingresar</button>
+                                </div>
+                            </div>
+                            <div id="loginErrorDiv" style="width:80%; margin: auto;"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    <div class="container">
+        <div class="row">
+            <div class="col-2">
+		<h5 class="px-3">Categories</h5>
+		<div id="categories"></div>
+            </div>
+            <div class="col-6">
+		<div class="container">
+                    <div class="container-fluid bg-white mb-1 rounded">
+			<div class="dropdown py-3">
+                            <button class="btn border-primary btn-light btn-block rounded dropdown-toggle text-truncate" 
+                            type="button" id="OrderTimePicker" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<b>ASAP</b>
+                            </button>
+                            <div class="dropdown-menu text-center" aria-labelledby="OrderTimePicker">
+                                <button id="asap" class="btn btn-outline-primary btn-block py-2">
+                                    ASAP
+                                </button>
+                                <div class="dropdown-divider"></div>
+                                <input type="datetime-local" id="daytime">  
+                                <button id="schedule_order" type="button" class="btn btn-outline-primary btn-sm py-2">
+                                    Schedule Order
+                                </button>
+                            </div>
+			</div>
+                    </div>
+                    <div class="container-fluid bg-white mb-1 rounded">
+			<div class="row py-3">
+                            <div class="col-6">
+				<h3 class="font-italic">Food Service</h3>
+                                <div class="text-muted">345 Lewisham Road, London SE13 7AB, United Kingdom</div>
+                            </div>
+                            <div class="col-6">
+                                <span class="text-success">We are open</span>
+                                <div>24 hours, 7 days.</div>
+                                <div class="text-muted">Delivery and pick-up available </div> 
+                            </div>
+			</div>
+                    </div>
+                    <div class="container-fluid bg-white rounded">
+			<h6 class="text-primary px-1 py-3">Menu</h6>
+                    </div>
+                    <div id="selected-categories" class="container-fluid bg-white rounded">
+                        <div id="new-seccion"></div>
+                        <div class="modal fade" id="detail_popup" tabindex="-1" role="dialog" 
+                        aria-labelledby="detail_popup_title" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="detail_popup_title"></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="alert_popup"></div>
+                                        <div id="detail_popup_body" class="container-fluid">
+                                             
+                                        </div>
+                                    </div>
+                                    <div id="detail_popup_footer" class="modal-footer">
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control  text-center" value="" placeholder="Cant" 
+                                                    id="cant_popup" aria-label="Cant" aria-describedby="basic-addon2">
+                                                    <div class="input-group-append">
+                                                        <button id="plus_order_popup" class="btn btn-outline-secondary" type="button">+</button>
+                                                        <button id="less_order_popup" class="btn btn-outline-secondary" type="button">-</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-7">
+                                                <button id="add_order_popup" type="button" class="btn btn-primary btn-block">
+                                                </button>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+		</div>
+            </div>
+            <div class="col-4">
+		<div class="container-fluid bg-white rounded mb-1">
+                    <div class="container py-2">
+			<!-- BOTONES DE DELIVERY Y PICKUP -->
+			<div id="way"  class="btn-block btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-primary active">
+                                <input type="radio" id="delivery" name="options" autocomplete="off" checked>
+    				<b>Delivery</b>
+                            </label>
+                            <label class="btn btn-outline-primary">
+    				<input type="radio" id="pickup" name="options" id="pickup" autocomplete="off">
+    				<b>Pickup</b>
+                            </label>
+			</div>
+                    </div>
+                    <br>
+                    <div id="dishes-container" class="container-fluid pb-1">
+                        
+                    </div>
+		</div>
+		<div class="container-fluid bg-white rounded mb-1 pb-2">
+                    <div class="row py-2">
+			<div class="col-4">
+                           <!-- <div class="text-muted">Sub-Total:</div>
+                            <div class="text-muted">Delivery:</div> -->
+                            <div class="text-muted">Order-Total:</div>
+			</div>	
+                        <div class="col-8 text-right">
+                            <!-- <div>c13023.324</div>
+                            <div>c0</div> -->
+                            <div id="order-total"></div>
+			</div>	
+                    </div>
+                    <button id="checkout" class="btn btn-danger btn-block">Checkout</button>
+		</div>
+            </div>
+	</div>
+    </div>
+    <!-- Footer -->
+    <footer class="page-footer font-small mt-5">
+	<div class="container-fluid bg-primary text-dark">
+            <div class="row py-4">
+		<div class="col-6">
+                    <h5 class="text-right">FOOD SERVICE BY:</h5>
+                </div>
+		<div class="col-6">
+                    <div class="h5 text-left">Kevin A. Flores</div>
+                    <div class="h5 text-left">Luis D. Villalobos</div>
+		</div>
+            </div>
+	</div>
+    	<div class="footer-copyright text-center text-white bg-dark py-3">
+            © 2020 Copyright.<br><h6 class="text-center">Universidad Nacional De Costa Rica</h6>
+ 	 </div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        
+        globalOrder=[];
+        _dish_=null;
+        _update_=false;
+        _selected_=0;
+        _confirm_=false;
+        _hecho_=false;
+        _client_=null;
+        
+        function init(){
+            $("#registerForm").submit(function(event){verifyInputs(event);});
+            $("#loginButton").click(login);
+            loadLogin();
+            
+            loadOrderInit();
+            $("#checkout").on("click",()=>{moveToConfirm();});
+            $("#plus_order_popup").on("click",()=>{
+               $("#cant_popup").attr("value",parseInt($("#cant_popup").val(),10)+1);
+            });
+            $("#less_order_popup").on("click",()=>{
+                var x = parseInt($("#cant_popup").val(),10);
+                if(x>1){$("#cant_popup").attr("value",parseInt($("#cant_popup").val(),10)-1);}
+                else{errorMessage(222,$("#alert_popup"));}
+            });
+            $("#way").on("click",()=>{changeWayToReceive();});
+            $("#asap").on("click",()=>{changeAsapDate(false);});
+            $("#schedule_order").on("click",()=>{changeAsapDate(true);});
+            //limitDatePicker();
+            loadCategories();
+            $("#add_order_popup").on("click",()=>{addToShoppingCart(_dish_,true);});
+        }
+        
+        $(init);
+       //=========================================================================================== 
+        function loadLogin(){
+            $.ajax({type: "GET",
+                url: "/Food_Service_PIV/web/api/loginClient",
+                contentType: "application/json"
+            }).then((admin) => {_client_=admin;
+                loginSuccess();
+            },
+            (error) => {
+                errorMessage2(error.status, $("#dishes-container"));
+            });
+        }
+        
+        function verifyInputs(event) {
+            var forms = document.getElementsByClassName('needs-validation');
+            if (forms[0].checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }else{
+                  event.preventDefault();
+                  var client = {
+                    name:$("#first-name").val(),
+                    password:$("#new-pass").val(),
+                    telephone:$("#telefono").val(),
+                    lastName:$("#validationCustom02").val(),
+                    email:$("#email").val()
+                  };
+                   $.ajax({type:"POST",
+                        url:"/Food_Service_PIV/web/api/loginClient/register",
+                        data:JSON.stringify(client),
+                        contentType: "application/json"
+                    }).then((admin) => {
+                        _client_=admin;
+                        if(_client_!==undefined){
+                            login2();
+                            $("#feed-back").html("Choose an Email");
+                            $("#registerDialog").modal("hide");
+                        }
+                        else{
+                            $("#email").addClass("is-invalid");
+                            $("#feed-back").html("Already used");
+                        }
+                    },
+                    (error) => {
+                        errorMessage2(error.status, $("#dishes-container"));
+                    });
+                }
+            forms[0].classList.add('was-validated');
+        }
+        
+        
+        function showPassword(){
+            var cambio = document.getElementById("contrasena");
+            if(cambio.type == "password"){
+                cambio.type = "text";
+                $('.icon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+            }else{
+                cambio.type = "password";
+                $('.icon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+            }
+        } 
+
+        function login() {
+            if (!loginValidar())
+                return;
+            admin = {
+                email: $("#usuario").val(),
+                password: $("#contrasena").val()
+            };
+            $.ajax({type: "POST",
+                url: "/Food_Service_PIV/web/api/loginClient",
+                data: JSON.stringify(admin),
+                contentType: "application/json"
+            }).then((admin) => {_client_=admin;
+                loginSuccess();
+            },
+            (error) => {
+                errorMessage2(error.status, $("#loginErrorDiv"));
+            });
+        }
+        
+        function login2() {
+            var ad = {
+                email: _client_.email,
+                password: _client_.password
+            };
+            $.ajax({type: "POST",
+                url: "/Food_Service_PIV/web/api/loginClient",
+                data: JSON.stringify(ad),
+                contentType: "application/json"
+            }).then((ad) => {_client_=ad;
+                loginSuccess();
+            },
+            (error) => {
+                errorMessage2(error.status, $("#loginErrorDiv"));
+            });
+        }
+
+        function loginValidar() {
+            $("#loginForm").addClass("was-validated");
+            return $("#loginForm").get(0).checkValidity();
+        }
+
+        function loginSuccess(){
+            if(_client_!==undefined){
+            $("#opciones").append($(
+                '<li class="nav-item">'+
+                    '<a id="perfil" href="/Food_Service_PIV/web/presentation/client/perfil.html" class="nav-link">'+_client_.name+' '+
+                    _client_.lastName+'</a>'+
+                '</li>'+
+                '<li class="nav-item">'+
+                    '<a id="logoutButton" href="#" class="nav-link">Logout</a>'+
+                '</li>')
+            );
+            $("#logoutButton").click(logout);
+            $("#login").hide(0);
+            $("#register").hide(0);
+            //$("#perfil").click(goToPerfil);
+            $("#loginDialog").modal("hide");
+            }            
+        }
+        
+        function goToPerfil(){
+            location.href="/Food_Service_PIV/web/Index.html";
+        }
+
+        function logout(){
+            $.ajax({type: "DELETE", 
+                url:"/Food_Service_PIV/web/api/loginClient"               
+            })
+            .then( ()=>{logoutSuccess();},
+                (error)=>{ errorMessage2(error.status,$("#loginErrorDiv"));});                
+        }
+
+        function logoutSuccess() {
+            _client_=null;
+            $("#login").show(0);
+            $("#register").show(0);
+            $("#perfil").hide(0);
+            $("#logoutButton").hide(0);
+        }
+
+        function errorMessage2(status, place) {
+            error = status;
+            switch (status){
+                case 401:
+                    error = "Cliente no registrado";
+                    break;
+                case 403:
+                case 405:
+                    error = "Cliente no autorizado";
+                    break;
+                case 404:
+                    error = "Usuario o Contraseña Incorrecta";
+                    break;
+            };
+            place.html('<div class="alert alert-danger fade show">' +
+                '<button type="button" class="close" data-dismiss="alert">' +
+                '&times;</button><h4 class="alert-heading">Error!</h4>' + error + '</div>');
+            return;
+        }
+
+        //======================================================================================
+        
+        function loadOrderInit(){
+            $.ajax({
+                type:"GET",
+                url:"/Food_Service_PIV/web/api/orders/globalOrder",
+                contentType:"application/json"
+            }).then(
+                (order)=>{updateOrder(order);},
+                (error)=>{errorMessage(error.status,$("#dishes-container"));} 
+            ); 
+        }
+        
+        function moveToConfirm(){
+            if(_confirm_){
+                window.location="/Food_Service_PIV/web/presentation/client/checkout.html";
+            }else{
+                errorMessage(555,$("#dishes-container"));
+                $("#dishes-container").append($('<div class="text-center"><i>Add menu items to your cart.</i></div>'));
+            }
+        }
+        
+        function changeAsapDate(x){
+            if(x){
+                $.ajax({
+                    type:"PUT",
+                    url:"/Food_Service_PIV/web/api/orders/schedule/"+document.getElementById("daytime").value,
+                    contentType:"application/json"
+                }).then(
+                    (order)=>{globalOrder=order.pop(); updateAsapDate();},
+                    (error)=>{errorMessage(error.status,$("#dishes-container"));} 
+                ); 
+            }else{
+                $.ajax({
+                    type:"PUT",
+                    url:"/Food_Service_PIV/web/api/orders/schedule/asap",
+                    contentType:"application/json"
+                }).then(
+                    (order)=>{globalOrder=order.pop(); updateAsapDate();},
+                    (error)=>{errorMessage(error.status,$("#dishes-container"));} 
+                ); 
+            }
+        }
+        
+        function updateAsapDate(){
+            if(globalOrder.deliveryDate === undefined){
+                $("#OrderTimePicker").html("<b>ASAP</b>");
+            }else{
+                var split = globalOrder.deliveryDate.split("T");
+                var date = split[0];
+                var time = split[1].split("-");
+                var time_ = time[0].split(":");
+                $("#OrderTimePicker").html("<b>"+date+" "+time_[0]+":"+time_[1]+"</b>");
+            }
+        }
+        
+        function limitDatePicker(){
+            var now = new Date();
+            var last = new Date();
+            last.setDate(now.getDate()+5);
+            
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth()+1)).slice(-2);
+            var hour = ("0" + (now.getHours())).slice(-2);
+            var min = ("0" + (now.getMinutes())).slice(-2);
+            
+            var _day = ("0" + last.getDate()).slice(-2);
+            var _month = ("0" + (last.getMonth()+1)).slice(-2);
+            var _hour = ("0" + (last.getHours())).slice(-2);
+            var _min = ("0" + (last.getMinutes())).slice(-2);
+            
+            var today_now = now.getFullYear()+"-"+(month)+"-"+(day)+"T"+hour+":"+min;
+            var today_last = last.getFullYear()+"-"+(_month)+"-"+(_day)+"T"+_hour+":"+_min;
+            
+            document.getElementById("daytime").min = today_now;
+            if(_hecho_){
+                document.getElementById("daytime").value = today_now;
+            }
+            document.getElementById("daytime").max = today_last;   
+        }
+        
+        function changeWayToReceive(){
+            // 0 es delivery y 1 es pickup;
+            var true_false  = 1;
+            if(!$("#delivery").prop("checked") === true){
+                true_false = 0;
+            }
+            $.ajax({
+                type:"PUT",
+                url:"/Food_Service_PIV/web/api/orders/receive/"+true_false,
+                contentType:"application/json"
+            }).then(
+                (order)=>{globalOrder=order.pop();},
+                (error)=>{errorMessage(error.status,$("#dishes-container"));} 
+            );
+        }
+        
+        function loadCategories(){
+            $.ajax({
+                type:"GET",
+                url:"/Food_Service_PIV/web/api/orders/categories",
+                contentType:"application/json" 
+            }).then(
+                (categories)=>{showCategories(categories);},
+                (error)=>{errorMessage(error.status,$("#categories"));}
+            );
+        }
+        
+        function showCategories(categories){
+            var list=$("#categories");
+            list.html("");
+            categories.forEach((c)=>{addCategorie(list,c);});
+        }
+        
+        function addCategorie(list,c){
+            var anchor=$('<a id="'+c.id+'" class="nav-link" href="#"></a>');
+            anchor.html(c.name);
+            anchor.on("click",()=>{verifySelectedCategorie(c.id);});
+            list.append(anchor);
+        }
+        
+        function verifySelectedCategorie(id){
+            if($("#"+id).hasClass("text-danger")){
+                $("#"+id).removeClass("text-danger");
+                $("#div-"+id).remove();
+            }
+            else{
+                $("#"+id).addClass("text-danger");
+                loadDishes(id);
+            }
+        }
+        
+        function loadDishes(id){
+            $.ajax({
+                type:"GET",
+                url:"/Food_Service_PIV/web/api/orders?categorie="+id,
+                contentType:"application/json"
+            }).then(
+                (dishes)=>{showDishes(dishes);},
+                (error)=>{errorMessage(error.status,$("#categories"));}
+            );
+        }
+       
+        function hasAdditionals(Dish,mainDiv){
+            $.ajax({
+                type:"GET",
+                url:"/Food_Service_PIV/web/api/orders/hasAdditionals/"+Dish.id,
+                contentType:"application/json"
+            }).then(
+                (additionals)=>{
+                    if(additionals.length>0){
+                        mainDiv.find("#add_button_"+Dish.id).attr("data-target","#detail_popup");
+                    };
+                    var y = mainDiv.find("#add_button_"+Dish.id);
+                    var t = y.attr("data-target");
+                    mainDiv.find("#add_button_"+Dish.id).on("click",()=>{validateDish(Dish, t==="#detail_popup");});
+                },
+                (error)=>{errorMessage(error.status,$("#selected-categories"));}            
+            );
+        }
+        
+        function showDishes(dishes){
+            if(dishes.length > 0){
+                var mainDiv=$("#new-seccion");
+                mainDiv.attr("id","div-"+dishes[0].categories.id);
+                mainDiv.addClass("py-1");
+                var mainButton=$('<button class="btn btn-block btn-outline-dark" type="button" data-toggle="collapse"'+ 
+                                 'data-target="#seccion-'+dishes[0].categories.id+'" aria-expanded="false">');
+                mainButton.html("<h5>"+dishes[0].categories.name+"</h5>");
+                mainDiv.append(mainButton);
+                dishes.forEach((d)=>{
+                    var newDish=$(
+                    '<div id="seccion-'+d.categories.id+'" class="collapse">'+
+			'<div class="row pt-2 pl-2">'+
+                            '<div class="col-8">'+
+				'<h6 class="text-uppercase">'+d.name+'</h6>'+
+                                '<div><small class="text-muted text-justify">'+
+                                    d.decription+
+                                '</small></div>'+	
+                            '</div>'+
+                            '<div class="col-3 font-weight-bold text-right">₡'+
+                                d.price+
+                            '</div>'+
+                            '<div class="col-1">'+
+                                '<button id="add_button_'+d.id+'" type="button" class="btn btn-outline-primary"'+
+                                ' data-toggle="modal" data-target="#DoNotHave"  style="float:right; padding: 0px 5px;">'+
+                                    '<b>+</b>'+
+                                '</button>'+
+                            '</div>'+
+			'</div>'+
+                    '</div>'    
+                    );
+                    mainDiv.append(newDish);
+                    hasAdditionals(d,mainDiv);
+                });
+                var selected=$("#selected-categories");
+                selected.append(mainDiv);
+                selected.append($('<div id="new-seccion"></div>'));
+            }
+        }
+        
+        function validateDish(dish,x){
+            if(x){
+                $.ajax({
+                    type:"GET",
+                    url:"/Food_Service_PIV/web/api/orders/details/"+dish.id,
+                    contentType:"application/json"
+                }).then(
+                   (details)=>{updateDetailPopup(dish,details);},
+                   (error)=>{errorMessage(error.status,("#detail_popup"));}
+                );
+            }else{
+                addToShoppingCart(dish,false);
+            }
+        }
+        
+        function addToShoppingCart(_dish,additionalsFlag){
+            var clientDish={quantity:$("#cant_popup").attr("value"),dishes:_dish};
+            if(!additionalsFlag){
+                clientDish.quantity=1;
+            }
+            itsOk=true;
+            if(additionalsFlag){
+                var clientAdditionals=[];
+                _dish.additionalsList.forEach((addi)=>{verifySelectedAdditional(addi,clientAdditionals);});
+                clientDish.clienteAdditionalsList=clientAdditionals;
+                if(parseInt($("#cant_popup").val(),10) < 1){
+                    itsOk=false;
+                    errorMessage(333,$("#alert_popup"));
+                }
+            }else{clientDish.clienteAdditionalsList=null;}
+            if(itsOk){
+                if(_update_){
+                    $.ajax({
+                        type:"DELETE",
+                        url:"/Food_Service_PIV/web/api/orders/delete/"+_selected_,
+                        data:_selected_,
+                        contentType:"application/json"
+                    }).then(
+                        (order)=>{
+                            _update_=false; 
+                            addToShoppingCart(_dish,additionalsFlag);
+                        },
+                        (error)=>{errorMessage(error.status,("#dishes-container"));}
+                    );
+                    
+                }else{
+                    $.ajax({
+                       type:"POST",
+                       url:"/Food_Service_PIV/web/api/orders",
+                       data:JSON.stringify(clientDish),
+                       contentType:"application/json"
+                    }).then(
+                       (order)=>{updateOrder(order);},
+                       (error)=>{errorMessage(error.status,("#alert_popup"));}
+                    );
+                }
+            }
+            
+        }
+        
+        function updateOrder(order){
+            globalOrder = order.pop();
+            if(!_hecho_){
+            if(globalOrder.deliveryDate === undefined){
+                _hecho_=true;
+                limitDatePicker();
+            }else{
+                var x = globalOrder.deliveryDate.substr(0,16);
+                document.getElementById("daytime").value = x;
+                changeAsapDate(true);
+                limitDatePicker();
+            }_hecho_=true;
+            }
+            showOrder(globalOrder.clientDishList);
+            $("#order-total").html("₡"+globalOrder.total);
+            return true;
+        }
+        
+        function showOrder(dishList){
+            var count = 0;
+            var container = $("#dishes-container");
+            container.html("");
+            if(dishList.length === 0){
+                container.html('<div class="text-center"><i>Add menu items to your cart.</i></div>');
+                _confirm_=false;
+                return;
+            }else{_confirm_=true;}
+            dishList.forEach((d)=>{
+                var dish = $(
+                    '<div class="row mb-2">'+
+                        '<div class="col-2">'+
+                            '<button type="button" id="delete-'+count+'" class="btn btn-outline-primary" style="padding: 0px 13px;">'+
+                                '<b>-</b>'+
+                            '</button><br>'+
+                            '<button type="button" id="edit-'+count+'"class="btn btn-outline-primary" style="padding: 0px 5px;">'+
+                                '<small>edit</small>'+
+                            '</button>'+
+                        '</div>'+
+                        '<div class="col-7">'+
+                            '<small class="text-uppercase">'+d.quantity+' x '+d.dishes.name+'</small>'+
+                            '<div>'+
+				'<small class="text-muted">'+
+                                '<div>'+detailsString(d)+'</div>'+
+				'</small>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="col-3"> ₡'+d.total+'</div>'+
+                    '</div>'  
+                    );
+                var x = count;
+                dish.find("#delete-"+x).on("click",()=>deleteDish(x));
+                if(d.dishes.additionalsList === undefined){
+                    dish.find("#edit-"+x).hide(0);
+                }
+                dish.find("#edit-"+x).on("click",()=>{
+                    _update_=true; _selected_=x;
+                    validateDish(globalOrder.clientDishList[x].dishes,true);
+                });
+                container.append(dish);
+                count++;
+            });
+            $("#detail_popup").modal("hide");
+        }
+        
+        function deleteDish(index){
+            $.ajax({
+                type:"DELETE",
+                url:"/Food_Service_PIV/web/api/orders/delete/"+index,
+                data:index,
+                contentType:"application/json"
+            }).then(
+               (order)=>{updateOrder(order);},
+               (error)=>{errorMessage(error.status,("#dishes-container"));}
+            );
+        }
+        
+        function detailsString(dish){
+            if(dish.clienteAdditionalsList === undefined){return dish.dishes.decription;}
+            var string = "";
+            dish.clienteAdditionalsList.forEach((addi)=>{
+                addi.clienteDetailsList.forEach((detail)=>{
+                    string+=detail.details.name+" (₡"+detail.details.price+").<br>";
+                });
+            });
+            return string;
+        }
+        
+        function verifySelectedAdditional(addi,clientAddi){
+            var oneSelected = false;
+            var newClientAddi = {
+                additionals:{id:addi.id}, //tengo todos los datos en addi
+                clienteDetailsList:[]
+            };
+            if(addi.type){
+                addi.detailsList.forEach((d)=>{
+                    if($("#check_"+d.id).prop("checked")){
+                        newClientAddi.clienteDetailsList.push({details:d});
+                        oneSelected = true;
+                    }
+                });
+            }
+            else{
+                var idDetail = $('input[name=grupo_'+addi.id+']:checked').val();
+                addi.detailsList.forEach((d)=>{
+                    if(""+d.id===idDetail){
+                        newClientAddi.clienteDetailsList.push({details:d});
+                        oneSelected=true;
+                    }
+                });  
+            }
+            if(addi.mandatory && !oneSelected){
+                errorMessage(111,$("#alert_popup"));
+                itsOk=false;
+            }
+            clientAddi.push(newClientAddi);
+        }
+        
+        function updateDetailPopup(dish,details){
+            _dish_=dish;
+            dish.additionalsList=details;
+            $("#detail_popup_title").html(dish.name+'<br><small class="text-muted">'+dish.decription+'</small>');
+            var popup_body=$("#detail_popup_body");
+            popup_body.empty();
+            details.forEach((d)=>{
+                var newAdditional=$(
+                '<div class="row bg-light">'+
+                    '<div class="col-8">'+
+                        '<h6 class="mb-0 text-uppercase">'+d.name+'</h6>'+
+                    '</div>'+
+                    '<div class="col-4">'+
+                        '<p class="text-muted text-right mb-0">'+(d.mandatory?'Requerido':'')+'</p>'+
+                    '</div>'+
+                '</div>');
+                d.detailsList.forEach((detail)=>{
+                    var newDetail=$(
+                    '<div class="container-fluid bg-white pt-1">'+
+                        '<div class="row">'+
+                            '<div class="col-8">'+
+                                '<div class="form-check">'+
+                                    '<input class="form-check-input" type="'+(d.type?'checkbox':'radio')+
+                                    '" name="'+(d.type?'':'grupo_'+d.id)+'" value="'+detail.id+'" id="check_'+detail.id+'">'+
+                                    '<label class="form-check-label" for="check_'+detail.id+'">'+
+                                        detail.name+
+                                    '</label>'+   
+                                '</div>'+
+                            '</div>'+
+                            '<div class="col-4"><p class="text-right my-1">₡'+detail.price+'</p></div>'+
+                        '</div>'+
+                    '</div>');
+                    newAdditional.append(newDetail);
+                });
+                popup_body.append(newAdditional);
+            });
+            if(_update_){
+                var list = globalOrder.clientDishList[_selected_].clienteAdditionalsList;
+                list.forEach((addi)=>{
+                    addi.clienteDetailsList.forEach((d)=>{
+                       $("#check_"+d.details.id).prop("checked",true);
+                    });
+                });
+                $("#add_order_popup").html('ACTUALIZAR');
+                $("#cant_popup").attr("value",""+globalOrder.clientDishList[_selected_].quantity); 
+            }else{
+                $("#add_order_popup").html('AÑADIR A LA ORDEN ₡'+dish.price);
+                $("#cant_popup").attr("value","1"); 
+            }
+            
+            $("#detail_popup").modal("show");
+        }
+        
+        function errorMessage(status,place){
+            errorq=status;
+            switch(status){
+                case 401: errorq= "Usuario no registrado"; break;
+                case 403: case 405: errorq="Usuario no autorizado"; break;                
+                case 404: errorq= "Registro no encontrado"; break;
+                case 111: errorq="Debes Completar los Espacios Requeridos"; break;
+                case 222: errorq="La cantidad no puede ser menor"; break;
+                case 333: errorq="La cantidad no puede ser menor a 1"; break;
+                case 555: errorq="Debes añadir elementos al carrito."; break;
+            };            
+            place.html('<div class="alert alert-danger fade show">' +
+            '<button type="button" class="close" data-dismiss="alert">' +
+            '&times;</button><h4 class="alert-heading">Error!</h4>'+errorq+'</div>');
+            return;        
+        }
+        
+    </script>
+</body>
+</html>

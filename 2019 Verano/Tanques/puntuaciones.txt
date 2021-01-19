@@ -1,0 +1,11 @@
+David*13450*Clasico
+David*6450*Batalla
+Andres*12400*Clasico
+Mario*10200*Batalla
+Fran*9899*Supervivencia
+Michi*7832*Supervivencia
+#*
+David*Andres*5470*3920
+Mario*Fran*4600*4892
+David*Fran*3470*2920
+#*
