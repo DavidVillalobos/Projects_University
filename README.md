@@ -1,5 +1,6 @@
-# ProyectosUNA
+# University Projects
 
-Estos son algunos de los proyectos hechos en la universidad
-Algunos son propios de mi ingenio otros son de algunos cursos
-que me solicitaron.
+These are some of the projects done at the university
+Some are from my ingenuity others are from some courses
+that they requested.
+
