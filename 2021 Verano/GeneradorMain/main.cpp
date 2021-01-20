@@ -2,9 +2,9 @@
  * Date: 20/01/2021
  * Author: Luis David Villobos Gonzalez
  * Description: The program is responsible for generating 
- * 				the main file with a hello world of 
- * 				languages such as c ++, c #, java 
- * 				python and ruby.
+ * 		the main file with a hello world of 
+ * 		languages such as c ++, c #, java 
+ * 		python and ruby.
  * */
 
 
