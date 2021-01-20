@@ -2,9 +2,9 @@
  * Date: 20/01/2021
  * Author: Luis David Villobos Gonzalez
  * Description: The program is responsible for generating 
- * 							the main file with a hello world of 
- * 							languages such as c ++, c #, java 
- * 							python and ruby.
+ * 				the main file with a hello world of 
+ * 				languages such as c ++, c #, java 
+ * 				python and ruby.
  * */
 
 
@@ -23,7 +23,10 @@ string generate_python_main();
 string generate_ruby_main();
 
 int main(int argc, char** argv){
-	if(argc == 2){
+	if(argc != 2){
+		cout << "\t Please only enter the language in\n";
+		cout << "\twhich you want to generate the main.";
+	}else{
 		string language = "";
 		for (int i=0; i<strlen(argv[1]); i++)
 			language += tolower(argv[1][i]);
@@ -42,9 +45,6 @@ int main(int argc, char** argv){
 			cout << "\tlanguage or we do not have it available\n";
 			cout << "\t     to generate a main, sorry.";
 		}
-	}else{
-		cout << "\tPlease enter the language in which\n";
-		cout << "\t  you want to generate the main.";
 	}
 }
 
