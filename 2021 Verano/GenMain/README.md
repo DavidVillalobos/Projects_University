@@ -6,7 +6,7 @@ of languages such as c++, c#, java, python and ruby.
 
 ## Installation
 Only need to download genmain.exe file  
-Or download Main.cpp, Generator.cpp and and compile them 
+Or download Main.cpp, Generator.cpp and compile them 
 ~~~cmd
 g++ Main.cpp -o genmain
 ~~~
