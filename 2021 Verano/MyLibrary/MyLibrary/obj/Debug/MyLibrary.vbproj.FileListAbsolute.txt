@@ -1,0 +1,36 @@
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\bin\Debug\MyLibrary.exe.config
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\bin\Debug\MyLibrary.exe
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\bin\Debug\MyLibrary.pdb
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\bin\Debug\MyLibrary.xml
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\obj\Debug\MyLibrary.vbprojAssemblyReference.cache
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Title.resources
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Resources.resources
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\obj\Debug\MyLibrary.vbproj.GenerateResource.cache
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\obj\Debug\MyLibrary.vbproj.CoreCompileInputs.cache
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\obj\Debug\MyLibrary.exe
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\obj\Debug\MyLibrary.xml
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\obj\Debug\MyLibrary.pdb
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Menu_Principal.resources
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\bin\Debug\MyLibrary.accdb
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Add_Autor.resources
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Add_Book.resources
+C:\Users\luisd\Desktop\VisualBasic\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Add_Gender.resources
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\bin\Debug\MyLibrary.accdb
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\bin\Debug\MyLibrary.exe.config
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\bin\Debug\MyLibrary.exe
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\bin\Debug\MyLibrary.pdb
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\bin\Debug\MyLibrary.xml
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.vbprojAssemblyReference.cache
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Add_Autor.resources
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Add_Book.resources
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Add_Gender.resources
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Menu_Principal.resources
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Title.resources
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Resources.resources
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.vbproj.GenerateResource.cache
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.vbproj.CoreCompileInputs.cache
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.exe
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.xml
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.pdb
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Add_Countries.resources
+C:\Users\luisd\Github\Projects_University\Proyectos Verano 2021\MyLibrary\MyLibrary\obj\Debug\MyLibrary.Add_Editorial.resources
